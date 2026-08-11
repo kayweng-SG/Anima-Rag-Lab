@@ -25,10 +25,41 @@ Full contract: [`docs/APP_INTEGRATION.md`](../../docs/APP_INTEGRATION.md)
 
 ## UI mapping (must follow)
 
-| `red_light_status` | `intercepted` | App should |
-|--------------------|---------------|------------|
-| `RED` | `true` | Emergency banner + `statusExplain` + `answer_zh`; **do not** treat `sources` as care advice |
-| `YELLOW` | `false` | Caution + answer + optional sources |
-| `GREEN` | `false` | Info + answer + sources |
+Use the shared mapper in each client — do not invent per-screen `if` trees:
 
-Always show: 不能替代执业兽医诊断.
+| Platform | Helper |
+|----------|--------|
+| iOS | `result.screen` → `TriageScreenModel` |
+| Android | `result.screen()` → `TriageScreenModel` |
+| TS / RN | `mapTriageScreen(result)` |
+
+| Flag | RED | YELLOW | GREEN |
+|------|-----|--------|-------|
+| `showEmergencyBanner` | ✅ | — | — |
+| `showInterceptedHint` | if `intercepted` | — | — |
+| `showSourcesAsAdvice` | ❌ never | ✅ | ✅ |
+| Primary copy | `answerZh` | `answerZh` | `answerZh` |
+| Chips | `symptomChips` | same | same |
+
+Always show `disclaimer`（不能替代执业兽医诊断与治疗）。
+
+```swift
+let ui = result.screen
+if ui.showEmergencyBanner { /* 急诊横幅 */ }
+Text(ui.badge)
+Text(ui.answerZh)
+if ui.showSourcesAsAdvice { /* 才展示 sources 作参考 */ }
+```
+
+## API Key（App / 生产）
+
+服务端 `.env` 设置 `ANIMA_API_KEY` 后，`/health` 会返回 `"auth_required": true`。
+
+| Client | 传入方式 |
+|--------|----------|
+| iOS | `AnimaTriageClient(baseURL:…, apiKey: "…")` |
+| Android | `AnimaTriageClient(baseUrl=…, apiKey="…")` |
+| TS | `new AnimaTriageClient({ baseUrl, apiKey })` |
+| 本地 Web demo | 顶部输入框 → localStorage |
+
+密钥只放本机 `.env` / App 安全存储，**不要**提交到 git。

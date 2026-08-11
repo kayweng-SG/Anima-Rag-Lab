@@ -115,6 +115,9 @@ Optional header: `X-Request-Id` (server echoes it; generates UUID if absent).
 
 ### App rendering rules
 
+Prefer the shared screen mapper in [`examples/app_clients/`](../examples/app_clients/)
+(`TriageScreenModel` / `mapTriageScreen`) instead of ad-hoc conditionals.
+
 | `red_light_status` | `intercepted` | UI behavior |
 |--------------------|---------------|-------------|
 | `RED` | `true` | Emergency banner; **do not** show sources as “advice”; emphasize clinic now |
@@ -234,8 +237,8 @@ iOS 本地 HTTP 需在 Info.plist 允许 App Transport Security 例外（仅 deb
 ## Server env for App deployment
 
 ```bash
-# .env
-ANIMA_API_KEY=generate-a-long-random-secret
+# .env  （勿提交；已在 .gitignore）
+ANIMA_API_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(32))')
 ANIMA_CORS_ORIGINS=https://app.animalink.example,http://localhost:3000
 ANIMA_API_HOST=0.0.0.0
 ANIMA_API_PORT=8000
@@ -243,8 +246,26 @@ OPENAI_API_KEY=...          # optional; improves GREEN/YELLOW answers
 ANIMA_LLM_MODEL=gpt-4o-mini
 ```
 
+### App 鉴权检查清单
+
+1. `.env` 写入 `ANIMA_API_KEY`（长随机串），重启 API  
+2. `GET /health` → `"auth_required": true`  
+3. 无 Key 调 `POST /v1/triage/query` → `401 unauthorized`  
+4. App client 传入同一把 key：
+
+```swift
+AnimaTriageClient(
+  baseURL: URL(string: "http://192.168.88.6:8000")!,
+  apiKey: "«与 .env 中 ANIMA_API_KEY 相同»"
+)
+```
+
+5. 本地 Web demo：顶部会出现 API Key 输入框（存 localStorage）；真机 App 用 client 构造参数，不要把 key 写进仓库  
+
+开发时若只想跑开放 demo：注释掉 / 清空 `ANIMA_API_KEY` 再重启即可。
+
 ## Compatibility notes
 
-- Local demo UI continues to call `/triage/query` (alias of `/v1/triage/query`).
+- Local demo UI continues to call `/triage/query` (alias of `/v1/triage/query`) and sends `X-API-Key` when the browser has a saved key.
 - `api_version` is always `"v1"` in success payloads.
 - Response headers include `X-Request-Id` and `X-API-Version: v1`.

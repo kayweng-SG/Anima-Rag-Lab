@@ -69,24 +69,97 @@ export class AnimaTriageError extends Error {
   }
 }
 
+export type TriageTone = "red" | "yellow" | "green";
+
+/** How the App should render one triage result (traffic-light UI mapping). */
+export type TriageScreenModel = {
+  tone: TriageTone;
+  badge: string;
+  explain: { title: string; body: string };
+  showEmergencyBanner: boolean;
+  showInterceptedHint: boolean;
+  /** When false, do **not** present sources as care advice (RED). */
+  showSourcesAsAdvice: boolean;
+  answerZh: string;
+  recommendationZh?: string;
+  symptomChips: string[];
+  disclaimer: string;
+};
+
+export const TRIAGE_DISCLAIMER =
+  "不能替代执业兽医诊断与治疗。紧急情况请立即送医。";
+
 export function statusExplain(status?: string): { title: string; body: string } {
-  switch (status) {
-    case "RED":
-      return {
+  return mapTriageScreen({
+    red_light_status: status,
+    intercepted: status === "RED",
+    answer_zh: "",
+    extracted_symptoms: [],
+  }).explain;
+}
+
+/** Canonical App presentation flags — prefer this over ad-hoc `if (intercepted)`. */
+export function mapTriageScreen(
+  r: Pick<
+    TriageQueryResponse,
+    | "red_light_status"
+    | "intercepted"
+    | "answer_zh"
+    | "extracted_symptoms"
+  > &
+    Partial<Pick<TriageQueryResponse, "recommendation_zh">>,
+): TriageScreenModel {
+  const status = (r.red_light_status ?? "GREEN").toUpperCase();
+  const chips = r.extracted_symptoms ?? [];
+  if (status === "RED") {
+    return {
+      tone: "red",
+      badge: "红灯 RED",
+      explain: {
         title: "红灯 = 紧急，先送医",
         body: "已出现危急信号。请立即送兽医急诊；系统已跳过 AI。",
-      };
-    case "YELLOW":
-      return {
+      },
+      showEmergencyBanner: true,
+      showInterceptedHint: !!r.intercepted,
+      showSourcesAsAdvice: false,
+      answerZh: r.answer_zh,
+      recommendationZh: r.recommendation_zh,
+      symptomChips: chips,
+      disclaimer: TRIAGE_DISCLAIMER,
+    };
+  }
+  if (status === "YELLOW") {
+    return {
+      tone: "yellow",
+      badge: "黄灯 YELLOW",
+      explain: {
         title: "黄灯 = 需小心，持续观察",
         body: "有风险但尚未立即拦截。按建议处理；恶化则升级红灯送医。",
-      };
-    default:
-      return {
-        title: "绿灯 = 暂无紧急信号",
-        body: "依目前描述未见红灯触发。不代表保证没事；有变化请重评。",
-      };
+      },
+      showEmergencyBanner: false,
+      showInterceptedHint: false,
+      showSourcesAsAdvice: true,
+      answerZh: r.answer_zh,
+      recommendationZh: r.recommendation_zh,
+      symptomChips: chips,
+      disclaimer: TRIAGE_DISCLAIMER,
+    };
   }
+  return {
+    tone: "green",
+    badge: "绿灯 GREEN",
+    explain: {
+      title: "绿灯 = 暂无紧急信号",
+      body: "依目前描述未见红灯触发。不代表保证没事；有变化请重评。",
+    },
+    showEmergencyBanner: false,
+    showInterceptedHint: false,
+    showSourcesAsAdvice: true,
+    answerZh: r.answer_zh,
+    recommendationZh: r.recommendation_zh,
+    symptomChips: chips,
+    disclaimer: TRIAGE_DISCLAIMER,
+  };
 }
 
 export class AnimaTriageClient {

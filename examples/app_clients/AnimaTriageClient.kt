@@ -78,13 +78,70 @@ data class TriageQueryResponse(
     @SerialName("extracted_symptoms") val extractedSymptoms: List<String> = emptyList(),
 ) {
     /** Human-readable traffic-light copy for App UI. */
-    fun statusExplain(): Pair<String, String> = when (redLightStatus) {
-        "RED" -> "红灯 = 紧急，先送医" to
-            "已出现危急信号。请立即送兽医急诊；系统已跳过 AI。"
-        "YELLOW" -> "黄灯 = 需小心，持续观察" to
-            "有风险但尚未立即拦截。按建议处理；恶化则升级红灯送医。"
-        else -> "绿灯 = 暂无紧急信号" to
-            "依目前描述未见红灯触发。不代表保证没事；有变化请重评。"
+    fun statusExplain(): Pair<String, String> = screen().explain
+
+    /** Canonical App presentation flags — prefer this over ad-hoc `if (intercepted)`. */
+    fun screen(): TriageScreenModel = TriageScreenModel.map(this)
+}
+
+/** How the App should render one triage result (traffic-light UI mapping). */
+data class TriageScreenModel(
+    val tone: Tone,
+    val badge: String,
+    val explain: Pair<String, String>,
+    val showEmergencyBanner: Boolean,
+    val showInterceptedHint: Boolean,
+    /** When false, do **not** present sources as care advice (RED). */
+    val showSourcesAsAdvice: Boolean,
+    val answerZh: String,
+    val recommendationZh: String?,
+    val symptomChips: List<String>,
+    val disclaimer: String = DEFAULT_DISCLAIMER,
+) {
+    enum class Tone { RED, YELLOW, GREEN }
+
+    companion object {
+        const val DEFAULT_DISCLAIMER = "不能替代执业兽医诊断与治疗。紧急情况请立即送医。"
+
+        fun map(r: TriageQueryResponse): TriageScreenModel =
+            when (r.redLightStatus?.uppercase()) {
+                "RED" -> TriageScreenModel(
+                    tone = Tone.RED,
+                    badge = "红灯 RED",
+                    explain = "红灯 = 紧急，先送医" to
+                        "已出现危急信号。请立即送兽医急诊；系统已跳过 AI。",
+                    showEmergencyBanner = true,
+                    showInterceptedHint = r.intercepted,
+                    showSourcesAsAdvice = false,
+                    answerZh = r.answerZh,
+                    recommendationZh = r.recommendationZh,
+                    symptomChips = r.extractedSymptoms,
+                )
+                "YELLOW" -> TriageScreenModel(
+                    tone = Tone.YELLOW,
+                    badge = "黄灯 YELLOW",
+                    explain = "黄灯 = 需小心，持续观察" to
+                        "有风险但尚未立即拦截。按建议处理；恶化则升级红灯送医。",
+                    showEmergencyBanner = false,
+                    showInterceptedHint = false,
+                    showSourcesAsAdvice = true,
+                    answerZh = r.answerZh,
+                    recommendationZh = r.recommendationZh,
+                    symptomChips = r.extractedSymptoms,
+                )
+                else -> TriageScreenModel(
+                    tone = Tone.GREEN,
+                    badge = "绿灯 GREEN",
+                    explain = "绿灯 = 暂无紧急信号" to
+                        "依目前描述未见红灯触发。不代表保证没事；有变化请重评。",
+                    showEmergencyBanner = false,
+                    showInterceptedHint = false,
+                    showSourcesAsAdvice = true,
+                    answerZh = r.answerZh,
+                    recommendationZh = r.recommendationZh,
+                    symptomChips = r.extractedSymptoms,
+                )
+            }
     }
 }
 

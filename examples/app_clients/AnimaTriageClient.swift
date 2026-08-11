@@ -87,13 +87,84 @@ struct TriageQueryResponse: Decodable {
 
     /// Human-readable traffic-light copy for App UI.
     var statusExplain: (title: String, body: String) {
-        switch redLightStatus {
+        TriageScreenModel.map(self).explain
+    }
+
+    /// Canonical App presentation flags — prefer this over ad-hoc `if intercepted`.
+    var screen: TriageScreenModel { TriageScreenModel.map(self) }
+}
+
+/// How the App should render one triage result (step 2: traffic-light UI mapping).
+struct TriageScreenModel {
+    enum Tone: String {
+        case red, yellow, green
+    }
+
+    let tone: Tone
+    let badge: String                 // e.g. "黄灯 YELLOW"
+    let explain: (title: String, body: String)
+    let showEmergencyBanner: Bool     // RED only
+    let showInterceptedHint: Bool     // "已拦截 · 跳过 LLM"
+    /// When false, do **not** present `sources` as care advice (RED).
+    let showSourcesAsAdvice: Bool
+    let answerZh: String
+    let recommendationZh: String?
+    let symptomChips: [String]
+    let disclaimer: String
+
+    static let defaultDisclaimer = "不能替代执业兽医诊断与治疗。紧急情况请立即送医。"
+
+    static func map(_ r: TriageQueryResponse) -> TriageScreenModel {
+        let status = (r.redLightStatus ?? "GREEN").uppercased()
+        switch status {
         case "RED":
-            return ("红灯 = 紧急，先送医", "已出现危急信号。请立即送兽医急诊；系统已跳过 AI。")
+            return TriageScreenModel(
+                tone: .red,
+                badge: "红灯 RED",
+                explain: (
+                    "红灯 = 紧急，先送医",
+                    "已出现危急信号。请立即送兽医急诊；系统已跳过 AI。"
+                ),
+                showEmergencyBanner: true,
+                showInterceptedHint: r.intercepted,
+                showSourcesAsAdvice: false,
+                answerZh: r.answerZh,
+                recommendationZh: r.recommendationZh,
+                symptomChips: r.extractedSymptoms,
+                disclaimer: defaultDisclaimer
+            )
         case "YELLOW":
-            return ("黄灯 = 需小心，持续观察", "有风险但尚未立即拦截。按建议处理；恶化则升级红灯送医。")
+            return TriageScreenModel(
+                tone: .yellow,
+                badge: "黄灯 YELLOW",
+                explain: (
+                    "黄灯 = 需小心，持续观察",
+                    "有风险但尚未立即拦截。按建议处理；恶化则升级红灯送医。"
+                ),
+                showEmergencyBanner: false,
+                showInterceptedHint: false,
+                showSourcesAsAdvice: true,
+                answerZh: r.answerZh,
+                recommendationZh: r.recommendationZh,
+                symptomChips: r.extractedSymptoms,
+                disclaimer: defaultDisclaimer
+            )
         default:
-            return ("绿灯 = 暂无紧急信号", "依目前描述未见红灯触发。不代表保证没事；有变化请重评。")
+            return TriageScreenModel(
+                tone: .green,
+                badge: "绿灯 GREEN",
+                explain: (
+                    "绿灯 = 暂无紧急信号",
+                    "依目前描述未见红灯触发。不代表保证没事；有变化请重评。"
+                ),
+                showEmergencyBanner: false,
+                showInterceptedHint: false,
+                showSourcesAsAdvice: true,
+                answerZh: r.answerZh,
+                recommendationZh: r.recommendationZh,
+                symptomChips: r.extractedSymptoms,
+                disclaimer: defaultDisclaimer
+            )
         }
     }
 }
@@ -199,7 +270,7 @@ final class AnimaTriageClient {
 }
 
 /*
- // MARK: - Minimal SwiftUI wiring (optional)
+ // MARK: - Minimal SwiftUI wiring (optional) — uses TriageScreenModel
 
  import SwiftUI
 
@@ -209,6 +280,7 @@ final class AnimaTriageClient {
      @State private var errorText: String?
      @State private var loading = false
 
+     // Simulator: 127.0.0.1 · Device: http://<Mac-LAN-IP>:8000
      private let client = AnimaTriageClient(
          baseURL: URL(string: "http://127.0.0.1:8000")!
      )
@@ -218,12 +290,29 @@ final class AnimaTriageClient {
              TextField("情况描述", text: $question, axis: .vertical)
              Button("开始分诊") { Task { await run() } }
                  .disabled(loading || question.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-             if let result {
-                 Text(result.statusExplain.title).bold()
-                 Text(result.answerZh)
-                 if result.intercepted {
+
+             if let ui = result?.screen {
+                 if ui.showEmergencyBanner {
+                     Text("⚠︎ 请立即送兽医急诊")
+                         .font(.headline)
+                         .foregroundStyle(.red)
+                 }
+                 Text(ui.badge).bold()
+                 Text(ui.explain.title)
+                 Text(ui.explain.body).font(.footnote)
+                 if ui.showInterceptedHint {
                      Text("已拦截 · 跳过 LLM").foregroundStyle(.red)
                  }
+                 if !ui.symptomChips.isEmpty {
+                     Text("识别症状：\(ui.symptomChips.joined(separator: " · "))")
+                         .font(.footnote)
+                 }
+                 Text(ui.answerZh)
+                 // RED: never treat sources as care advice
+                 if ui.showSourcesAsAdvice, let sources = result?.sources, !sources.isEmpty {
+                     Text("参考来源 \(sources.count) 条").font(.caption)
+                 }
+                 Text(ui.disclaimer).font(.caption2).foregroundStyle(.secondary)
              }
              if let errorText { Text(errorText).foregroundStyle(.red) }
          }

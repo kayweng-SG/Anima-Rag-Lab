@@ -92,6 +92,33 @@
     .dot.ok { background: #059669; }
     .dot.bad { background: #dc2626; }
 
+    .api-key-panel {
+      margin-top: 0.85rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 12px;
+    }
+    .api-key-panel label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 0.35rem;
+    }
+    .api-key-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .api-key-row input {
+      flex: 1;
+      min-width: 0;
+    }
+    button.secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
     .layout {
       display: grid;
       gap: 1.25rem;
@@ -394,6 +421,15 @@
         <span class="pill"><span class="dot" id="healthDot"></span><span id="healthText">检查 API…</span></span>
         <span class="pill" id="vectorInfo">向量库：—</span>
         <span class="pill" id="llmInfo">LLM：—</span>
+        <span class="pill" id="authInfo">鉴权：—</span>
+      </div>
+      <div id="apiKeyPanel" class="api-key-panel" hidden>
+        <label for="apiKeyInput">App API Key（本地 demo 用，存浏览器）</label>
+        <div class="api-key-row">
+          <input id="apiKeyInput" type="password" autocomplete="off" placeholder="与服务端 ANIMA_API_KEY 一致" />
+          <button type="button" id="apiKeySave" class="secondary">保存</button>
+        </div>
+        <div class="field-hint">服务端设置了 <code>ANIMA_API_KEY</code> 时必填；仅存本机 localStorage，不会上传到仓库。</div>
       </div>
     </header>
 
@@ -542,6 +578,34 @@
   </div>
 
   <script>
+    const API_KEY_STORAGE = "anima_api_key";
+    let authRequired = false;
+
+    function getStoredApiKey() {
+      try {
+        return (localStorage.getItem(API_KEY_STORAGE) || "").trim();
+      } catch (_) {
+        return "";
+      }
+    }
+
+    function setStoredApiKey(value) {
+      try {
+        const v = (value || "").trim();
+        if (v) localStorage.setItem(API_KEY_STORAGE, v);
+        else localStorage.removeItem(API_KEY_STORAGE);
+      } catch (_) {
+        /* ignore quota / private mode */
+      }
+    }
+
+    function triageHeaders() {
+      const headers = { "Content-Type": "application/json" };
+      const key = getStoredApiKey();
+      if (key) headers["X-API-Key"] = key;
+      return headers;
+    }
+
     const EXAMPLES = {
       normal: {
         question: "小狗正常心率是多少？运动后呼吸有点快，有点担心。",
@@ -721,7 +785,7 @@
       try {
         const res = await fetch("/triage/query", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: triageHeaders(),
           body: JSON.stringify(payload),
           signal: controller.signal,
         });
@@ -821,13 +885,27 @@
         $("llmInfo").textContent = data.llm_enabled
           ? `LLM：已开启 · ${data.llm_model || "openai"}`
           : "LLM：未开启 · extractive";
+        authRequired = !!data.auth_required;
+        $("authInfo").textContent = authRequired ? "鉴权：需要 API Key" : "鉴权：开放（开发）";
+        $("apiKeyPanel").hidden = !authRequired;
+        if (authRequired) {
+          $("apiKeyInput").value = getStoredApiKey();
+        }
       } catch (err) {
         $("healthDot").className = "dot bad";
         $("healthText").textContent = "API 未连接 — 请先启动 07_api_server.py";
         $("vectorInfo").textContent = "向量库：—";
         $("llmInfo").textContent = "LLM：—";
+        $("authInfo").textContent = "鉴权：—";
+        $("apiKeyPanel").hidden = true;
       }
     }
+
+    $("apiKeySave").addEventListener("click", () => {
+      setStoredApiKey($("apiKeyInput").value);
+      $("apiKeyInput").value = getStoredApiKey();
+      alert(getStoredApiKey() ? "API Key 已保存到本机浏览器" : "已清除本机 API Key");
+    });
 
     function showError(message) {
       const box = $("errorBox");
