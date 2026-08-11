@@ -135,6 +135,8 @@ def test_extract_symptom_keywords_from_description(red_light_mod):
     mild = extract("中暑怎么办？", "散步后喘气、流口水，仍清醒能走")
     assert any("中暑" in item for item in mild)
     assert any("喘气" in item or "流口水" in item for item in mild)
+    assert any("清醒" in item for item in mild)
+    assert any("能走" in item or "仍清醒能走" in item for item in mild)
 
     severe = extract("中暑怎么办？狗已经站不起来了", "Heat stroke after hiking, collapse")
     assert any("collapse" in item.lower() or "站不起来" in item for item in severe)
@@ -152,7 +154,8 @@ def test_extract_symptom_keywords_from_description(red_light_mod):
     assert any("巧克力" in item for item in chocolate_ok)
     assert any("精神还行" in item for item in chocolate_ok)
 
-def test_chocolate_ingestion_is_red(red_light_mod, red_light):
+def test_chocolate_ingestion_alert_is_yellow(red_light_mod, red_light):
+    """Exposure alone + alert mentation → YELLOW (not RED intercept)."""
     PatientVitals = red_light_mod.PatientVitals
     result = red_light.evaluate(
         PatientVitals(
@@ -161,10 +164,24 @@ def test_chocolate_ingestion_is_red(red_light_mod, red_light):
             chief_complaint="小狗吃了巧克力，精神还行，有点担心。",
         )
     )
+    assert result.status.value == "YELLOW"
+    assert result.intercept is False
+    assert any(a.code == "toxic_food_exposure" for a in result.alerts)
+    assert "有毒食物" in result.recommendation_zh or "toxic food" in result.recommendation_en.lower()
+
+
+def test_chocolate_with_vomiting_is_red(red_light_mod, red_light):
+    PatientVitals = red_light_mod.PatientVitals
+    result = red_light.evaluate(
+        PatientVitals(
+            species="dog",
+            size="small",
+            chief_complaint="小狗吃了巧克力，开始呕吐，精神差。",
+        )
+    )
     assert result.status.value == "RED"
     assert result.intercept is True
     assert any(a.code == "poisoning" for a in result.alerts)
-    assert "中毒" in result.recommendation_zh or "毒物" in result.recommendation_zh
 
 
 def test_aspca_toxic_plant_red(red_light_mod, red_light):

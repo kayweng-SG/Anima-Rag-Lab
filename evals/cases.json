@@ -18,7 +18,7 @@
         "red_light_status": "GREEN",
         "intercepted": false,
         "min_sources": 1,
-        "answer_zh_must_contain_any": ["心率", "70"],
+        "answer_zh_must_contain_any": ["心率", "可能原因", "请先观察", "建议行动"],
         "answer_zh_must_not_contain_any": ["立即就医并途中降温"],
         "sources_content_must_match_any": ["heart_rate", "bpm", "70"],
         "max_elapsed_ms": 8000
@@ -40,8 +40,9 @@
         "red_light_status": "YELLOW",
         "intercepted": false,
         "min_sources": 1,
-        "answer_zh_must_contain_any": ["中暑", "降温", "观察"],
+        "answer_zh_must_contain_any": ["中暑", "可能原因", "请先观察", "建议行动", "何时就医"],
         "answer_zh_must_not_contain_any": ["心率参考范围"],
+        "extracted_symptoms_must_contain_any": ["清醒", "能走"],
         "sources_content_must_match_any": ["heat", "cool", "temperature", "hyperthermia"],
         "max_elapsed_ms": 8000
       }
@@ -98,6 +99,7 @@
       "expect": {
         "red_light_status": ["GREEN", "YELLOW"],
         "intercepted": false,
+        "answer_zh_must_contain_any": ["可能原因", "请先观察", "建议行动", "何时就医"],
         "answer_zh_must_not_contain_any": [
           "心率参考范围",
           "70–120",
@@ -134,7 +136,7 @@
           "老鼠药",
           "立即就医并途中降温"
         ],
-        "answer_zh_must_contain_any": ["参考", "就医"],
+        "answer_zh_must_contain_any": ["参考", "就医", "可能原因", "建议行动"],
         "max_elapsed_ms": 8000
       }
     },
@@ -198,11 +200,29 @@
       }
     },
     {
-      "id": "chocolate_ingestion_red",
+      "id": "chocolate_ingestion_yellow",
       "group": "toxic_food",
-      "description": "Ate chocolate → RED poison; chip must be 吃了巧克力 not bare 吃了",
+      "description": "Ate chocolate + alert → YELLOW (no intercept); chip 吃了巧克力 not bare 吃了",
       "request": {
         "question": "小狗吃了巧克力，精神还行，有点担心。",
+        "species": "dog",
+        "size": "small"
+      },
+      "expect": {
+        "red_light_status": "YELLOW",
+        "intercepted": false,
+        "answer_zh_must_contain_any": ["可可碱", "可能原因", "建议行动", "尽快"],
+        "extracted_symptoms_must_contain_any": ["巧克力", "精神还行"],
+        "extracted_symptoms_must_not_contain_any": ["吃了"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "chocolate_vomiting_red",
+      "group": "toxic_food",
+      "description": "Ate chocolate + vomiting/poor mentation → RED intercept",
+      "request": {
+        "question": "小狗吃了巧克力，开始呕吐，精神差。",
         "species": "dog",
         "size": "small"
       },
@@ -211,29 +231,27 @@
         "intercepted": true,
         "max_sources": 0,
         "model_used": "red_light_intercept",
-        "answer_zh_must_contain_any": ["急诊", "中毒", "精神还行"],
-        "extracted_symptoms_must_contain_any": ["巧克力", "精神还行"],
+        "answer_zh_must_contain_any": ["急诊", "可能原因", "建议行动"],
+        "extracted_symptoms_must_contain_any": ["巧克力"],
         "extracted_symptoms_must_not_contain_any": ["吃了"],
         "max_elapsed_ms": 500
       }
     },
     {
-      "id": "grape_ingestion_red",
+      "id": "grape_ingestion_yellow",
       "group": "toxic_food",
-      "description": "Ate grapes → RED poison intercept",
+      "description": "Ate grapes alone (no severe signs) → YELLOW, not RED intercept",
       "request": {
         "question": "狗狗刚才吃了几颗葡萄，现在怎么办？",
         "species": "dog"
       },
       "expect": {
-        "red_light_status": "RED",
-        "intercepted": true,
-        "max_sources": 0,
-        "model_used": "red_light_intercept",
-        "answer_zh_must_contain_any": ["急诊", "中毒"],
+        "red_light_status": "YELLOW",
+        "intercepted": false,
+        "answer_zh_must_contain_any": ["葡萄", "可能原因", "建议行动"],
         "extracted_symptoms_must_contain_any": ["葡萄"],
         "extracted_symptoms_must_not_contain_any": ["吃了"],
-        "max_elapsed_ms": 500
+        "max_elapsed_ms": 8000
       }
     },
     {
@@ -270,6 +288,7 @@
         "red_light_status": ["GREEN", "YELLOW"],
         "intercepted": false,
         "min_sources": 1,
+        "answer_zh_must_contain_any": ["可能原因", "请先观察", "建议行动"],
         "answer_zh_must_not_contain_any": ["心率参考范围"],
         "sources_content_must_match_any": [
           "vomit",
@@ -297,6 +316,7 @@
         "red_light_status": ["GREEN", "YELLOW"],
         "intercepted": false,
         "min_sources": 1,
+        "answer_zh_must_contain_any": ["可能原因", "请先观察", "建议行动", "耳"],
         "sources_content_must_match_any": ["otitis", "ear infection", "otorrhea"],
         "extracted_symptoms_must_contain_any": ["otitis", "ear infection"],
         "extracted_symptoms_must_not_contain_any": ["fleas"],

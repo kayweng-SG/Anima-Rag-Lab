@@ -75,63 +75,298 @@ SYSTEM_PROMPT = (
     "Always return both Simplified Chinese (answer_zh) and English (answer_en)."
 )
 
-# Topic-level Chinese guidance when Merck snippets match emergency themes.
-TOPIC_GUIDANCE_ZH: Tuple[Tuple[re.Pattern, Tuple[str, ...]], ...] = (
+# Topic checklists for GREEN/YELLOW extractive answers (and LLM hints).
+# Each entry: (pattern, {"causes": [...], "observe": [...], "actions": [...], "seek_care": [...]})
+TOPIC_CHECKLISTS_ZH: Tuple[Tuple[re.Pattern, Dict[str, Tuple[str, ...]]], ...] = (
     (
         re.compile(r"heat\s*stroke|hypertherm|overheat|中暑|过热", re.I),
-        (
-            "中暑常见表现：皮肤发烫、呕吐、流口水、急促喘气、痛苦表现、步态不稳、虚脱或意识改变。",
-            "轻度处理：立即移至阴凉通风处，用室温水打湿被毛并加强通风，少量补水，持续观察体温与神志。",
-            "若出现虚脱、昏迷、抽搐，或直肠体温 ≥40°C（104°F），请立即送急诊。",
+        {
+            "causes": (
+                "热应激 / 轻度到中度中暑风险（过热、通风差、活动过度）",
+                "若伴随虚脱、抽搐或体温过高，需按重度中暑升级",
+            ),
+            "observe": (
+                "皮肤是否发烫、是否呕吐/流口水、喘气是否急促",
+                "神志是否清醒、能否站立行走、步态是否不稳",
+                "若能量到体温：是否接近或超过 40°C（104°F）",
+            ),
+            "actions": (
+                "立即移至阴凉通风处",
+                "用室温水打湿被毛并加强通风（勿强灌冰水）",
+                "少量补水，持续观察体温与神志",
+            ),
+            "seek_care": (
+                "出现虚脱、昏迷、抽搐，或直肠体温 ≥40°C（104°F）→ 立即送急诊",
+                "居家降温后仍持续加重 → 尽快就医",
+            ),
+        },
+    ),
+    (
+        re.compile(
+            r"巧克力|可可|葡萄干|葡萄|木糖醇|洋葱|大蒜|"
+            r"chocolate|cocoa|theobromine|grape|raisin|xylitol|onion|garlic",
+            re.I,
         ),
+        {
+            "causes": (
+                "疑似误食对宠物有毒的食物（如巧克力/葡萄/木糖醇等）",
+                "巧克力含可可碱（theobromine）；葡萄等也可引起器官损伤，症状可能迟发",
+                "体型越小、摄入量相对越大，风险通常越高",
+            ),
+            "observe": (
+                "是否呕吐、腹泻、流口水、兴奋或躁动",
+                "心率是否异常、精神是否变差、是否抽搐/站立困难",
+                "尽量确认食物种类、大致量与摄入时间",
+            ),
+            "actions": (
+                "尽快联系兽医评估剂量与是否需要催吐/洗胃等处置",
+                "就医时尽量带上包装、剩余物或呕吐物样本",
+                "不要自行催吐或乱用药（除非兽医明确指示）",
+            ),
+            "seek_care": (
+                "明确误食有毒食物 → 尽快就医评估（即使目前精神还行）",
+                "出现呕吐、抽搐、虚脱、呼吸困难或精神变差 → 急诊",
+            ),
+        },
     ),
     (
         re.compile(r"poison|tox|中毒|毒物", re.I),
-        (
-            "疑似中毒：请立即联系兽医或动物中毒控制中心，不要自行催吐（除非兽医明确指示）。",
-            "就医时尽量带上毒物包装、呕吐物样本与接触时间，便于对症处理。",
-            "部分案例可考虑活性炭、洗胃或支持疗法，须由兽医评估后决定。",
-        ),
+        {
+            "causes": (
+                "疑似毒物暴露 / 误食有毒物质",
+                "部分毒物可迟发，即使当下精神尚可仍须谨慎",
+            ),
+            "observe": (
+                "是否呕吐、流口水、腹泻",
+                "呼吸是否困难、精神是否变差、是否抽搐/站立困难",
+                "尽量确认毒物名称、摄入时间与大致量",
+            ),
+            "actions": (
+                "立即联系兽医或动物中毒控制渠道",
+                "就医时尽量带上毒物包装、呕吐物样本与接触时间",
+                "不要自行催吐或乱用药（除非兽医明确指示）",
+            ),
+            "seek_care": (
+                "任何明确毒物暴露 → 尽快/立即就医评估",
+                "出现呼吸困难、抽搐、虚脱 → 急诊",
+            ),
+        },
     ),
     (
         re.compile(r"heart\s*rate|心率|心跳|脉搏", re.I),
-        (
-            "心率会随体型、年龄、紧张与活动状态变化；单次测量需结合整体状态判断。",
-            "若伴虚脱、苍白牙龈、呼吸困难或持续异常，请尽快就医。",
-        ),
+        {
+            "causes": (
+                "心率随体型、年龄、紧张与活动状态变化",
+                "单次偏快/偏慢不一定等于疾病，需结合整体状态",
+            ),
+            "observe": (
+                "测量时是否刚运动/紧张",
+                "是否伴虚脱、苍白牙龈、呼吸困难",
+                "是否持续异常而非短暂波动",
+            ),
+            "actions": (
+                "安静休息后再复测一次心率",
+                "记录数值、时间与当时活动状态",
+                "对照体型参考区间做初步核对（非诊断）",
+            ),
+            "seek_care": (
+                "伴虚脱、苍白牙龈、呼吸困难或持续异常 → 尽快就医",
+            ),
+        },
     ),
     (
         re.compile(
             r"舔脚|舔爪|抓痒|瘙痒|皮肤|dermatitis|pruritus|itch|lick(?:ing)?\s*(?:paw|feet)|skin\s*disorder",
             re.I,
         ),
-        (
-            "可能原因拆解：①寄生虫（跳蚤/螨）②过敏（环境/食物）③细菌或酵母继发感染④趾间异物/创伤⑤潮湿闷热或接触刺激物。",
-            "请先观察并记录：舔的是单脚还是多脚？趾间是否红肿、破皮、渗液、异味？有无脱毛、结痂、跛行？是否季节性或雨天加重？",
-            "非侵入性居家行动：趾间用干净温湿软布/宠物湿巾轻柔擦干擦净；保持足垫干爽（外出潮湿后立即擦干）；室内通风或适度开空调降湿；减少继续舔咬（必要时伊丽莎白圈）；暂时避免刺激性洗澡/新香氛地板清洁剂。",
-            "暂勿自行：不要乱涂人用药膏、激素霜、双氧水或酒精；不要长期泡药液。",
-            "尽快就医：持续加重、破皮出血、明显疼痛/跛行、全身抓痒、精神变差，或居家护理 24–48 小时无改善。",
-        ),
+        {
+            "causes": (
+                "寄生虫（跳蚤/螨）",
+                "过敏（环境/食物）",
+                "细菌或酵母继发感染",
+                "趾间异物/创伤，或潮湿闷热/接触刺激物",
+            ),
+            "observe": (
+                "舔的是单脚还是多脚",
+                "趾间是否红肿、破皮、渗液、异味",
+                "有无脱毛、结痂、跛行；是否季节性或雨天加重",
+            ),
+            "actions": (
+                "趾间用干净温湿软布/宠物湿巾轻柔擦干擦净",
+                "保持足垫干爽（外出潮湿后立即擦干）",
+                "室内通风或适度降湿；必要时伊丽莎白圈减少舔咬",
+                "暂时避免刺激性洗澡/新香氛地板清洁剂",
+                "暂勿乱涂人用药膏、激素霜、双氧水或酒精",
+            ),
+            "seek_care": (
+                "持续加重、破皮出血、明显疼痛/跛行、全身抓痒、精神变差",
+                "居家护理 24–48 小时无改善 → 尽快就医",
+            ),
+        },
     ),
     (
-        re.compile(r"抓耳|舔耳|耳炎|耳朵臭|otitis|otorrhea|ear infection|ear infection", re.I),
-        (
-            "可能原因拆解：①耳道炎症（细菌/酵母）②寄生虫或过敏③异物或耳道结构问题④疼痛导致的反复抓挠。",
-            "请先观察：是否频繁摇头/歪头？耳朵是否红肿、潮湿、异味？是否有黑色分泌物/渗液/抓破出血？精神与食欲是否下降？",
-            "非侵入性居家行动：保持耳朵外侧干爽（不要往耳道灌水/塞棉签）；轻柔擦拭可见污物；减少继续挠抓（必要时伊丽莎白圈）；记录出现时间与是否与洗澡/潮湿季节有关。",
-            "暂勿自行：不要用人用滴耳液/酒精/双氧水自行清洗；不要强行掏耳道深处。",
-            "尽快就医：若疼痛明显、频繁摇头、分泌物增多或出现出血、精神变差，请尽快联系兽医耳科/急诊评估。",
-        ),
+        re.compile(r"抓耳|舔耳|耳炎|耳朵臭|otitis|otorrhea|ear infection", re.I),
+        {
+            "causes": (
+                "耳道炎症（细菌/酵母）",
+                "寄生虫或过敏",
+                "异物或耳道结构问题",
+                "疼痛导致的反复抓挠",
+            ),
+            "observe": (
+                "是否频繁摇头/歪头",
+                "耳朵是否红肿、潮湿、异味",
+                "是否有黑色分泌物/渗液/抓破出血",
+                "精神与食欲是否下降",
+            ),
+            "actions": (
+                "保持耳朵外侧干爽（不要往耳道灌水/塞棉签）",
+                "轻柔擦拭可见污物",
+                "减少继续挠抓（必要时伊丽莎白圈）",
+                "记录出现时间与是否与洗澡/潮湿季节有关",
+                "暂勿用人用滴耳液/酒精/双氧水自行清洗，不要强行掏耳道深处",
+            ),
+            "seek_care": (
+                "疼痛明显、频繁摇头、分泌物增多或出血、精神变差 → 尽快就医",
+            ),
+        },
     ),
     (
         re.compile(r"呕吐|腹泻|digestive|vomit|diarrhea|软便|拉肚子|吐黄水|吐黄", re.I),
-        (
-            "可能原因：饮食不当、感染、寄生虫、异物、胰腺炎或其他系统疾病。",
-            "请先观察：次数、是否混血/胆汁、精神与饮水、是否脱水（牙龈干燥、皮肤回弹慢）。",
-            "短暂轻度可先禁食数小时并观察；持续呕吐、血便、腹胀、精神萎靡或幼龄/老年动物请尽快就医。",
-        ),
+        {
+            "causes": (
+                "饮食不当",
+                "感染或寄生虫",
+                "异物、胰腺炎或其他系统疾病",
+            ),
+            "observe": (
+                "次数、是否混血/胆汁",
+                "精神与饮水情况",
+                "是否脱水（牙龈干燥、皮肤回弹慢）",
+            ),
+            "actions": (
+                "短暂轻度可先禁食数小时并观察",
+                "提供少量清水，记录症状时间线",
+                "暂勿自行给人用止吐/止泻药",
+            ),
+            "seek_care": (
+                "持续呕吐、血便、腹胀、精神萎靡 → 尽快就医",
+                "幼龄/老年动物症状更需尽早评估",
+            ),
+        },
     ),
 )
+
+# Backward-compatible flat bullets derived from structured checklists.
+TOPIC_GUIDANCE_ZH: Tuple[Tuple[re.Pattern, Tuple[str, ...]], ...] = tuple(
+    (
+        pattern,
+        tuple(
+            list(sections.get("causes", ()))
+            + list(sections.get("observe", ()))
+            + list(sections.get("actions", ()))
+            + list(sections.get("seek_care", ()))
+        ),
+    )
+    for pattern, sections in TOPIC_CHECKLISTS_ZH
+)
+
+
+def _match_topic_checklist(question: str) -> Optional[Dict[str, Tuple[str, ...]]]:
+    text = question or ""
+    for pattern, sections in TOPIC_CHECKLISTS_ZH:
+        if pattern.search(text):
+            return sections
+    return None
+
+
+def _default_topic_checklist() -> Dict[str, Tuple[str, ...]]:
+    return {
+        "causes": (
+            "依目前描述尚不足以锁定单一病因，需结合更多症状判断",
+        ),
+        "observe": (
+            "补充更具体症状：部位、持续时间、是否红肿/破皮/跛行",
+            "精神、食欲、饮水是否变化",
+            "是否发热、呕吐、腹泻或呼吸异常",
+        ),
+        "actions": (
+            "先记录症状变化与时间线",
+            "保持安静观察，暂勿自行给人用药",
+            "若有明确外伤/毒物暴露按对应紧急路径处理",
+        ),
+        "seek_care": (
+            "症状持续加重或精神变差 → 尽快就医",
+        ),
+    }
+
+
+def _format_structured_checklist_zh(
+    *,
+    question: str,
+    checklist: Dict[str, Tuple[str, ...]],
+    extra_observe: Optional[List[str]] = None,
+) -> str:
+    """Build GREEN/YELLOW body with fixed section headers."""
+    causes = list(checklist.get("causes") or ())
+    observe = list(checklist.get("observe") or ())
+    actions = list(checklist.get("actions") or ())
+    seek_care = list(checklist.get("seek_care") or ())
+    for line in extra_observe or []:
+        cleaned = line.lstrip("·- ").strip()
+        if cleaned and cleaned not in observe:
+            observe.append(cleaned)
+
+    def _bullets(items: List[str]) -> str:
+        return "\n".join(f"- {item}" for item in items if item)
+
+    return (
+        f"针对「{question}」，建议按下面步骤自我核对：\n\n"
+        "可能原因：\n"
+        f"{_bullets(causes) or '- 暂无法从现有描述锁定原因'}\n\n"
+        "请先观察：\n"
+        f"{_bullets(observe) or '- 补充更具体症状后再评估'}\n\n"
+        "建议行动：\n"
+        f"{_bullets(actions) or '- 先观察并记录变化'}\n\n"
+        "何时就医：\n"
+        f"{_bullets(seek_care) or '- 症状加重请尽快就医'}\n\n"
+        "免责声明：以上仅为信息参考，不能替代执业兽医诊断与治疗。"
+    )
+
+
+def _format_structured_checklist_en(
+    *,
+    question: str,
+    checklist: Dict[str, Tuple[str, ...]],
+    source_bullets: Optional[List[str]] = None,
+) -> str:
+    causes = list(checklist.get("causes") or ())
+    observe = list(checklist.get("observe") or ())
+    actions = list(checklist.get("actions") or ())
+    seek_care = list(checklist.get("seek_care") or ())
+
+    def _bullets(items: List[str]) -> str:
+        return "\n".join(f"- {item}" for item in items if item)
+
+    source_block = ""
+    if source_bullets:
+        source_block = (
+            "\n\nReference snippets:\n" + "\n".join(source_bullets[:3])
+        )
+
+    return (
+        f"For \"{question}\", use this self-check structure:\n\n"
+        "Possible causes:\n"
+        f"{_bullets(causes) or '- Unable to pin a single cause from current description'}\n\n"
+        "Check first:\n"
+        f"{_bullets(observe) or '- Add more specific signs before further triage'}\n\n"
+        "What to do:\n"
+        f"{_bullets(actions) or '- Monitor and document changes'}\n\n"
+        "Seek care when:\n"
+        f"{_bullets(seek_care) or '- Seek veterinary care if worsening'}"
+        f"{source_block}\n\n"
+        "Disclaimer: This is informational guidance only — not a veterinary diagnosis."
+    )
 
 # Best-effort phrase map for short English emergency snippets.
 PHRASE_MAP_ZH: Tuple[Tuple[re.Pattern, str], ...] = (
@@ -941,53 +1176,37 @@ class AnimaRAGPipeline:
         note_zh: str,
         note_en: str,
     ) -> Tuple[str, str]:
-        topic_lines = []
-        for pattern, items in TOPIC_GUIDANCE_ZH:
-            if pattern.search(request.question or ""):
-                topic_lines = [f"· {item}" for item in items]
-                break
+        checklist = _match_topic_checklist(request.question or "") or _default_topic_checklist()
 
-        if not sources and not topic_lines:
-            answer_zh = _format_bilingual_answer(
-                note_zh,
-                "未检索到足够相关的 Merck 参考内容。若症状加重请立即就医。\n"
-                "以上仅为信息参考，不能替代执业兽医诊断与治疗。",
-                lang="zh",
-            )
-            answer_en = _format_bilingual_answer(
-                note_en,
-                "No matching Merck references were retrieved. "
-                "Seek veterinary care if symptoms are worsening.\n"
-                "This is informational guidance only — not a veterinary diagnosis.",
-                lang="en",
-            )
-            return answer_zh, answer_en
+        # Keep numeric/vital reference lines under "请先观察".
+        extra_observe: List[str] = []
+        if sources:
+            for line in _build_chinese_guidance(request, sources):
+                if any(token in line for token in ("参考", "心率", "体温", "CRT", "crt")):
+                    extra_observe.append(line)
 
-        zh_lines = _build_chinese_guidance(request, sources) if sources else []
-        if topic_lines:
-            # Prefer structured topic guidance; keep metric lines if present.
-            metric_lines = [line for line in zh_lines if "参考" in line or "心率" in line or "体温" in line]
-            zh_lines = topic_lines + [line for line in metric_lines if line not in topic_lines]
+        # Mentation chips are judgment signals for non-RED paths too.
+        for symptom in request.symptoms or []:
+            if "精神" in symptom and symptom not in extra_observe:
+                extra_observe.append(f"已识别判断条件：{symptom}")
 
-        if not zh_lines:
-            zh_lines = topic_lines or [
-                "· 请补充更具体症状（部位、持续时间、是否红肿/破皮/跛行）以便进一步分诊。",
-                "· 若持续加重或精神变差，请尽快就医。",
-            ]
-
-        zh_body = (
-            f"针对「{request.question}」，建议按下面步骤自我核对：\n"
-            + "\n".join(zh_lines)
-            + "\n\n以上仅为信息参考，不能替代执业兽医诊断与治疗。"
+        zh_body = _format_structured_checklist_zh(
+            question=request.question or "",
+            checklist=checklist,
+            extra_observe=extra_observe,
         )
         answer_zh = _format_bilingual_answer(note_zh, zh_body, lang="zh")
 
         relevant = [s for s in sources if _source_relevant_to_question(request, s)]
-        bullets = [f"- {source['content']}" for source in (relevant or sources)[:3]]
-        en_body = (
-            f"For \"{request.question}\", review the following guidance:\n"
-            + ("\n".join(bullets) if bullets else "- Monitor closely and seek veterinary care if worsening.")
-            + "\n\nThis is informational guidance only — not a veterinary diagnosis."
+        source_bullets = [
+            f"- {(s.get('content') or '').strip()[:180]}"
+            for s in (relevant or sources)[:3]
+            if (s.get("content") or "").strip()
+        ]
+        en_body = _format_structured_checklist_en(
+            question=request.question or "",
+            checklist=checklist,
+            source_bullets=source_bullets,
         )
         answer_en = _format_bilingual_answer(note_en, en_body, lang="en")
         return answer_zh, answer_en
@@ -1001,10 +1220,23 @@ class AnimaRAGPipeline:
     ) -> Tuple[str, str]:
         context = self._format_context(sources) if sources else "(no matching Merck chunks)"
         topic_hint = ""
-        for pattern, items in TOPIC_GUIDANCE_ZH:
-            if pattern.search(request.question or ""):
-                topic_hint = "\n".join(f"- {item}" for item in items)
-                break
+        checklist = _match_topic_checklist(request.question or "")
+        if checklist:
+            topic_hint = (
+                "Possible causes:\n"
+                + "\n".join(f"- {x}" for x in checklist.get("causes", ()))
+                + "\nCheck first:\n"
+                + "\n".join(f"- {x}" for x in checklist.get("observe", ()))
+                + "\nWhat to do:\n"
+                + "\n".join(f"- {x}" for x in checklist.get("actions", ()))
+                + "\nSeek care when:\n"
+                + "\n".join(f"- {x}" for x in checklist.get("seek_care", ()))
+            )
+        else:
+            for pattern, items in TOPIC_GUIDANCE_ZH:
+                if pattern.search(request.question or ""):
+                    topic_hint = "\n".join(f"- {item}" for item in items)
+                    break
 
         user_prompt = (
             f"Patient question: {request.question}\n"
@@ -1165,7 +1397,7 @@ class AnimaRAGPipeline:
                         for s in extracted_symptoms
                     )
                     mentation_zh = (
-                        "- 目前精神还行（仍须持续观察；迟发症状可能稍后出现）\n"
+                        "- 目前精神还行（重要判断条件：仍须持续观察；迟发症状可能稍后出现）\n"
                         if mentation_ok and not mentation_bad
                         else (
                             "- 目前精神差/变差（加重信号）\n"
@@ -1174,7 +1406,7 @@ class AnimaRAGPipeline:
                         )
                     )
                     mentation_en = (
-                        "- Currently alert/responsive (still monitor; delayed signs may appear later)\n"
+                        "- Currently alert/responsive (key judgment: still monitor; delayed signs may appear later)\n"
                         if mentation_ok and not mentation_bad
                         else (
                             "- Mentation is currently poor/worsening (escalation signal)\n"
@@ -1182,38 +1414,100 @@ class AnimaRAGPipeline:
                             else "- Abnormal mentation (lethargy, collapse, seizures)\n"
                         )
                     )
+
+                    blob = " ".join(
+                        [
+                            request.question or "",
+                            request.chief_complaint or "",
+                            " ".join(extracted_symptoms or []),
+                            observed_str,
+                        ]
+                    )
+                    if re.search(r"巧克力|可可|chocolate|cocoa|theobromine", blob, re.I):
+                        causes_zh = (
+                            "- 巧克力含可可碱（theobromine），对犬猫有毒性\n"
+                            "- 误食后可能出现呕吐、腹泻、心率异常、兴奋或抽搐\n"
+                            "- 体型越小、摄入量相对越大，耐受越差，风险更高\n"
+                        )
+                        causes_en = (
+                            "- Chocolate contains theobromine, which is toxic to dogs/cats\n"
+                            "- Ingestion may cause vomiting, diarrhea, heart-rate changes, agitation, or seizures\n"
+                            "- Smaller animals tolerate less; relative dose drives risk\n"
+                        )
+                        action_extra_zh = "（即使目前精神还行，巧克力中毒也可能迟发）"
+                        action_extra_en = " (even if currently alert — chocolate toxicity can be delayed)"
+                    elif re.search(r"葡萄干|葡萄|grape|raisin", blob, re.I):
+                        causes_zh = (
+                            "- 葡萄/葡萄干可导致犬只急性肾损伤风险\n"
+                            "- 即使当下精神尚可，仍可能迟发呕吐、少尿等表现\n"
+                        )
+                        causes_en = (
+                            "- Grapes/raisins can cause acute kidney injury risk in dogs\n"
+                            "- Even if currently alert, delayed vomiting/oliguria may appear\n"
+                        )
+                        action_extra_zh = "（葡萄毒性可不立即出现）"
+                        action_extra_en = " (grape toxicity may be delayed)"
+                    elif toxic_plant:
+                        causes_zh = (
+                            f"- 疑似 ASPCA 名录有毒植物暴露（识别：{observed_str}）\n"
+                            "- 部分植物对猫犬毒性高，可能造成消化道或器官损伤\n"
+                        )
+                        causes_en = (
+                            f"- Suspected ASPCA-listed toxic plant exposure ({observed_str})\n"
+                            "- Some plants are highly toxic and may cause GI or organ injury\n"
+                        )
+                        action_extra_zh = ""
+                        action_extra_en = ""
+                    else:
+                        causes_zh = (
+                            f"- 疑似毒物暴露（识别：{observed_str}）\n"
+                            "- 不同毒物作用机制不同，可能出现消化道、神经或循环系统表现\n"
+                            "- 即便当下精神还行，部分毒物仍可能迟发\n"
+                        )
+                        causes_en = (
+                            f"- Suspected toxin exposure ({observed_str})\n"
+                            "- Different toxins may affect GI, neurologic, or circulatory systems\n"
+                            "- Even if currently alert, some toxins can be delayed\n"
+                        )
+                        action_extra_zh = ""
+                        action_extra_en = ""
+
                     body_zh = (
                         "可能原因：\n"
-                        f"- {observed_str}\n\n"
+                        f"{causes_zh}\n"
                         "请先观察（已识别的判断条件）：\n"
+                        f"- 已识别暴露：{observed_str}\n"
                         f"{mentation_zh}"
                         "- 是否持续呕吐/流口水\n"
                         "- 是否呼吸困难、喘不上气\n"
                         "- 精神是否从「还行」转为萎靡/抽搐/站立困难\n\n"
                         "建议行动（立刻）：\n"
-                        "- 立即送兽医急诊（即使目前精神还行，巧克力中毒也可能迟发）\n"
+                        f"- 立即送兽医急诊{action_extra_zh}\n"
                         "- 途中稳住气道、呼吸与循环（ABC），保持安静保温\n"
                         "- 尽量带上毒物包装、剩余物或呕吐物样本\n"
                         "- 不要自行催吐/喂药/乱用人用药（除非兽医明确指示）\n\n"
                         "何时就医：\n"
-                        "- 已经达到“红灯”，不要等待任何结果，马上就医。\n\n"
+                        "- 已经达到“红灯”，不要等待任何结果，马上就医。\n"
+                        "- 「精神还行」不代表可以观察等待，仅作为途中监测重点。\n\n"
                         "免责声明：以上仅为信息参考，不能替代执业兽医诊断与治疗。\n"
                     )
                     body_en = (
                         "Possible causes:\n"
-                        f"- {observed_str}\n\n"
+                        f"{causes_en}\n"
                         "First to check (recognized judgment signals):\n"
+                        f"- Recognized exposure: {observed_str}\n"
                         f"{mentation_en}"
                         "- Ongoing vomiting / drooling\n"
                         "- Breathing difficulty\n"
                         "- Mentation changing from OK to lethargy / seizures / collapse\n\n"
                         "What to do now:\n"
-                        "- Seek emergency veterinary care (even if currently alert — chocolate toxicity can be delayed)\n"
+                        f"- Seek emergency veterinary care{action_extra_en}\n"
                         "- Stabilize airway, breathing, and circulation (ABC) in transit\n"
                         "- Bring packaging, remnants, or vomit samples if safe\n"
                         "- Do not induce vomiting or give human medications unless instructed by a veterinarian\n\n"
                         "When to seek care:\n"
-                        "- This is a RED emergency. Go now.\n\n"
+                        "- This is a RED emergency. Go now.\n"
+                        "- Being currently alert does not mean it is safe to wait and watch.\n\n"
                         "Disclaimer: This is informational only — not a veterinary diagnosis.\n"
                     )
                 elif heat_related:

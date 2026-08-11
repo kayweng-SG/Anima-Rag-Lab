@@ -77,8 +77,8 @@ INGESTION_OBJECT_PATTERN = re.compile(
     re.I,
 )
 
-# Common household toxins — escalate like poisoning when mentioned with intake context,
-# or as a clear exposure phrase (chocolate/grape/xylitol are high-risk for pets).
+# Common household toxins — grade by severity signs (not always RED).
+# Exposure alone + alert → YELLOW (urgent advice). Exposure + severe signs → RED.
 TOXIC_FOOD_PATTERNS = (
     (
         re.compile(
@@ -88,7 +88,7 @@ TOXIC_FOOD_PATTERNS = (
             r"\b(chocolate|cocoa|theobromine)\b.{0,24}\b(ate|eaten|ingest\w*|chew\w*|poison)",
             re.I,
         ),
-        "poisoning",
+        "toxic_food_exposure",
         "吃了巧克力",
     ),
     (
@@ -99,7 +99,7 @@ TOXIC_FOOD_PATTERNS = (
             r"\b(grape|raisin)s?\b.{0,24}\b(ate|eaten|ingest\w*|chew\w*|poison)",
             re.I,
         ),
-        "poisoning",
+        "toxic_food_exposure",
         "吃了葡萄/葡萄干",
     ),
     (
@@ -108,7 +108,7 @@ TOXIC_FOOD_PATTERNS = (
             r"\b(ate|eaten|ingest\w*|chew\w*).{0,24}\b(onion|garlic)\b",
             re.I,
         ),
-        "poisoning",
+        "toxic_food_exposure",
         "吃了洋葱/蒜",
     ),
     (
@@ -118,20 +118,47 @@ TOXIC_FOOD_PATTERNS = (
             r"\bxylitol\b",
             re.I,
         ),
-        "poisoning",
+        "toxic_food_exposure",
         "误食木糖醇",
     ),
+)
+
+# Escalate toxic-food exposure to RED when these severity signs are also present.
+TOXIC_FOOD_SEVERE_SIGN_PATTERN = re.compile(
+    r"(呕吐|吐了|抽搐|癫痫|癲癇|虚脱|倒下|站不起来|昏迷|无反应|呼吸困难|喘不过气|"
+    r"精神差|精神变差|精神萎靡|大出血|"
+    r"\bvomit\w*|\bseizure\b|\bcollapse\b|\bunconscious\b|\bletharg\w*|"
+    r"difficulty breathing|respiratory distress)",
+    re.I,
 )
 
 # Owner-reported mentation / energy — important clinical judgment signals (not red flags alone).
 # Prefer longer/more specific phrases first when matching.
 MENTAL_STATUS_PATTERNS: Tuple[Tuple[re.Pattern, str], ...] = (
+    # Mild heat / triage:「仍清醒能走」is a key YELLOW vs RED discriminator.
+    (
+        re.compile(
+            r"(仍|还|還)?\s*(清醒|清楚)\s*[、，,]?\s*(能走|可走|能站|可站|能行走)|"
+            r"神志\s*(清醒|清楚)\s*[、，,]?\s*(能走|可走|能站|可站)"
+        ),
+        "仍清醒能走",
+    ),
+    # Alert mentation alone (do not also fire when the compound above already matched).
+    (
+        re.compile(
+            r"(仍|还|還)\s*(清醒|清楚)(?!\s*(能走|可走|能站|可站))|"
+            r"神志\s*(清醒|清楚)(?!\s*(能走|可走|能站|可站))|"
+            r"意识\s*清醒"
+        ),
+        "仍清醒",
+    ),
     (re.compile(r"精神\s*(还行|還行|尚可|还可以|還可以|不错|不錯|很好|正常|OK|ok)"), "精神还行"),
     (re.compile(r"精神\s*(萎靡|很差|不好|差|差|不佳|不好)"), "精神差"),
     (re.compile(r"精神\s*(变差|變差|变差了|變差了)"), "精神变差"),
     (
         re.compile(
-            r"\b(alert|responsive|still\s+ok|doing\s+ok|acting\s+normal|normal\s+energy)\b",
+            r"\b(alert|responsive|still\s+ok|doing\s+ok|acting\s+normal|normal\s+energy|"
+            r"still\s+alert|can\s+still\s+walk|able\s+to\s+walk|ambulatory)\b",
             re.I,
         ),
         "精神还行",
@@ -192,8 +219,17 @@ def extract_symptom_keywords(*texts: str) -> List[str]:
             _add(f"ate {obj}")
 
     for pattern, label in MENTAL_STATUS_PATTERNS:
-        if pattern.search(blob):
-            _add(label)
+        if not pattern.search(blob):
+            continue
+        # Prefer the more specific mentation chip when both would match.
+        if any(label != existing and label in existing for existing in found):
+            continue
+        if any(existing != label and existing in label for existing in found):
+            # Replace shorter with longer (e.g. 仍清醒 → 仍清醒能走).
+            found[:] = [e for e in found if not (e != label and e in label)]
+            seen.clear()
+            seen.update(e.casefold() for e in found)
+        _add(label)
 
     for pattern in _EXTRACTION_PATTERNS:
         for match in pattern.finditer(blob):
@@ -667,13 +703,25 @@ class RedLightIntercept:
             if pattern.search(text):
                 if label not in matched_flags:
                     matched_flags.append(label)
-                # Avoid duplicate poisoning alerts if already matched via CRITICAL.
-                if not any(a.code == code and a.observed == label for a in alerts):
+                # Exposure alone → YELLOW; exposure + severe clinical signs → RED.
+                severe = bool(TOXIC_FOOD_SEVERE_SIGN_PATTERN.search(text))
+                if severe:
+                    severity = TriageStatus.RED
+                    alert_code = "poisoning"
+                    message = f"Toxic food exposure with severe signs: '{label}'"
+                else:
+                    severity = TriageStatus.YELLOW
+                    alert_code = code  # toxic_food_exposure
+                    message = (
+                        f"Toxic food exposure without severe signs yet: '{label}'. "
+                        "Seek veterinary advice soon; monitor for delayed signs."
+                    )
+                if not any(a.code in {"poisoning", code} and a.observed == label for a in alerts):
                     alerts.append(
                         TriageAlert(
-                            severity=TriageStatus.RED,
-                            code=code,
-                            message=f"Critical toxin exposure detected: '{label}'",
+                            severity=severity,
+                            code=alert_code,
+                            message=message,
                             observed=label,
                         )
                     )
@@ -927,6 +975,17 @@ class RedLightIntercept:
                 "Stabilize ABC (airway, breathing, circulation) and transport to clinic now.",
             )
         if status == TriageStatus.YELLOW:
+            if "toxic_food_exposure" in codes:
+                return (
+                    "YELLOW — 疑似误食有毒食物：尽快联系兽医评估剂量与处置；"
+                    "即使目前精神还行也需密切观察（症状可能迟发）。"
+                    "出现呕吐、抽搐、虚脱、呼吸困难或精神变差 → 立即升级为 RED 送急诊。"
+                    "可继续查看知识库建议。",
+                    "YELLOW — Suspected toxic food exposure: contact a veterinarian soon about dose "
+                    "and next steps. Monitor closely even if currently alert (signs can be delayed). "
+                    "Escalate to RED emergency if vomiting, seizure, collapse, breathing trouble, "
+                    "or mentation worsens. Knowledge-base advice may follow.",
+                )
             if heat_related and not poison_related:
                 return (
                     "YELLOW — 疑似轻/中度热应激：先自行确认（体温、神志、是否虚脱）。"
