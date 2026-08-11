@@ -114,6 +114,16 @@ TOPIC_GUIDANCE_ZH: Tuple[Tuple[re.Pattern, Tuple[str, ...]], ...] = (
         ),
     ),
     (
+        re.compile(r"抓耳|舔耳|耳炎|耳朵臭|otitis|otorrhea|ear infection|ear infection", re.I),
+        (
+            "可能原因拆解：①耳道炎症（细菌/酵母）②寄生虫或过敏③异物或耳道结构问题④疼痛导致的反复抓挠。",
+            "请先观察：是否频繁摇头/歪头？耳朵是否红肿、潮湿、异味？是否有黑色分泌物/渗液/抓破出血？精神与食欲是否下降？",
+            "非侵入性居家行动：保持耳朵外侧干爽（不要往耳道灌水/塞棉签）；轻柔擦拭可见污物；减少继续挠抓（必要时伊丽莎白圈）；记录出现时间与是否与洗澡/潮湿季节有关。",
+            "暂勿自行：不要用人用滴耳液/酒精/双氧水自行清洗；不要强行掏耳道深处。",
+            "尽快就医：若疼痛明显、频繁摇头、分泌物增多或出现出血、精神变差，请尽快联系兽医耳科/急诊评估。",
+        ),
+    ),
+    (
         re.compile(r"呕吐|腹泻|digestive|vomit|diarrhea|软便|拉肚子|吐黄水|吐黄", re.I),
         (
             "可能原因：饮食不当、感染、寄生虫、异物、胰腺炎或其他系统疾病。",
@@ -517,6 +527,11 @@ QUERY_EXPANSIONS = (
         ("paragraph", "triage_indicator"),
     ),
     (
+        re.compile(r"抓耳|舔耳|耳炎|耳朵臭|otitis|otorrhea|ear infection", re.I),
+        "otitis otorrhea ear infection yeast infection ear discharge head shaking itching",
+        ("paragraph", "triage_indicator"),
+    ),
+    (
         re.compile(r"呕吐|腹泻|digestive|vomit|diarrhea|软便|拉肚子|吐黄水|吐黄", re.I),
         "vomiting diarrhea digestive gastroenteritis dehydration bilious bile",
         ("paragraph",),
@@ -583,6 +598,18 @@ def _load_complaint_clinical_map(
 
 _COMPLAINT_PATTERNS = _load_complaint_clinical_map()
 
+# Order matters for matching priority.
+# Example: "一直抓耳朵" contains substring "一直抓", which would otherwise
+# match a generic skin/itch pattern first and fill the term budget before
+# the more specific "抓耳朵" ear-infection mapping can take effect.
+#
+# Sort by phrase_norm length (desc) so more specific phrases are matched first.
+_COMPLAINT_PATTERNS = sorted(
+    _COMPLAINT_PATTERNS,
+    key=lambda e: len((e.get("phrase_norm") or e.get("phrase") or "")),
+    reverse=True,
+)
+
 
 def expand_complaint_to_clinical(text: str, limit: int = 8) -> List[str]:
     """Map owner free-text phrases to clinical retrieval terms."""
@@ -615,7 +642,31 @@ def expand_complaint_to_clinical(text: str, limit: int = 8) -> List[str]:
                 seen.add(key)
                 terms.append(term.strip())
                 if len(terms) >= limit:
-                    return terms
+                    # Do not return early; we still need conflict-resolution
+                    # logic below (ear vs skin/itch) to run.
+                    break
+        if len(terms) >= limit:
+            break
+
+    # If ear infection terms are present, prefer them over generic skin/flea
+    # itching terms to avoid retrieval dominated by "flea allergy dermatitis"
+    # when the owner message contains both "一直抓" and "抓耳朵".
+    ear_terms = {"otitis", "otorrhea", "ear infection"}
+    skin_confusers = {
+        "pruritus",
+        "pododermatitis",
+        "dermatitis",
+        "alopecia",
+        "allergy",
+        "fleas",
+        "flea",
+    }
+
+    terms_ci = {t.casefold().strip(): t for t in terms}
+    if any(t in ear_terms for t in terms_ci.keys()):
+        allowed = set(ear_terms) | {"yeast", "yeast infection"}
+        terms = [t for t in terms if t.casefold().strip() in allowed]
+
     return terms
 
 
@@ -710,8 +761,39 @@ class AnimaRAGPipeline:
             if key and key not in seen:
                 seen.add(key)
                 merged.append(phrase.strip())
+
+        # Symptom conflict resolution (UX):
+        # If we see ear-infection terms, prefer them over generic skin/flea itching.
+        # This prevents cases like "一直抓耳朵" from showing "fleas" first.
+        # UX-only conflict resolution:
+        # Filter the *display* symptoms list, but keep request.symptoms
+        # unchanged so retrieval/answer content doesn't get overly simplified.
+        ear_terms = {"otitis", "otorrhea", "ear infection"}
+        skin_confusers = {
+            "pruritus",
+            "pododermatitis",
+            "dermatitis",
+            "alopecia",
+            "allergy",
+            "fleas",
+            "flea",
+        }
+        merged_display = list(merged)
+        merged_ci = {m.casefold().strip(): m for m in merged_display}
+        if any(k in ear_terms for k in merged_ci.keys()):
+            filtered = [
+                m
+                for m in merged_display
+                if m.casefold().strip() not in skin_confusers
+            ]
+            # Put ear terms first.
+            filtered.sort(
+                key=lambda x: 0 if x.casefold().strip() in ear_terms else 1,
+            )
+            merged_display = filtered
+
         request.symptoms = merged
-        return merged
+        return merged_display
 
     def _build_patient(self, request: RAGQueryRequest) -> Optional[PatientVitals]:
         if not any(
@@ -1039,17 +1121,251 @@ class AnimaRAGPipeline:
             recommendation_en = note_en
             if red_light_result.intercept:
                 elapsed_ms = (time.perf_counter() - start) * 1000
-                answer_zh = _format_bilingual_answer(
-                    note_zh,
-                    "请立即送兽医急诊，途中注意稳住气道、呼吸与循环。不要等待 AI 建议。",
-                    lang="zh",
+
+                # Structured RED checklist (so App UI can show check + actions).
+                # Keep content safety-first and never assume diagnosis.
+                alert_codes = {a.code for a in (red_light_result.alerts or [])}
+                alert_observed = [
+                    str(getattr(a, "observed", "")).strip()
+                    for a in (red_light_result.alerts or [])
+                    if getattr(a, "observed", None)
+                ]
+                observed_str = "、".join([s for s in alert_observed if s]) or "疑似风险信号"
+
+                poison_related = bool(
+                    alert_codes
+                    & {"poisoning", "aspca_toxic_plant", "snakebite"}
                 )
-                answer_en = _format_bilingual_answer(
-                    note_en,
-                    "Seek emergency veterinary care now. Stabilize ABC while transporting. "
-                    "Do not wait for AI advice.",
-                    lang="en",
+                heat_related = bool(
+                    alert_codes
+                    & {
+                        "heat_stroke_severe",
+                        "heat_stress_mild_moderate",
+                        "heat_self_assessment",
+                        "hyperthermia_critical",
+                        "hyperthermia_critical_c",
+                        "hyperthermia_moderate",
+                        "hyperthermia_moderate_c",
+                    }
                 )
+                seizure_related = bool(
+                    "seizure" in alert_codes or "critical_consciousness" in alert_codes
+                )
+                airway_related = bool("respiratory_distress" in alert_codes)
+                bleed_related = bool("severe_bleeding" in alert_codes)
+                toxic_plant = bool("aspca_toxic_plant" in alert_codes)
+
+                if poison_related or toxic_plant:
+                    mentation_ok = any(
+                        "精神还行" in s or "精神很好" in s or "精神正常" in s
+                        for s in extracted_symptoms
+                    )
+                    mentation_bad = any(
+                        "精神差" in s or "精神变差" in s or "精神萎靡" in s
+                        for s in extracted_symptoms
+                    )
+                    mentation_zh = (
+                        "- 目前精神还行（仍须持续观察；迟发症状可能稍后出现）\n"
+                        if mentation_ok and not mentation_bad
+                        else (
+                            "- 目前精神差/变差（加重信号）\n"
+                            if mentation_bad
+                            else "- 是否精神状态异常（嗜睡、抽搐、站立困难）\n"
+                        )
+                    )
+                    mentation_en = (
+                        "- Currently alert/responsive (still monitor; delayed signs may appear later)\n"
+                        if mentation_ok and not mentation_bad
+                        else (
+                            "- Mentation is currently poor/worsening (escalation signal)\n"
+                            if mentation_bad
+                            else "- Abnormal mentation (lethargy, collapse, seizures)\n"
+                        )
+                    )
+                    body_zh = (
+                        "可能原因：\n"
+                        f"- {observed_str}\n\n"
+                        "请先观察（已识别的判断条件）：\n"
+                        f"{mentation_zh}"
+                        "- 是否持续呕吐/流口水\n"
+                        "- 是否呼吸困难、喘不上气\n"
+                        "- 精神是否从「还行」转为萎靡/抽搐/站立困难\n\n"
+                        "建议行动（立刻）：\n"
+                        "- 立即送兽医急诊（即使目前精神还行，巧克力中毒也可能迟发）\n"
+                        "- 途中稳住气道、呼吸与循环（ABC），保持安静保温\n"
+                        "- 尽量带上毒物包装、剩余物或呕吐物样本\n"
+                        "- 不要自行催吐/喂药/乱用人用药（除非兽医明确指示）\n\n"
+                        "何时就医：\n"
+                        "- 已经达到“红灯”，不要等待任何结果，马上就医。\n\n"
+                        "免责声明：以上仅为信息参考，不能替代执业兽医诊断与治疗。\n"
+                    )
+                    body_en = (
+                        "Possible causes:\n"
+                        f"- {observed_str}\n\n"
+                        "First to check (recognized judgment signals):\n"
+                        f"{mentation_en}"
+                        "- Ongoing vomiting / drooling\n"
+                        "- Breathing difficulty\n"
+                        "- Mentation changing from OK to lethargy / seizures / collapse\n\n"
+                        "What to do now:\n"
+                        "- Seek emergency veterinary care (even if currently alert — chocolate toxicity can be delayed)\n"
+                        "- Stabilize airway, breathing, and circulation (ABC) in transit\n"
+                        "- Bring packaging, remnants, or vomit samples if safe\n"
+                        "- Do not induce vomiting or give human medications unless instructed by a veterinarian\n\n"
+                        "When to seek care:\n"
+                        "- This is a RED emergency. Go now.\n\n"
+                        "Disclaimer: This is informational only — not a veterinary diagnosis.\n"
+                    )
+                elif heat_related:
+                    body_zh = (
+                        "可能原因：\n"
+                        "- 重度中暑/严重过热\n\n"
+                        "请先观察：\n"
+                        "- 体温是否很高（≥104°F / ≥40°C）\n"
+                        "- 是否虚脱、意识改变、抽搐\n\n"
+                        "建议行动（立刻）：\n"
+                        "- 立即送兽医急诊\n"
+                        "- 移至阴凉通风处，用室温水打湿身体并加强通风\n"
+                        "- 不要强灌冰水（避免反效果）\n\n"
+                        "何时就医：\n"
+                        "- 出现虚脱/意识改变/抽搐或体温≥104°F → 立即就医。\n\n"
+                        "免责声明：以上仅为信息参考，不能替代执业兽医诊断与治疗。\n"
+                    )
+                    body_en = (
+                        "Possible cause:\n"
+                        "- Severe heat stroke / critical hyperthermia\n\n"
+                        "First to check:\n"
+                        "- Very high temperature (≥104°F / ≥40°C)\n"
+                        "- Collapse, altered consciousness, seizures\n\n"
+                        "What to do now:\n"
+                        "- Seek emergency veterinary care\n"
+                        "- Move to shade; wet with room-temperature water; increase airflow\n"
+                        "- Do not force ice-cold water\n\n"
+                        "When to seek care:\n"
+                        "- If collapse/altered consciousness/seizures or temp ≥104°F → go now.\n\n"
+                        "Disclaimer: This is informational only — not a veterinary diagnosis.\n"
+                    )
+                elif seizure_related:
+                    body_zh = (
+                        "可能原因：\n"
+                        "- 抽搐/意识改变\n\n"
+                        "请先观察：\n"
+                        "- 抽搐持续时间\n"
+                        "- 是否意识丧失或站立困难\n\n"
+                        "建议行动（立刻）：\n"
+                        "- 立即送兽医急诊\n"
+                        "- 保护周围避免二次伤害\n"
+                        "- 不要强塞物品入口/不要强行喂水\n\n"
+                        "何时就医：\n"
+                        "- 正在抽搐或意识异常 → 立即就医。\n\n"
+                        "免责声明：以上仅为信息参考，不能替代执业兽医诊断与治疗。\n"
+                    )
+                    body_en = (
+                        "Possible cause:\n"
+                        "- Seizure / altered consciousness\n\n"
+                        "First to check:\n"
+                        "- Seizure duration\n"
+                        "- Whether consciousness is altered\n\n"
+                        "What to do now:\n"
+                        "- Seek emergency veterinary care\n"
+                        "- Protect from injury\n"
+                        "- Do not put objects in the mouth; do not force water/food\n\n"
+                        "When to seek care:\n"
+                        "- Any ongoing seizure or altered mentation → go now.\n\n"
+                        "Disclaimer: This is informational only — not a veterinary diagnosis.\n"
+                    )
+                elif airway_related:
+                    body_zh = (
+                        "可能原因：\n"
+                        "- 呼吸窘迫\n\n"
+                        "请先观察：\n"
+                        "- 是否明显喘不上气\n"
+                        "- 是否口鼻发绀/呼吸急促\n\n"
+                        "建议行动（立刻）：\n"
+                        "- 立即送兽医急诊\n"
+                        "- 保持气道通畅，避免强行喂食/喂水\n"
+                        "- 途中保持安静、稳住呼吸\n\n"
+                        "何时就医：\n"
+                        "- 出现呼吸窘迫 → 立即就医。\n\n"
+                        "免责声明：以上仅为信息参考，不能替代执业兽医诊断与治疗。\n"
+                    )
+                    body_en = (
+                        "Possible cause:\n"
+                        "- Respiratory distress\n\n"
+                        "First to check:\n"
+                        "- Struggling to breathe\n"
+                        "- Blue/gray gums or rapid breathing\n\n"
+                        "What to do now:\n"
+                        "- Seek emergency veterinary care\n"
+                        "- Keep the airway clear; do not force food/water\n"
+                        "- Keep the patient calm during transport\n\n"
+                        "When to seek care:\n"
+                        "- Any respiratory distress → go now.\n\n"
+                        "Disclaimer: This is informational only — not a veterinary diagnosis.\n"
+                    )
+                elif bleed_related:
+                    body_zh = (
+                        "可能原因：\n"
+                        "- 严重出血\n\n"
+                        "请先观察：\n"
+                        "- 出血量与持续时间\n"
+                        "- 是否虚弱/牙龈苍白\n\n"
+                        "建议行动（立刻）：\n"
+                        "- 立即送兽医急诊\n"
+                        "- 可用干净敷料轻压止血\n"
+                        "- 途中保温、减少移动\n\n"
+                        "何时就医：\n"
+                        "- 严重出血 → 立即就医。\n\n"
+                        "免责声明：以上仅为信息参考，不能替代执业兽医诊断与治疗。\n"
+                    )
+                    body_en = (
+                        "Possible cause:\n"
+                        "- Severe bleeding\n\n"
+                        "First to check:\n"
+                        "- Amount and duration of bleeding\n"
+                        "- Weakness or pale gums\n\n"
+                        "What to do now:\n"
+                        "- Seek emergency veterinary care\n"
+                        "- Apply gentle pressure with a clean dressing\n"
+                        "- Keep warm and minimize movement\n\n"
+                        "When to seek care:\n"
+                        "- Severe bleeding → go now.\n\n"
+                        "Disclaimer: This is informational only — not a veterinary diagnosis.\n"
+                    )
+                else:
+                    # Generic RED emergency checklist.
+                    body_zh = (
+                        "可能原因：\n"
+                        f"- {observed_str}\n\n"
+                        "请先观察：\n"
+                        "- 精神状态是否异常\n"
+                        "- 是否呼吸/循环不稳定\n\n"
+                        "建议行动（立刻）：\n"
+                        "- 立即送兽医急诊\n"
+                        "- 途中稳住气道、呼吸与循环（ABC）\n"
+                        "- 保持安静保温，不要等待 AI 建议\n\n"
+                        "何时就医：\n"
+                        "- 已达到红灯，马上就医。\n\n"
+                        "免责声明：以上仅为信息参考，不能替代执业兽医诊断与治疗。\n"
+                    )
+                    body_en = (
+                        "Possible cause:\n"
+                        f"- {observed_str}\n\n"
+                        "First to check:\n"
+                        "- Abnormal mentation\n"
+                        "- Breathing/circulation instability\n\n"
+                        "What to do now:\n"
+                        "- Seek emergency veterinary care\n"
+                        "- Stabilize ABC while transporting\n"
+                        "- Keep calm; do not wait for AI advice\n\n"
+                        "When to seek care:\n"
+                        "- This is RED. Go now.\n\n"
+                        "Disclaimer: This is informational only — not a veterinary diagnosis.\n"
+                    )
+
+                answer_zh = _format_bilingual_answer(note_zh, body_zh, lang="zh")
+                answer_en = _format_bilingual_answer(note_en, body_en, lang="en")
+
                 return RAGQueryResponse(
                     answer=answer_zh,
                     answer_zh=answer_zh,

@@ -123,6 +123,28 @@ TOXIC_FOOD_PATTERNS = (
     ),
 )
 
+# Owner-reported mentation / energy — important clinical judgment signals (not red flags alone).
+# Prefer longer/more specific phrases first when matching.
+MENTAL_STATUS_PATTERNS: Tuple[Tuple[re.Pattern, str], ...] = (
+    (re.compile(r"精神\s*(还行|還行|尚可|还可以|還可以|不错|不錯|很好|正常|OK|ok)"), "精神还行"),
+    (re.compile(r"精神\s*(萎靡|很差|不好|差|差|不佳|不好)"), "精神差"),
+    (re.compile(r"精神\s*(变差|變差|变差了|變差了)"), "精神变差"),
+    (
+        re.compile(
+            r"\b(alert|responsive|still\s+ok|doing\s+ok|acting\s+normal|normal\s+energy)\b",
+            re.I,
+        ),
+        "精神还行",
+    ),
+    (
+        re.compile(
+            r"\b(lethargic|lethargy|depressed|listless|weak\s+and\s+quiet|not\s+himself|not\s+herself)\b",
+            re.I,
+        ),
+        "精神差",
+    ),
+)
+
 # Patterns used to extract symptom keywords from free-text descriptions (no user keyword field).
 # NOTE: bare ingestion cues like "吃了" are NOT listed — use INGESTION_OBJECT_PATTERN instead.
 _EXTRACTION_PATTERNS = (
@@ -168,6 +190,10 @@ def extract_symptom_keywords(*texts: str) -> List[str]:
             _add(f"吃了{obj}")
         else:
             _add(f"ate {obj}")
+
+    for pattern, label in MENTAL_STATUS_PATTERNS:
+        if pattern.search(blob):
+            _add(label)
 
     for pattern in _EXTRACTION_PATTERNS:
         for match in pattern.finditer(blob):

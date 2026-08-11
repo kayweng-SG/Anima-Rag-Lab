@@ -148,6 +148,9 @@ def test_extract_symptom_keywords_from_description(red_light_mod):
     assert any("巧克力" in item for item in chocolate)
     assert "吃了" not in chocolate  # bare ingestion verb must not be the chip
 
+    chocolate_ok = extract("小狗吃了巧克力，精神还行，有点担心。")
+    assert any("巧克力" in item for item in chocolate_ok)
+    assert any("精神还行" in item for item in chocolate_ok)
 
 def test_chocolate_ingestion_is_red(red_light_mod, red_light):
     PatientVitals = red_light_mod.PatientVitals

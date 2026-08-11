@@ -211,8 +211,8 @@
         "intercepted": true,
         "max_sources": 0,
         "model_used": "red_light_intercept",
-        "answer_zh_must_contain_any": ["急诊", "中毒"],
-        "extracted_symptoms_must_contain_any": ["巧克力"],
+        "answer_zh_must_contain_any": ["急诊", "中毒", "精神还行"],
+        "extracted_symptoms_must_contain_any": ["巧克力", "精神还行"],
         "extracted_symptoms_must_not_contain_any": ["吃了"],
         "max_elapsed_ms": 500
       }
@@ -280,6 +280,26 @@
           "diarrhea",
           "nausea"
         ],
+        "max_elapsed_ms": 8000
+      }
+    }
+    ,
+    {
+      "id": "ear_grab_should_map_to_otitis",
+      "group": "ear_infections",
+      "description": "Phrase containing both '一直抓' and '抓耳朵' should prioritize otitis/ear infection terms",
+      "request": {
+        "question": "一直抓耳朵",
+        "species": "dog",
+        "size": "small"
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "sources_content_must_match_any": ["otitis", "ear infection", "otorrhea"],
+        "extracted_symptoms_must_contain_any": ["otitis", "ear infection"],
+        "extracted_symptoms_must_not_contain_any": ["fleas"],
         "max_elapsed_ms": 8000
       }
     }
