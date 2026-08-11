@@ -1,0 +1,8 @@
+{
+  "generated_at": "2026-08-10T22:27:46.427598+00:00",
+  "embedder": "sentence_transformers:paraphrase-multilingual-MiniLM-L12-v2",
+  "dimension": 384,
+  "vector_count": 13572,
+  "build_elapsed_ms": 18497.98,
+  "source_chunks_file": "merck_emergencies_chunks.json"
+}

@@ -1,0 +1,306 @@
+complaint,aliases,clinical_terms,condition,lang,source
+吐黄水,吐黄色的水 | 吐黄沫 | vomit yellow water | yellow vomit | bile vomit,bilious vomiting | bile | gastroenteritis | empty stomach vomiting,Digestive Issues,zh,curated_bilingual
+拉肚子,软便 | 腹泻 | 水便 | diarrhea | loose stool | runny poop,diarrhea | gastroenteritis | enteritis | dehydration,Digestive Issues,zh,curated_bilingual
+呕吐,一直吐 | 吐了好几次 | vomiting | throwing up,vomiting | emesis | gastroenteritis,Digestive Issues,zh,curated_bilingual
+便血,拉血 | 大便带血 | bloody stool | blood in stool,hematochezia | gastrointestinal bleeding | colitis,Digestive Issues,zh,curated_bilingual
+一直舔脚,舔爪子 | 咬脚 | lick paws | chewing feet | itchy paws,pruritus | pododermatitis | allergy | dermatitis | yeast infection,Skin Irritations,zh,curated_bilingual
+抓痒,一直抓 | 皮肤痒 | 脱毛 | itchy | scratching | hair loss,pruritus | alopecia | dermatitis | allergy | fleas,Skin Irritations,zh,curated_bilingual
+耳朵臭,甩头 | 抓耳朵 | 耳垢多 | ear smell | shaking head | ear scratch,otitis | otorrhea | ear infection | yeast,Ear Infections,zh,curated_bilingual
+走路瘸,跛行 | 不敢踩 | 腿痛 | limping | lameness | won't put weight,lameness | musculoskeletal pain | arthritis | trauma,Mobility Problems,zh,curated_bilingual
+有虫子,绦虫 | 蛔虫 | 跳蚤 | worms | fleas | seeing worms in stool,parasite | helminth | flea | deworming,Parasites,zh,curated_bilingual
+不吃东西,没食欲 | 厌食 | not eating | won't eat | loss of appetite,anorexia | inappetence | systemic illness,Digestive Issues,zh,curated_bilingual
+喘不过气,呼吸困难 | 喘气很重 | can't breathe | labored breathing | gasping,dyspnea | respiratory distress | tachypnea,Respiratory,zh,curated_bilingual
+抽搐,癫痫发作 | 痉挛 | seizure | convulsing | fitting,seizure | epilepsy | neurologic emergency,Neurologic,zh,curated_bilingual
+Digestive Issues,digestive issues,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+diarrhea,,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+vomiting,,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+vomits,,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+vomit,,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+cough,,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+not eating,,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+won't eat,,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+worm,,vomiting | diarrhea | obstruction | giardia | dehydration | anorexia | gastroenteritis | lethargy | hematochezia | hematemesis | infection | parasite,Digestive Issues,en,huggingface:karenwky/pet-health-symptoms-dataset
+Ear Infections,ear infections,otitis | infection | inflammation | paralysis | ataxia | abscess | trauma | fever | lethargy | anorexia,Ear Infections,en,huggingface:karenwky/pet-health-symptoms-dataset
+ear infection,,otitis | infection | inflammation | paralysis | ataxia | abscess | trauma | fever | lethargy | anorexia,Ear Infections,en,huggingface:karenwky/pet-health-symptoms-dataset
+scratching,,otitis | infection | inflammation | paralysis | ataxia | abscess | trauma | fever | lethargy | anorexia,Ear Infections,en,huggingface:karenwky/pet-health-symptoms-dataset
+scratches,,otitis | infection | inflammation | paralysis | ataxia | abscess | trauma | fever | lethargy | anorexia,Ear Infections,en,huggingface:karenwky/pet-health-symptoms-dataset
+hair loss,,otitis | infection | inflammation | paralysis | ataxia | abscess | trauma | fever | lethargy | anorexia,Ear Infections,en,huggingface:karenwky/pet-health-symptoms-dataset
+ear discharge,,otitis | infection | inflammation | paralysis | ataxia | abscess | trauma | fever | lethargy | anorexia,Ear Infections,en,huggingface:karenwky/pet-health-symptoms-dataset
+shaking its head,,otitis | infection | inflammation | paralysis | ataxia | abscess | trauma | fever | lethargy | anorexia,Ear Infections,en,huggingface:karenwky/pet-health-symptoms-dataset
+Mobility Problems,mobility problems,lameness | dysplasia | paresis | ataxia | fracture | fever | arthritis | infection | inflammation | lethargy | tick | paralysis,Mobility Problems,en,huggingface:karenwky/pet-health-symptoms-dataset
+limp,,lameness | dysplasia | paresis | ataxia | fracture | fever | arthritis | infection | inflammation | lethargy | tick | paralysis,Mobility Problems,en,huggingface:karenwky/pet-health-symptoms-dataset
+limping,,lameness | dysplasia | paresis | ataxia | fracture | fever | arthritis | infection | inflammation | lethargy | tick | paralysis,Mobility Problems,en,huggingface:karenwky/pet-health-symptoms-dataset
+lameness,,lameness | dysplasia | paresis | ataxia | fracture | fever | arthritis | infection | inflammation | lethargy | tick | paralysis,Mobility Problems,en,huggingface:karenwky/pet-health-symptoms-dataset
+scratching,,lameness | dysplasia | paresis | ataxia | fracture | fever | arthritis | infection | inflammation | lethargy | tick | paralysis,Mobility Problems,en,huggingface:karenwky/pet-health-symptoms-dataset
+not eating,,lameness | dysplasia | paresis | ataxia | fracture | fever | arthritis | infection | inflammation | lethargy | tick | paralysis,Mobility Problems,en,huggingface:karenwky/pet-health-symptoms-dataset
+Parasites,parasites,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+fleas,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+flea,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+scratching,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+itchy,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+diarrhea,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+worms,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+worm,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+hair loss,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+itching,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+shaking its head,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+coughing,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+vomit,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+cough,,flea | parasite | tick | infection | giardia | coccidia | mange | pruritus | hookworm | mite | anemia | roundworm,Parasites,en,huggingface:karenwky/pet-health-symptoms-dataset
+Skin Irritations,skin irritations,dermatitis | alopecia | pruritus | pyoderma | infection | flea | trauma | inflammation | mange | otitis,Skin Irritations,en,huggingface:karenwky/pet-health-symptoms-dataset
+hair loss,,dermatitis | alopecia | pruritus | pyoderma | infection | flea | trauma | inflammation | mange | otitis,Skin Irritations,en,huggingface:karenwky/pet-health-symptoms-dataset
+scratching,,dermatitis | alopecia | pruritus | pyoderma | infection | flea | trauma | inflammation | mange | otitis,Skin Irritations,en,huggingface:karenwky/pet-health-symptoms-dataset
+itchy,,dermatitis | alopecia | pruritus | pyoderma | infection | flea | trauma | inflammation | mange | otitis,Skin Irritations,en,huggingface:karenwky/pet-health-symptoms-dataset
+itching,,dermatitis | alopecia | pruritus | pyoderma | infection | flea | trauma | inflammation | mange | otitis,Skin Irritations,en,huggingface:karenwky/pet-health-symptoms-dataset
+flea,,dermatitis | alopecia | pruritus | pyoderma | infection | flea | trauma | inflammation | mange | otitis,Skin Irritations,en,huggingface:karenwky/pet-health-symptoms-dataset
+scratches,,dermatitis | alopecia | pruritus | pyoderma | infection | flea | trauma | inflammation | mange | otitis,Skin Irritations,en,huggingface:karenwky/pet-health-symptoms-dataset
+fever,,fever | diarrhea | coughing | weight loss | depression | lethargy | loss of appetite | pain | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+weight loss,,weight loss | diarrhea | fever | vomiting | coughing | pain | anorexia | loss of appetite | lethargy,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+diarrhea,,diarrhea | fever | weight loss | vomiting | coughing | pain | dehydration | lethargy | loss of appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+vomiting,,vomiting | diarrhea | weight loss | fever | dehydration | anorexia | pain | lethargy | loss of appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no redness,,no redness | normal eating | no swelling | no pain | normal walking | normal grooming | normal drinking | normal coat | normal play,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lethargy,,lethargy | fever | coughing | diarrhea | weight loss | sneezing | vomiting | anorexia | nasal discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no swelling,,no swelling | normal eating | no redness | normal walking | normal movement | normal appetite | normal coat | minor skin irritation | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+coughing,,coughing | fever | weight loss | diarrhea | lethargy | sneezing | dyspnea | anorexia | difficulty in breathing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal eating,,normal eating | no redness | no swelling | normal drinking | no pain | normal movement | normal grooming | no discharge | normal play,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no pain,,no pain | normal eating | no redness | normal drinking | normal play | no aggression | normal appetite | normal sleep | minor change in behavior,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal appetite,,normal appetite | no swelling | no redness | normal sleep | no aggression | minor change in behavior | no pain | minor skin irritation | normal coat,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal play,,normal play | normal eating | no redness | no pain | minor swelling at vaccination site | no discharge | minor sneezing | normal grooming | normal urination,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+loss of  appetite,,loss of  appetite | weight loss | fever | lameness | coughing | vomiting | short term lethargy | rapid heart rate | week pulse,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+pain,,pain | fever | diarrhea | weight loss | vomiting | lethargy | swelling | pneumonia | nasal discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal drinking,,normal drinking | normal eating | no redness | no pain | minor change in eating habits | no vomiting | no diarrhea | normal weight | no fever,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal grooming,,normal grooming | normal eating | no redness | normal drinking | seasonal shedding | minor dandruff | no itching | normal coat | normal activity,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal coat,,normal coat | no redness | normal eating | no swelling | normal appetite | no pain | minor skin irritation | normal grooming | minor dandruff,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+anorexia,,anorexia | fever | weight loss | coughing | vomiting | diarrhea | lethargy | depression | dyspnea,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+poor appetite,,poor appetite | fever | diarrhea | weight loss | ulcers | tarry stool | enlarged lymph nodes | chronic eye inflamation | lethargy,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+pains,,pains | death | fever | fetopelvic dispropotion | uteria inertia | malpresentation | loss of appetite | depression | stop eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lameness,,lameness | fever | weight loss | swelling | loss of appetite | loss of  appetite | pains | change their normal behaviour | swelling of joints,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+sneezing,,sneezing | coughing | fever | lethargy | nasal discharge | difficulty in breathing | dyspnea | weight loss | difficulty breathing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+swelling,,swelling | lameness | weight loss | fever | pain | death | anorexia | loss of appetite | nasal discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+dehydration,,dehydration | diarrhea | vomiting | fever | weight loss | lethargy | poor coat apperence | watering | no appp,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+hair loss,,hair loss | dandruff | crusting of the skin | ulcerated skin | darkened skin | lession on cat skin | dandruff in cat coat | red patches | skin issue,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+depression,,depression | fever | loss of appetite | coughing | weight loss | pains | nasal discharge | anorexia | rapid pulse and heart rates,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no discharge,,no discharge | normal eating | normal vision | minor eye watering | wind exposure | minor sneezing | normal play | normal movement | normal appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal walking,,normal walking | no swelling | no redness | normal eating | slight limp after running | normal running | minor limp after exercise | minor limp after running | slight limp after swimming,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+nasal discharge,,nasal discharge | fever | coughing | sneezing | painfull | lethargy | depression | swelling on leg | broken bones,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor dandruff,,minor dandruff | no itching | no redness | normal eating | normal grooming | normal activity | normal coat | normal fur | normal feathers,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal sleep,,normal sleep | normal appetite | no aggression | minor change in behavior | no pain | normal movement | minor sneezing | no fever | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+jaundice,,jaundice | lethargy | pneumonia | lession on the skin | pain | vomitting | difficulty in breathing | seizuers | pale gums,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal running,,normal running | no swelling | no redness | normal walking | minor limp after exercise | minor limp after play,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+difficulty breathing,,difficulty breathing | fever | coughing | lethargy | sneezing | thrist and urination | weight loss | enlarged lymph nodes or swelling | eye and skin change,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+mild sneezing,,mild sneezing | seasonal hair loss | itchy skin | minor dandruff | occasional paw licking | fever | coughing | nasal | ocular discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+loss of appetite,,loss of appetite | fever | depression | weight loss | diarrhea | weakness | vomiting | pains | lameness,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no itching,,no itching | minor dandruff | no redness | normal eating | normal grooming | normal activity | normal coat | normal fur | normal feathers,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no fever,,no fever | normal drinking | clear nasal discharge | normal eating | normal grooming | minor sneezing | normal preening | normal movement | normal sleep,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+clear nasal discharge,,clear nasal discharge | normal eating | no fever | normal drinking | normal grooming | normal appetite | normal preening | minor ear wax build-up | occasional head shaking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor change in eating habits,,minor change in eating habits | no vomiting | no diarrhea | normal weight | normal drinking | normal water intake,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal weight,,normal weight | minor change in eating habits | no vomiting | no diarrhea | normal drinking | normal water intake,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no vomiting,,no vomiting | minor change in eating habits | no diarrhea | normal weight | normal drinking | normal water intake,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no diarrhea,,no diarrhea | minor change in eating habits | no vomiting | normal weight | normal drinking | normal water intake,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no aggression,,no aggression | normal appetite | normal sleep | minor change in behavior | no pain | normal movement | minor reluctance to move,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor change in behavior,,minor change in behavior | no aggression | normal appetite | normal sleep | no pain | normal movement,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+difficulty in breathing,,difficulty in breathing | coughing | fever | sneezing | lethargy | neurologic abnormalities | dyspnea | loss of eat | swelling,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor sneezing,,minor sneezing | normal eating | no discharge | normal play | no fever | no cough | normal drinking | normal movement | normal sleep,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor skin irritation,,minor skin irritation | no swelling | no redness | normal appetite | normal coat | temporary limp after running | quick recovery | normal temperature | normal fur,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor swelling at vaccination site,,minor swelling at vaccination site | no pain | no redness | normal eating | normal play | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor skin dryness,,minor skin dryness | no redness | normal eating | no irritation | normal coat shine | normal grooming | normal drinking | normal fur | normal shell,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no cough,,no cough | normal eating | minor sneezing | no discharge | frequent gentle sneezing | no fever | clear eyes | active | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal urination,,normal urination | normal eating | normal play | no blood | no pain | occasional soft stool | minor change in elimination | normal grooming | normal energy,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor skin scaly patch,,minor skin scaly patch | no pain | no open wound | normal coat | no swelling | frequent scratching | normal drinking | normal grooming | normal eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no lameness,,no lameness | normal appetite | normal drinking | minor reluctance to move | no swelling | minor eye watering | frequent chewing | normal gait | normal urination,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor reluctance to move,,minor reluctance to move | normal appetite | no lameness | no swelling | normal drinking | no aggression | no pain | normal sleep,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor watery eyes,,minor watery eyes | no redness | no swelling | normal eating | clear nasal discharge | normal appetite | no discharge | normal play | normal vision,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor limp after exercise,,minor limp after exercise | no swelling | no redness | normal walking | normal running,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor crusty eyelashes,,minor crusty eyelashes | no matting | no inflammation | normal playfulness | normal eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal playfulness,,normal playfulness | minor crusty eyelashes | no matting | no inflammation | normal eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no inflammation,,no inflammation | minor crusty eyelashes | no matting | normal playfulness | normal eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no matting,,no matting | minor crusty eyelashes | no inflammation | normal playfulness | normal eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+seizuers,,seizuers | fever | respiratory distress | hyperesthesia | sudden death | jaundice | difficulty in breathing | lethargy | pale gums,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor swelling after grooming,,minor swelling after grooming | no redness | no pain | normal coat | normal eating | normal play,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+neurologic abnormalities,,neurologic abnormalities | difficulty in breathing | fever | chronic eye inflamation | lethargy | poor appetite | loss of eat | swelling | lameness,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal coat shine,,normal coat shine | minor skin dryness | no irritation | no redness | normal eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no irritation,,no irritation | minor skin dryness | no redness | normal coat shine | normal eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no blood,,no blood | no pain | normal urination | minor change in elimination | normal eating | normal energy | minor change in litter box use | normal play,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+limping,,limping | fever | inflammed eye | depression | coughing | willnot run to jump | swelling | week legs | pain on leg,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+upset stomach,,upset stomach | diarrhea | weight loss | vomiting | muscle pain | muscle stiffness | coughing | anaemia | loss of appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+vomitting,,vomitting | fever | weight loss | diarrhea | poor appetite | jaundice | pneumonia | lession on the skin | pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+scabs,,"scabs | ulcers | lesions | lumps | bumps(black,grey or red) | scaly patches of skin | sore | scartch | hair loss",KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor bad breath,,minor bad breath | no swelling | normal eating | no tartar | normal grooming | minor tartar | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+skin issue,,skin issue | loss of eat | fell unwell | lethargy | weight loss | lession on cat skin | dandruff in cat coat | red patches | hair loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+ulcers,,"ulcers | diarrhea | tarry stool | enlarged lymph nodes | poor appetite | lesions | scabs | lumps | bumps(black,grey or red)",KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+loss of eat,,loss of eat | difficulty in breathing | swelling | lameness | neurologic abnormalities | fell unwell | lethargy | weight loss | skin issue,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+hairballs,,hairballs | frequent grooming | no weight loss | normal appetite | mild conjunctivitis | occasional sneezing | mild dental tartar | mild gingivitis | occasional vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+scartch,,scartch | tenderness | erythema | swelling | pain | scaly patches of skin | sore | scabs | hair loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lesions on nose,,lesions on nose | lesions in the nasal cavity | noisy breathing | nose bleeds | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+mild conjunctivitis,,mild conjunctivitis | mild sneezing | mild limping | mild hair loss | mild dandruff | occasional sneezing | hairballs | mild dental tartar | mild gingivitis,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor skin redness,,minor skin redness | insect bite | no swelling | normal eating | normal fur | normal feathers | normal coat | minor tartar buildup | frequent yawning,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no weight loss,,no weight loss | normal drinking | minor decrease in appetite | hot weather | normal grooming | normal preening | frequent grooming | normal appetite | hairballs,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+clear eyes,,clear eyes | normal eating | normal movement | no lesions | normal appetite | frequent gentle sneezing | no cough | no fever | active,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+blindness,,blindness | pains | straining | diarrhea | vomiting | weight loss | lethargy | circling | fever,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+sudden death,,sudden death | high temperature | trembling | fever | difficulty breating | respiratory distress | hyperesthesia | seizuers | depression,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+anemia,,anemia | weight loss | diarrhea | coughing | blood stool | emaciation | edema in lower jaw | weakness | fever,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+active,,active | normal eating | frequent gentle sneezing | no cough | no fever | clear eyes | minor hair thinning | no redness | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor hair loss,,minor hair loss | normal grooming | no redness | normal eating | seasonal shedding | no swelling | normal sleep | mild nasal discharge | mild dandruff,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no bleeding,,no bleeding | normal eating | normal drinking | normal movement | minor gingivitis | no swelling | minor shell scratching | clear eyes | normal appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+nausea,,nausea | vomiting | diarrhea | loss of appetite | firm | distended stomach | fever | sickness | weight loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+seizures,,seizures | fever | hydrophobia | jaw is dropped | shyness or aggression | coughing | dullness | lacrimation | diarrhea,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+convulsion,,convulsion | loss of consciousness | chewing | twitching | salivating | fever | sudden death | weight loss | distress,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+respiratory distress,,respiratory distress | fever | hyperesthesia | sudden death | seizuers | nasal discharge | pox lesion | pain | mucous discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no open wound,,no open wound | minor skin scaly patch | no pain | normal coat | normal grooming | normal eating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+tiredness,,tiredness | fever | diarrhea | coughing | pains | muscle aches | headache | skin rashes | pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+pneumonia,,pneumonia | pain | jaundice | lession on the skin | vomitting | fever | rhinitis | abscessess | torticollis,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+change their normal behaviour,,change their normal behaviour | stop eating | stop drinking | pains | lameness | eye discharges | nasal discharge | high body temperature | weight loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+congestion,,congestion | fever | depression | eye ulcer | pink eye | pneumonia | lethargy | nasal discharge | apathy,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+wheezing,,wheezing | rapid breathing | coughing | swallowing | effort to breath | bubbles in the mouth | loss of appetite | lethargy | nasal discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+loss of appettite,,loss of appettite | runny nose | strong cough | lethargy | sneezing | difficulty in breathing | coughing | weakness | fever,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+facial swelling,,facial swelling | bloody drool | unable to eat | lossened teeth | foul breath | egg production decreases | stunted growth | blindness | distinctive bumps,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+abdominal pain,,abdominal pain | diarrhea | fever | stiffness | severe weekness and depression | haemorrhage | straw colored | death | carcass decomposes,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+stop drinking,,stop drinking | stop eating | change their normal behaviour | pains | lameness | weight loss | depression | diarrhea,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+stop eating,,stop eating | stop drinking | change their normal behaviour | pains | lameness | weight loss | depression | diarrhea,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+stiffness,,stiffness | fever | diarrhea | severe weekness and depression | abdominal pain | weakness | trembling | white mark on the muscle | loss of vitamin e,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+painfull,,painfull | nasal discharge | swelling on leg | broken bones | coughing | fever | difficulty in breathing | eye become dull | mortality,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor change in elimination,,minor change in elimination | no blood | no pain | normal urination | normal eating | normal energy,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+reduced appetite,,reduced appetite | soft stool | minor eye discharge | intermittent limp | chewing paws | chewing legs | sweating | dry or tacky gums | lying down,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+frequent yawning,,frequent yawning | minor tartar buildup | low energy after play | excessive shedding | minor skin redness | difficulty in breathing | swelling problem | bleeding from wounds | anorexia,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+muscle pain,,muscle pain | diarrhea | upset stomach | vomiting | muscle stiffness | fever | muscle weakness | abdonormal discomfort | constant pacing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+tenderness,,tenderness | erythema | swelling | scartch | pain | swollen | testical pain | itches | bloody discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+salivation,,salivation | fever | diarrhea | vomiting | decrease appetite | depression | relunctance to move | nasal discharge | lack of coordination,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+soft stool,,soft stool | reduced appetite | minor eye discharge | intermittent limp | chewing paws | chewing legs | minor skin dryness | no fever | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+swelling of face or leg,,swelling of face or leg | fever | depression | pains | poor appetite | oedema | swelling of neck | weight loss | pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+enlarged lymph nodes,,enlarged lymph nodes | diarrhea | ulcers | tarry stool | poor appetite | poor condition | weight loss | pain | back pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+swollen lymph nodes,,swollen lymph nodes | difficulty walking | lethargy | vaginal discharge | back pain | fever | nasal discharge | muscular stiffness | depression,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lession on the skin,,lession on the skin | jaundice | pneumonia | pain | vomitting | fever | slightly swollen | milky hard | papules appear on teats anad udder,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+seasonal hair loss,,seasonal hair loss | itchy skin | mild sneezing | minor dandruff | occasional paw licking | occasional scratching | clear nasal discharge | normal appetite | active grazing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+swelling on leg,,swelling on leg | nasal discharge | painfull | broken bones | heat | hardness | redness | pain | poor appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+noisy breathing,,noisy breathing | lesions on nose | lesions in the nasal cavity | nose bleeds | outstretched neck | dull ness | inappetence | coughing | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+runny nose,,runny nose | loss of appettite | strong cough | lethargy | sneezing | difficulty in breathing | coughing | weakness | darkened skin,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+joint pain,,joint pain | fever | coughing | loss of  appetite | lethargy | chills | progressive weakness | lession on the skin,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+temporary limp after running,,temporary limp after running | quick recovery | no swelling | minor skin irritation | normal temperature,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+frequent gentle sneezing,,frequent gentle sneezing | no cough | no fever | clear eyes | active,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+occasional head shaking,,occasional head shaking | minor ear wax build-up | clear nasal discharge | frequent stretching | healthy appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor ear wax build-up,,minor ear wax build-up | occasional head shaking | clear nasal discharge | frequent stretching | healthy appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+low energy after play,,low energy after play | minor tartar buildup | frequent yawning | excessive shedding | minor skin redness,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor tartar buildup,,minor tartar buildup | frequent yawning | low energy after play | excessive shedding | minor skin redness,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor eye discharge,,minor eye discharge | reduced appetite | soft stool | intermittent limp | chewing paws | chewing legs,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+frequent stretching,,frequent stretching | minor ear wax build-up | occasional head shaking | clear nasal discharge | healthy appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+frequent scratching,,frequent scratching | minor skin scaly patch | no pain | no swelling | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+discharge from eye,,discharge from eye | lethargy | diarrhea | vomiting | anorexia | fever | ulcer | scabs | pains,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+excessive shedding,,excessive shedding | minor tartar buildup | frequent yawning | low energy after play | minor skin redness,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+normal temperature,,normal temperature | temporary limp after running | quick recovery | no swelling | minor skin irritation,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+decrease appetite,,decrease appetite | fever | diarrhea | vomiting | salivation | abortion on late pregancy | stillbirth | retained placenda | endomeritis,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+distended stomach,,distended stomach | nausea | loss of appetite | vomiting | firm | weakness | decreased stool production | heavy breathing | restless movement,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+intermittent limp,,intermittent limp | reduced appetite | soft stool | minor eye discharge | chewing paws | chewing legs,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+frequent grooming,,frequent grooming | no weight loss | normal appetite | hairballs | occasional vomiting | occasional soft stool | minor fur matting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+healthy appetite,,healthy appetite | minor ear wax build-up | occasional head shaking | clear nasal discharge | frequent stretching,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+minor gingivitis,,minor gingivitis | no bleeding | no swelling | normal eating | normal drinking,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+quick recovery,,quick recovery | temporary limp after running | no swelling | minor skin irritation | normal temperature,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+eye disharge,,eye disharge | pnemonia | loss of  appetite | lameness | arthritis | sharp feather | clubbed feather | loss of powder down | diarrhea,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+itchy skin,,itchy skin | seasonal hair loss | mild sneezing | minor dandruff | occasional paw licking | occasional scratching,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+straining,,straining | diarrhea | vomiting | weight loss | blindness | tail wagging | lethargy | weakness,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+bad smell,,bad smell | shaking head | scartching ear | black on ear | red and inflammation ear | red tinge | slim over the shell | easily damage shell | flaking of the scutes,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+twitching,,twitching | convulsion | loss of consciousness | chewing | salivating | unsteady gait | blindness | swelling on joints | pains,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+no tartar,,no tartar | minor bad breath | no swelling | normal eating | normal grooming,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+sickness,,sickness | weight loss | loss of  appetite | vomiting | raised growth or bump | diarrhea | nausea | dehydration,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+anaemia,,anaemia | upset stomach | diarrhea | coughing | weight loss | feline infections | lymphosarcoma | difficulty breating | stomatitis,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+enlarged lymph nodes or swelling,,enlarged lymph nodes or swelling | fever | difficulty breathing | weight loss | thrist and urination | reduce energy,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+greenish-yellow nasal discharge,,greenish-yellow nasal discharge | lack of pigmentation | lethargy | pain on face | sneezing | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+severe weekness and depression,,severe weekness and depression | fever | diarrhea | stiffness | abdominal pain | sneezing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lesions in the nasal cavity,,lesions in the nasal cavity | lesions on nose | noisy breathing | nose bleeds | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+weekness in the back legs,,weekness in the back legs | short term lethargy | loss of  appetite | rapid heart rate | week pulse | fever | respiratory distress | hyperesthesia | sudden death,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+chronic eye inflamation,,chronic eye inflamation | fever | lethargy | neurologic abnormalities | poor appetite | coughing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+occasional paw licking,,occasional paw licking | seasonal hair loss | itchy skin | mild sneezing | minor dandruff,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+thrist and urination,,thrist and urination | fever | difficulty breathing | weight loss | enlarged lymph nodes or swelling | lethargy | sneezing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+diarrhea with muscus,,diarrhea with muscus | tensemus | flatulence | pains | watery stool | nose bleeds,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+crusting of the skin,,crusting of the skin | hair loss | dandruff | ulcerated skin | darkened skin | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lack of pigmentation,,lack of pigmentation | greenish-yellow nasal discharge | lethargy | pain on face | sneezing | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+short term lethargy,,short term lethargy | loss of  appetite | rapid heart rate | week pulse | weekness in the back legs | poor appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+eye and skin change,,eye and skin change | fever | difficulty breathing | unable to exercise | coughing | poor appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+difficulty walking,,difficulty walking | swollen lymph nodes | lethargy | vaginal discharge | back pain | watery stool,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+swelling of joints,,swelling of joints | fever | loss of  appetite | lameness | reduce energy | coughing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+unable to exercise,,unable to exercise | fever | difficulty breathing | eye and skin change | coughing | poor appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+vaginal discharge,,vaginal discharge | swollen lymph nodes | difficulty walking | lethargy | back pain | watery stool,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+rapid heart rate,,rapid heart rate | short term lethargy | loss of  appetite | week pulse | weekness in the back legs | poor appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lossened teeth,,lossened teeth | facial swelling | bloody drool | unable to eat | foul breath | abdominal pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+ulcerated skin,,ulcerated skin | hair loss | dandruff | crusting of the skin | darkened skin | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+scartching ear,,scartching ear | shaking head | black on ear | bad smell | red and inflammation ear | head shking | discharge from ear | odor to ear | redness on ear,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+hyperesthesia,,hyperesthesia | fever | respiratory distress | sudden death | seizuers | weekness in the back legs,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+unable to eat,,unable to eat | facial swelling | bloody drool | lossened teeth | foul breath | abdominal pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+reduce energy,,reduce energy | fever | loss of  appetite | lameness | swelling of joints | difficulty breathing | weight loss | enlarged lymph nodes or swelling,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+inflammed eye,,inflammed eye | fever | depression | limping | coughing | sneezing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+darkened skin,,darkened skin | hair loss | dandruff | crusting of the skin | ulcerated skin | strong cough | runny nose | lethargy | loss of appettite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+mild dandruff,,mild dandruff | mild conjunctivitis | mild sneezing | mild limping | mild hair loss | mild nasal discharge | minor hair loss | slight limp | mild swelling at vaccination site,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+bloody drool,,bloody drool | facial swelling | unable to eat | lossened teeth | foul breath | abdominal pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+broken bones,,broken bones | nasal discharge | swelling on leg | painfull | poor appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+watery stool,,watery stool | diarrhea with muscus | tensemus | flatulence | pains | swollen lymph nodes | difficulty walking | lethargy | vaginal discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+strong cough,,strong cough | runny nose | lethargy | loss of appettite | sneezing | darkened skin,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+pain on face,,pain on face | greenish-yellow nasal discharge | lack of pigmentation | lethargy | sneezing | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+inflammation,,inflammation | sensitivity to bright light | disharge from affected eye | clouded cornea | rubbing eye | discomfort | kicking at the belly | urine infection | pains,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+tarry stool,,tarry stool | ulcers | diarrhea | enlarged lymph nodes | poor appetite | back pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+nose bleeds,,nose bleeds | lesions on nose | lesions in the nasal cavity | noisy breathing | diarrhea with muscus | tensemus | flatulence | pains,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+week pulse,,week pulse | short term lethargy | loss of  appetite | rapid heart rate | weekness in the back legs | poor appetite,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+flatulence,,flatulence | diarrhea with muscus | tensemus | pains | watery stool | nose bleeds,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+back pain,,back pain | swollen lymph nodes | difficulty walking | lethargy | vaginal discharge | ulcers | diarrhea | tarry stool | enlarged lymph nodes,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+blue eye,,blue eye | fever | diarrhea | lethargy | coughing | nasal discharge,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+tensemus,,tensemus | diarrhea with muscus | flatulence | pains | watery stool | nose bleeds,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+dandruff,,dandruff | hair loss | crusting of the skin | ulcerated skin | darkened skin | vomiting,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+sensitivity to bright light,,sensitivity to bright light | disharge from affected eye | inflammation | clouded cornea | rubbing eye,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+disharge from affected eye,,disharge from affected eye | sensitivity to bright light | inflammation | clouded cornea | rubbing eye,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+swelling  in the bite area,,swelling  in the bite area | fever | lethargy | limp | pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+"bumps(black,grey or red)",,"bumps(black,grey or red) | ulcers | lesions | scabs | lumps",KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+red and inflammation ear,,red and inflammation ear | shaking head | scartching ear | black on ear | bad smell,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+intellectual disability,,intellectual disability | floopy muscle | speech delay | walking problem | eye movements,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+shyness or aggression,,shyness or aggression | fever | seizures | hydrophobia | jaw is dropped,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+raised growth or bump,,raised growth or bump | sickness | loss of  appetite | vomiting | weight loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+loss of consciousness,,loss of consciousness | convulsion | chewing | twitching | salivating,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+scaly patches of skin,,scaly patches of skin | sore | scabs | scartch | hair loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+dandruff in cat coat,,dandruff in cat coat | lession on cat skin | red patches | hair loss | skin issue,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+poor coat apperence,,poor coat apperence | diarrhea | vomiting | weight loss | dehydration,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+willnot run to jump,,willnot run to jump | limping | swelling | week legs | pain on leg,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+diffculty breathing,,diffculty breathing | bloody urine | vomiting | weight loss | anorexia,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lession on cat skin,,lession on cat skin | dandruff in cat coat | red patches | hair loss | skin issue,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+dark or black face,,dark or black face | diarrhea | vomiting | blood in faces | pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+periodic vommiting,,periodic vommiting | attacks | loss of  appetite | coughing | weight loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+exessive urination,,exessive urination | change in gait | vomiting | weight loss | inability to jump,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+excessive grooming,,excessive grooming | skin irritation | scartching | lethargy | hair loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+allergic reaction,,allergic reaction | poor appetite | coughing | weight loss | distended chest,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+inflamed nostrils,,inflamed nostrils | nasal discharge | nosebleeds | sneezing | lound breathing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+inability to jump,,inability to jump | exessive urination | change in gait | vomiting | weight loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+muscle stiffness,,muscle stiffness | upset stomach | diarrhea | vomiting | muscle pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+diffulty chewing,,diffulty chewing | nasal bleeding | swelling | weight loss | anorexia,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+stomach growling,,stomach growling | gasc | loss of  appetite | blood in stool | black stool,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+effort to breath,,effort to breath | wheezing | rapid breathing | coughing | swallowing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+ocular discharge,,ocular discharge | fever | mild sneezing | coughing | nasal,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+distended chest,,distended chest | allergic reaction | poor appetite | coughing | weight loss,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+appetite varies,,appetite varies | diarrhea | vomiting | weight loss | pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+lound breathing,,lound breathing | nasal discharge | nosebleeds | inflamed nostrils | sneezing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+rapid breathing,,rapid breathing | wheezing | coughing | swallowing | effort to breath,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+skin irritation,,skin irritation | scartching | lethargy | hair loss | excessive grooming,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+walking problem,,walking problem | floopy muscle | speech delay | intellectual disability | eye movements,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+jaw is dropped,,jaw is dropped | fever | seizures | hydrophobia | shyness or aggression,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+blood in faces,,blood in faces | dark or black face | diarrhea | vomiting | pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+nasal bleeding,,nasal bleeding | diffulty chewing | swelling | weight loss | anorexia,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+blood in stool,,blood in stool | gasc | loss of  appetite | stomach growling | black stool,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+change in gait,,change in gait | exessive urination | vomiting | weight loss | inability to jump,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+clouded cornea,,clouded cornea | sensitivity to bright light | disharge from affected eye | inflammation | rubbing eye,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+floopy muscle,,floopy muscle | speech delay | intellectual disability | walking problem | eye movements,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+eye movements,,eye movements | floopy muscle | speech delay | intellectual disability | walking problem,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+liver disease,,liver disease | fever | loss of appetite | eyeproblem | nuerological,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+bloody urine,,bloody urine | diffculty breathing | vomiting | weight loss | anorexia,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+shaking head,,shaking head | scartching ear | black on ear | bad smell | red and inflammation ear,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+black on ear,,black on ear | shaking head | scartching ear | bad smell | red and inflammation ear,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+speech delay,,speech delay | floopy muscle | intellectual disability | walking problem | eye movements,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+nuerological,,nuerological | fever | loss of appetite | eyeproblem | liver disease,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+foul breath,,foul breath | facial swelling | bloody drool | unable to eat | lossened teeth,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+pain on leg,,pain on leg | limping | willnot run to jump | swelling | week legs,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+hydrophobia,,hydrophobia | fever | seizures | jaw is dropped | shyness or aggression,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+fell unwell,,fell unwell | loss of eat | lethargy | weight loss | skin issue,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+black stool,,black stool | gasc | loss of  appetite | blood in stool | stomach growling,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+blood stool,,blood stool | diarrhea | coughing | weight loss | anemia,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+red patches,,red patches | lession on cat skin | dandruff in cat coat | hair loss | skin issue,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+rubbing eye,,rubbing eye | sensitivity to bright light | disharge from affected eye | inflammation | clouded cornea,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+fatty stool,,fatty stool | diarrhea | vomiting | weight loss | pain,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+nosebleeds,,nosebleeds | nasal discharge | inflamed nostrils | sneezing | lound breathing,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+salivating,,salivating | convulsion | loss of consciousness | chewing | twitching,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+swallowing,,swallowing | wheezing | rapid breathing | coughing | effort to breath,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+scartching,,scartching | skin irritation | lethargy | hair loss | excessive grooming,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease
+eyeproblem,,eyeproblem | fever | loss of appetite | liver disease | nuerological,KaggleAnimalDisease,en,kaggle:gracehephzibahm/animal-disease

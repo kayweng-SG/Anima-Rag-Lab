@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AnimaLink · Emergency Triage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #15231c;
+      --muted: #5a6b62;
+      --line: #d5e0d9;
+      --paper: #f4f7f4;
+      --panel: #ffffff;
+      --teal: #0f766e;
+      --teal-deep: #0b4f4a;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --red-bg: #fef2f2;
+      --amber-bg: #fffbeb;
+      --green-bg: #ecfdf5;
+      --shadow: 0 18px 50px rgba(21, 35, 28, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "DM Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #d9efe8 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #e8f0ea 0%, transparent 50%),
+        var(--paper);
+    }
+
+    .shell {
+      width: min(980px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2rem 0 3.5rem;
+    }
+
+    header {
+      margin-bottom: 1.75rem;
+    }
+
+    .brand {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.35rem;
+      color: var(--teal-deep);
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 42rem;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 1.02rem;
+    }
+
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+    }
+
+    .dot {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+    .dot.ok { background: #059669; }
+    .dot.bad { background: #dc2626; }
+
+    .layout {
+      display: grid;
+      gap: 1.25rem;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 1.1rem;
+      box-shadow: var(--shadow);
+      padding: 1.25rem 1.3rem 1.4rem;
+    }
+
+    .panel h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.2rem;
+      margin: 0 0 1rem;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin: 0.85rem 0 0.35rem;
+    }
+
+    .field-hint {
+      margin-top: 0.3rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    input.invalid {
+      border-color: #f87171;
+      background: #fff7f7;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 0.7rem;
+      padding: 0.7rem 0.8rem;
+      font: inherit;
+      color: var(--ink);
+      background: #fbfcfb;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(15, 118, 110, 0.25);
+      border-color: var(--teal);
+      background: #fff;
+    }
+
+    textarea { min-height: 88px; resize: vertical; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.9rem 0 0.2rem;
+    }
+
+    .examples button {
+      border: 1px solid var(--line);
+      background: #f0f5f2;
+      color: var(--teal-deep);
+      border-radius: 999px;
+      padding: 0.4rem 0.75rem;
+      font: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .examples button:hover { background: #e3eee8; }
+
+    .actions {
+      display: flex;
+      gap: 0.7rem;
+      margin-top: 1.2rem;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 0.8rem;
+      padding: 0.8rem 1.1rem;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+      flex: 1;
+    }
+    .btn-primary:hover { background: var(--teal-deep); }
+    .btn-primary:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .result-empty {
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-size: 0.85rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 0.55rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .badge.RED { background: var(--red-bg); color: var(--red); }
+    .badge.YELLOW { background: var(--amber-bg); color: var(--amber); }
+    .badge.GREEN { background: var(--green-bg); color: #047857; }
+
+    .status-explain {
+      margin: -0.35rem 0 1rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 0.7rem;
+      border: 1px solid var(--line);
+      background: #f8faf9;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .status-explain .title {
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .status-explain.RED {
+      border-color: #fecaca;
+      background: var(--red-bg);
+      color: #7f1d1d;
+    }
+
+    .status-explain.YELLOW {
+      border-color: #fde68a;
+      background: var(--amber-bg);
+      color: #78350f;
+    }
+
+    .status-explain.GREEN {
+      border-color: #a7f3d0;
+      background: var(--green-bg);
+      color: #065f46;
+    }
+
+    .answer {
+      white-space: pre-wrap;
+      line-height: 1.55;
+      margin: 0 0 1rem;
+      font-size: 0.98rem;
+    }
+
+    .answer-en {
+      margin: 0 0 1rem;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      padding: 0.55rem 0.75rem;
+      background: #f8fbf9;
+    }
+
+    .answer-en summary {
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .answer-en .answer {
+      margin: 0.55rem 0 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .extracted {
+      margin: 0 0 1rem;
+      padding: 0.7rem 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      background: #f8fbf9;
+    }
+
+    .extracted-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 0.45rem;
+    }
+
+    .extracted-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .extracted-tags .tag {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 0.4rem;
+      background: #e8f4ef;
+      color: var(--ink);
+      border: 1px solid #cfe6dc;
+    }
+
+    .sources {
+      border-top: 1px solid var(--line);
+      padding-top: 0.9rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .source {
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      padding: 0.7rem 0.8rem;
+      background: #f8fbf9;
+    }
+
+    .source .rank {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 0.25rem;
+    }
+
+    .source .text {
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+
+    .error {
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid #fecaca;
+      border-radius: 0.75rem;
+      padding: 0.8rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    a { color: var(--teal); }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <h1 class="brand">AnimaLink</h1>
+      <p class="lede">
+        紧急分诊演示：先跑 Red-Light 生理拦截，再检索 Merck 知识库。
+        RED 时直接提示就医，不进入 LLM。
+      </p>
+      <div class="status-bar">
+        <span class="pill"><span class="dot" id="healthDot"></span><span id="healthText">检查 API…</span></span>
+        <span class="pill" id="vectorInfo">向量库：—</span>
+        <span class="pill" id="llmInfo">LLM：—</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>病例输入</h2>
+        <div class="examples">
+          <button type="button" data-example="normal">示例：正常心率</button>
+          <button type="button" data-example="heatMild">示例：中暑轻微</button>
+          <button type="button" data-example="heatSevere">示例：中暑严重</button>
+          <button type="button" data-example="chocolate">示例：吃了巧克力</button>
+          <button type="button" data-example="poison">示例：中毒</button>
+        </div>
+
+        <form id="triageForm" novalidate>
+          <label for="question">情况描述 *</label>
+          <textarea
+            id="question"
+            required
+            placeholder="一句话说明想问什么、宠物怎么了。例如：中暑怎么办？散步后喘气但仍清醒能走。"
+          ></textarea>
+          <div class="field-hint">
+            只需填这一栏。系统会自动识别症状词（中暑、虚脱、中毒、喘气等），并据此分诊与检索。
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label for="species">物种</label>
+              <select id="species">
+                <option value="dog">Dog</option>
+                <option value="cat">Cat</option>
+                <option value="">Unknown</option>
+              </select>
+            </div>
+            <div>
+              <label for="size">体型（犬）</label>
+              <select id="size">
+                <option value="">—</option>
+                <option value="small">Small</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label for="heart_rate_bpm">心率 (bpm)</label>
+              <input
+                id="heart_rate_bpm"
+                type="number"
+                inputmode="numeric"
+                step="1"
+                min="20"
+                max="400"
+                placeholder="95"
+              />
+              <div class="field-hint">可填 20–400；犬约 60–180，猫约 120–220</div>
+            </div>
+            <div>
+              <label for="crt_seconds">CRT (秒)</label>
+              <input
+                id="crt_seconds"
+                type="number"
+                inputmode="decimal"
+                step="0.1"
+                min="0"
+                max="10"
+                placeholder="1.5"
+              />
+              <div class="field-hint">可填 0–10；正常约 1–2 秒</div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label for="rectal_temp_f">体温 (°F)</label>
+              <input
+                id="rectal_temp_f"
+                type="number"
+                inputmode="decimal"
+                step="0.1"
+                min="85"
+                max="110"
+                placeholder="101.8"
+              />
+              <div class="field-hint">可填 85–110°F；正常约 101.5–102°F</div>
+            </div>
+            <div>
+              <label for="rectal_temp_c">体温 (°C)</label>
+              <input
+                id="rectal_temp_c"
+                type="number"
+                inputmode="decimal"
+                step="0.1"
+                min="29"
+                max="43"
+                placeholder="38.8"
+              />
+              <div class="field-hint">可填 29–43°C；与 °F 自动换算</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" id="submitBtn" type="submit">开始分诊</button>
+            <button class="btn btn-ghost" type="button" id="clearBtn">清空</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>分诊结果</h2>
+        <div id="errorBox" class="error" hidden></div>
+        <div id="emptyState" class="result-empty">
+          填写左侧病例，或点一个示例，然后点「开始分诊」。
+        </div>
+        <div id="resultPanel" hidden>
+          <div class="badge" id="statusBadge">GREEN</div>
+          <div class="status-explain GREEN" id="statusExplain">
+            <div class="title" id="statusExplainTitle"></div>
+            <div id="statusExplainBody"></div>
+          </div>
+          <div class="meta">
+            <span id="interceptMeta"></span>
+            <span id="modelMeta"></span>
+            <span id="timeMeta"></span>
+          </div>
+          <div class="extracted" id="extractedBox" hidden>
+            <div class="extracted-label">从描述识别的症状</div>
+            <div class="extracted-tags" id="extractedTags"></div>
+          </div>
+          <p class="answer" id="answerText"></p>
+          <details class="answer-en" id="answerEnBox" hidden>
+            <summary>英文版（仅供参考）</summary>
+            <p class="answer" id="answerEnText"></p>
+          </details>
+          <div class="meta" id="recordMeta" hidden></div>
+          <div class="sources" id="sourcesList"></div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      仅供研究 / Demo，不能替代执业兽医诊断。
+      API 文档：<a href="/docs" target="_blank" rel="noopener">/docs</a>
+    </footer>
+  </div>
+
+  <script>
+    const EXAMPLES = {
+      normal: {
+        question: "小狗正常心率是多少？运动后呼吸有点快，有点担心。",
+        species: "dog",
+        size: "small",
+        heart_rate_bpm: "95",
+        crt_seconds: "1.5",
+        rectal_temp_f: "101.8",
+        rectal_temp_c: "38.8",
+      },
+      heatMild: {
+        question: "中暑怎么办？散步后喘气、流口水，仍清醒能走。",
+        species: "dog",
+        size: "large",
+        heart_rate_bpm: "120",
+        crt_seconds: "1.5",
+        rectal_temp_f: "102.8",
+        rectal_temp_c: "39.3",
+      },
+      heatSevere: {
+        question: "中暑怎么办？爬山后虚脱、站不起来了，体温很高。",
+        species: "dog",
+        size: "large",
+        heart_rate_bpm: "170",
+        crt_seconds: "1.5",
+        rectal_temp_f: "105.2",
+        rectal_temp_c: "40.7",
+      },
+      chocolate: {
+        question: "小狗吃了巧克力，精神还行，有点担心。",
+        species: "dog",
+        size: "small",
+        heart_rate_bpm: "",
+        crt_seconds: "",
+        rectal_temp_f: "",
+        rectal_temp_c: "",
+      },
+      poison: {
+        question: "狗狗中毒怎么办？刚才吃了老鼠药，还在呕吐。",
+        species: "dog",
+        size: "",
+        heart_rate_bpm: "",
+        crt_seconds: "",
+        rectal_temp_f: "",
+        rectal_temp_c: "",
+      },
+    };
+
+    const VITAL_LIMITS = {
+      heart_rate_bpm: { min: 20, max: 400, step: 1 },
+      crt_seconds: { min: 0, max: 10, step: 0.1 },
+      rectal_temp_f: { min: 85, max: 110, step: 0.1 },
+      rectal_temp_c: { min: 29, max: 43, step: 0.1 },
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function roundTo(value, step) {
+      const decimals = String(step).includes(".")
+        ? String(step).split(".")[1].length
+        : 0;
+      const factor = 10 ** decimals;
+      return Math.round(value * factor) / factor;
+    }
+
+    function clamp(value, min, max, step) {
+      const bounded = Math.min(max, Math.max(min, value));
+      return roundTo(bounded, step);
+    }
+
+    function fToC(f) {
+      return (f - 32) * (5 / 9);
+    }
+
+    function cToF(c) {
+      return c * (9 / 5) + 32;
+    }
+
+    function setNumberField(id, value, { sync = false } = {}) {
+      const limits = VITAL_LIMITS[id];
+      const el = $(id);
+      if (!el) return;
+      if (value === "" || value == null || Number.isNaN(Number(value))) {
+        el.value = "";
+        el.classList.remove("invalid");
+        return;
+      }
+      const clamped = clamp(Number(value), limits.min, limits.max, limits.step);
+      el.value = String(clamped);
+      el.classList.toggle(
+        "invalid",
+        Number(value) < limits.min || Number(value) > limits.max
+      );
+      if (!sync) return;
+      if (id === "rectal_temp_f") {
+        const c = clamp(fToC(clamped), VITAL_LIMITS.rectal_temp_c.min, VITAL_LIMITS.rectal_temp_c.max, 0.1);
+        $("rectal_temp_c").value = String(c);
+        $("rectal_temp_c").classList.remove("invalid");
+      }
+      if (id === "rectal_temp_c") {
+        const f = clamp(cToF(clamped), VITAL_LIMITS.rectal_temp_f.min, VITAL_LIMITS.rectal_temp_f.max, 0.1);
+        $("rectal_temp_f").value = String(f);
+        $("rectal_temp_f").classList.remove("invalid");
+      }
+    }
+
+    function fillForm(data) {
+      if (!data) return;
+      // Always clear vitals first so a prior heat/poison example cannot leave
+      // stale number values that silently fail HTML5 validation.
+      Object.keys(VITAL_LIMITS).forEach((id) => setNumberField(id, ""));
+      Object.entries(data).forEach(([key, value]) => {
+        const el = $(key);
+        if (!el) return;
+        if (key in VITAL_LIMITS) {
+          setNumberField(key, value);
+        } else {
+          el.value = value ?? "";
+        }
+      });
+      if (data.rectal_temp_f) {
+        setNumberField("rectal_temp_f", data.rectal_temp_f, { sync: true });
+      } else if (data.rectal_temp_c) {
+        setNumberField("rectal_temp_c", data.rectal_temp_c, { sync: true });
+      }
+    }
+
+    function formatApiError(data, status) {
+      if (!data) return `请求失败（HTTP ${status || "?"}）`;
+      if (typeof data.detail === "string") return data.detail;
+      if (data.error && data.error.message) return data.error.message;
+      if (data.detail && data.detail.error && data.detail.error.message) {
+        return data.detail.error.message;
+      }
+      try {
+        return JSON.stringify(data.detail || data);
+      } catch (_) {
+        return `请求失败（HTTP ${status || "?"}）`;
+      }
+    }
+
+    async function runTriage() {
+      clearError();
+
+      const question = $("question").value.trim();
+      if (!question) {
+        showError("请填写情况描述，或先点一个示例。");
+        $("question").focus();
+        return;
+      }
+
+      const vitalErrors = validateVitals();
+      if (vitalErrors.length) {
+        showError("请修正生命体征输入：" + vitalErrors.join("；"));
+        return;
+      }
+
+      const payload = {
+        question,
+        species: $("species").value || null,
+        size: $("size").value || null,
+        heart_rate_bpm: numOrNull("heart_rate_bpm"),
+        crt_seconds: numOrNull("crt_seconds"),
+        rectal_temp_f: numOrNull("rectal_temp_f"),
+        rectal_temp_c: numOrNull("rectal_temp_c"),
+        top_k: 5,
+      };
+
+      const btn = $("submitBtn");
+      btn.disabled = true;
+      btn.textContent = "分诊中…";
+      $("emptyState").hidden = true;
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 90000);
+
+      try {
+        const res = await fetch("/triage/query", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+        let data = null;
+        try {
+          data = await res.json();
+        } catch (_) {
+          throw new Error(`服务器返回无法解析（HTTP ${res.status}）`);
+        }
+        if (!res.ok) {
+          throw new Error(formatApiError(data, res.status));
+        }
+        renderResult(data);
+      } catch (err) {
+        if (err && err.name === "AbortError") {
+          showError("请求超时。请确认 API 仍在运行后重试。");
+        } else {
+          showError((err && err.message) || String(err));
+        }
+      } finally {
+        clearTimeout(timer);
+        btn.disabled = false;
+        btn.textContent = "开始分诊";
+      }
+    }
+
+    function numOrNull(id) {
+      const v = $(id).value.trim();
+      if (!v) return null;
+      const n = Number(v);
+      if (!Number.isFinite(n)) return null;
+      const limits = VITAL_LIMITS[id];
+      if (!limits) return n;
+      return clamp(n, limits.min, limits.max, limits.step);
+    }
+
+    function validateVitals() {
+      const errors = [];
+      Object.keys(VITAL_LIMITS).forEach((id) => {
+        const raw = $(id).value.trim();
+        if (!raw) {
+          $(id).classList.remove("invalid");
+          return;
+        }
+        const n = Number(raw);
+        const { min, max } = VITAL_LIMITS[id];
+        if (!Number.isFinite(n) || n < min || n > max) {
+          $(id).classList.add("invalid");
+          errors.push(`${id} 需在 ${min}–${max} 之间`);
+        } else {
+          $(id).classList.remove("invalid");
+          setNumberField(id, n);
+        }
+      });
+      return errors;
+    }
+
+    ["heart_rate_bpm", "crt_seconds"].forEach((id) => {
+      $(id).addEventListener("change", () => {
+        if ($(id).value.trim()) setNumberField(id, $(id).value);
+      });
+      $(id).addEventListener("blur", () => {
+        if ($(id).value.trim()) setNumberField(id, $(id).value);
+      });
+    });
+
+    $("rectal_temp_f").addEventListener("change", () => {
+      if ($("rectal_temp_f").value.trim()) {
+        setNumberField("rectal_temp_f", $("rectal_temp_f").value, { sync: true });
+      }
+    });
+    $("rectal_temp_f").addEventListener("blur", () => {
+      if ($("rectal_temp_f").value.trim()) {
+        setNumberField("rectal_temp_f", $("rectal_temp_f").value, { sync: true });
+      }
+    });
+    $("rectal_temp_c").addEventListener("change", () => {
+      if ($("rectal_temp_c").value.trim()) {
+        setNumberField("rectal_temp_c", $("rectal_temp_c").value, { sync: true });
+      }
+    });
+    $("rectal_temp_c").addEventListener("blur", () => {
+      if ($("rectal_temp_c").value.trim()) {
+        setNumberField("rectal_temp_c", $("rectal_temp_c").value, { sync: true });
+      }
+    });
+
+    async function checkHealth() {
+      try {
+        const res = await fetch("/health");
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "health failed");
+        $("healthDot").className = "dot ok";
+        $("healthText").textContent = "API 正常";
+        $("vectorInfo").textContent =
+          `向量库：${data.vector_count ?? "?"} · ${data.embedder || "unknown"}`;
+        $("llmInfo").textContent = data.llm_enabled
+          ? `LLM：已开启 · ${data.llm_model || "openai"}`
+          : "LLM：未开启 · extractive";
+      } catch (err) {
+        $("healthDot").className = "dot bad";
+        $("healthText").textContent = "API 未连接 — 请先启动 07_api_server.py";
+        $("vectorInfo").textContent = "向量库：—";
+        $("llmInfo").textContent = "LLM：—";
+      }
+    }
+
+    function showError(message) {
+      const box = $("errorBox");
+      box.hidden = false;
+      box.textContent = message;
+    }
+
+    function clearError() {
+      $("errorBox").hidden = true;
+      $("errorBox").textContent = "";
+    }
+
+    const STATUS_EXPLAIN = {
+      RED: {
+        badge: "红灯 RED",
+        title: "红灯 = 紧急，先送医",
+        body:
+          "已出现危急信号（如虚脱、中毒、严重中暑等）。请立即送兽医急诊；系统已跳过 AI，避免耽误时间。途中稳住气道、呼吸与循环。",
+      },
+      YELLOW: {
+        badge: "黄灯 YELLOW",
+        title: "黄灯 = 需小心，持续观察",
+        body:
+          "有风险但尚未达到立即拦截。可先按建议处理并尽快评估；若出现虚脱、昏迷、抽搐或明显恶化，立即升级为红灯送医。",
+      },
+      GREEN: {
+        badge: "绿灯 GREEN",
+        title: "绿灯 = 暂无紧急信号",
+        body:
+          "依目前描述未见红灯触发，可查看知识库建议。这不代表保证没事；症状变化请重新分诊。",
+      },
+    };
+
+    function renderResult(data) {
+      $("emptyState").hidden = true;
+      $("resultPanel").hidden = false;
+
+      const status = data.red_light_status || "GREEN";
+      const explain = STATUS_EXPLAIN[status] || STATUS_EXPLAIN.GREEN;
+      const badge = $("statusBadge");
+      badge.textContent = explain.badge;
+      badge.className = `badge ${status}`;
+
+      const explainBox = $("statusExplain");
+      if (explainBox) {
+        explainBox.className = `status-explain ${status}`;
+        $("statusExplainTitle").textContent = explain.title;
+        $("statusExplainBody").textContent = explain.body;
+      }
+
+      $("interceptMeta").textContent = data.intercepted
+        ? "已拦截 · 跳过 LLM"
+        : "未拦截 · 可检索回答";
+      $("modelMeta").textContent = `模型：${data.model_used || "—"}`;
+      $("timeMeta").textContent = `耗时：${data.elapsed_ms ?? "—"} ms`;
+      $("answerText").textContent = data.answer_zh || data.answer || "";
+
+      const answerEn = data.answer_en || "";
+      const answerEnBox = $("answerEnBox");
+      if (answerEn && answerEn !== (data.answer_zh || data.answer || "")) {
+        answerEnBox.hidden = false;
+        $("answerEnText").textContent = answerEn;
+      } else {
+        answerEnBox.hidden = true;
+        $("answerEnText").textContent = "";
+      }
+
+      const recordMeta = $("recordMeta");
+      if (data.record_id) {
+        recordMeta.hidden = false;
+        recordMeta.textContent = `已入库 · record_id：${data.record_id}`;
+      } else {
+        recordMeta.hidden = true;
+        recordMeta.textContent = "";
+      }
+
+      const extracted = data.extracted_symptoms || [];
+      const extractedBox = $("extractedBox");
+      const extractedTags = $("extractedTags");
+      if (extracted.length) {
+        extractedBox.hidden = false;
+        extractedTags.innerHTML = extracted
+          .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
+          .join("");
+      } else {
+        extractedBox.hidden = true;
+        extractedTags.innerHTML = "";
+      }
+
+      const sources = data.sources || [];
+      const list = $("sourcesList");
+      if (!sources.length) {
+        list.innerHTML = `<div class="source"><div class="text">无检索来源（可能被 Red-Light 拦截）。</div></div>`;
+        return;
+      }
+      list.innerHTML = sources
+        .map((s) => {
+          const typeZh =
+            s.chunk_type_zh ||
+            (s.metadata && s.metadata.chunk_type_zh) ||
+            ({
+              numeric_metric: "数值指标",
+              vital_sign: "体征参考",
+              triage_indicator: "分诊指标",
+              toxic_dosage: "毒物剂量",
+              paragraph: "段落摘录",
+            }[(s.metadata && s.metadata.chunk_type) || ""] || "知识片段");
+          const score = typeof s.score === "number" ? s.score.toFixed(3) : "—";
+          const text = s.content_zh || s.content || "";
+          return `
+            <div class="source">
+              <div class="rank">#${s.rank ?? "?"} · ${typeZh} · 相关度 ${score}</div>
+              <div class="text">${escapeHtml(text)}</div>
+            </div>`;
+        })
+        .join("");
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    document.querySelectorAll("[data-example]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const example = EXAMPLES[btn.dataset.example];
+        if (!example) {
+          showError(`示例「${btn.dataset.example}」未找到，请强制刷新页面（Cmd+Shift+R）。`);
+          return;
+        }
+        fillForm(example);
+        clearError();
+        $("question").focus();
+      });
+    });
+
+    $("clearBtn").addEventListener("click", () => {
+      $("triageForm").reset();
+      Object.keys(VITAL_LIMITS).forEach((id) => setNumberField(id, ""));
+      $("species").value = "dog";
+      clearError();
+      $("resultPanel").hidden = true;
+      $("emptyState").hidden = false;
+    });
+
+    $("triageForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      runTriage();
+    });
+
+    fillForm(EXAMPLES.normal);
+    checkHealth();
+  </script>
+</body>
+</html>

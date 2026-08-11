@@ -1,0 +1,9 @@
+data/triage_results.db
+data/*.db
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.env
+evals/last_report.json
+.DS_Store

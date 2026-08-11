@@ -1,0 +1,120 @@
+[
+  {
+    "url": "https://www.merckvetmanual.com/emergency-medicine-and-critical-care/evaluation-and-initial-treatment-of-small-animal-emergency-patients/initial-triage-and-resuscitation-of-small-animal-emergency-patients",
+    "title": "Initial Triage and Resuscitation of Small Animal Emergency Patients",
+    "paragraphs": [
+      "Triage is the method of assigning priority to emergency patients and their problems based on rapid assessment of historical and physical parameters.",
+      "In triage of an animal undergoing evaluation on an emergency basis, a primary survey (a rapid assessment) is performed to assess patient stability and identify problems so that immediate treatment can be initiated. After the primary survey and initial stabilization are complete, a secondary survey (a thorough examination) is performed.",
+      "The traditional primary survey has focused on life-threatening problems; the ABC approach (for airway, breathing, circulation) is a systematic method for prioritizing and treating life-threatening emergencies. The Veterinary Committee on Trauma (VetCOT) supports updating the primary survey for trauma patients to XABCDE (for eXsanguination, airway, breathing, circulation, disability, and exposure), to particularly prioritize the importance of arresting hemorrhage.",
+      "C (circulation): auscultating the heart and assessing for clinical signs of adequate blood flow, such as heart rate, pulse quality, mucous membrane color, capillary refill time [CRT], and blood pressure.",
+      "Animals with circulatory compromise can have alterations in physical perfusion parameters including heart rate, pulse quality, mucous membrane color, CRT, and rectal temperature.",
+      "As shock approaches the terminal (or late decompensatory) stage, the heart rate slows in both dogs and cats, and animals begin to lose consciousness. Clinical signs in this terminal stage include bradycardia, severe hypotension, absent pulses, gray or ashen mucous membranes, prolonged CRT, depressed or altered mentation, oliguria, and abnormal respiratory patterns.",
+      "Small-volume resuscitation with low-normal end points (normal perfusion parameters with a mean arterial pressure of 60–80 mm Hg) is used to avoid volume overload and hypertension.",
+      "Large-volume resuscitation with high-normal end points (normal perfusion parameters with a mean arterial pressure of 80–100 mm Hg) is used in patients with GI disease, sepsis, or systemic vasodilation.",
+      "Animals in shock should be slowly warmed during fluid resuscitation until rectal temperatures are > 36.5°C (98°F)."
+    ],
+    "tables": [
+      [
+        ["Parameter", "Evaluation", "Significance"],
+        ["Mucous membrane color", "Pink", "Normal PCV and adequate perfusion"],
+        ["Mucous membrane color", "Pale or white", "Anemia or shock"],
+        ["Mucous membrane color", "Cyanotic or muddy", "Severe hypoxemia or decompensatory shock"],
+        ["Capillary refill time", "1–2 seconds", "Normal perfusion"],
+        ["Capillary refill time", "> 2 seconds", "Poor perfusion or peripheral vasoconstriction"],
+        ["Capillary refill time", "< 1 second", "Hyperdynamic state; fever, heatstroke, distributive shock, or early compensatory hypovolemic shock"],
+        ["Heart rate", "70–120 bpm (small dogs); 60–120 bpm (large dogs); 150–220 bpm (cats)", "Normal heart rates"],
+        ["Heart rate", "Bradycardia: < 60–70 bpm (dogs); < 150 bpm (cats)", "Decreased cardiac output and poor perfusion; cats may develop bradycardia (< 120 bpm) in shock"],
+        ["Heart rate", "Tachycardia: > 180 bpm (dogs); > 220 bpm (cats)", "Compromised diastolic filling; often hypovolemic shock, pain, or primary cardiac disease"],
+        ["Pulse rate and quality", "Strong and synchronous", "Normal"],
+        ["Pulse rate and quality", "Weak or absent", "Decreased cardiac output, vasoconstriction, decreased pulse pressure, or thrombosis"],
+        ["Level of consciousness", "Alert and responsive", "Normal neurological and metabolic state"],
+        ["Level of consciousness", "Stupor", "Severe neurological or metabolic derangements, including toxin ingestion"],
+        ["Level of consciousness", "Comatose or seizures", "Primary neurological disease or secondary metabolic derangements including toxin exposure"]
+      ]
+    ],
+    "crawled_at": "2026-08-06T06:50:00+00:00",
+    "source_note": "offline_seed_due_to_local_cloudfront_403"
+  },
+  {
+    "url": "https://www.merckvetmanual.com/special-pet-topics/emergencies/evaluation-and-initial-treatment-of-dog-and-cat-emergencies",
+    "title": "Evaluation and Initial Treatment of Dog and Cat Emergencies",
+    "paragraphs": [
+      "With emergency care, the most life-threatening problems are treated first. At the clinic, veterinary staff will do a rapid check of your pet and give priority to the most urgent problems.",
+      "Some problems require immediate treatment. Examples include trauma, shock, poisoning, severe burns, breathing difficulty, ongoing seizures, abnormal heart rhythms, loss of consciousness, severe bleeding, blocked urine flow, prolapsed organs, possible snakebite, heat stroke, open wounds exposing bone, and difficult labor during birth.",
+      "After determining whether your pet is conscious, the vet will evaluate airway, breathing, and circulation.",
+      "Open-mouth breathing and a bluish tinge to the gums or skin indicate severe oxygen loss.",
+      "Shock happens when the body can't deliver enough blood, oxygen, and nutrients to tissues. Causes of shock include head injury, major blood loss, and severe infection. Signs of shock include rapid heart rate, pale gums, low blood pressure, low urine output, and weak pulses.",
+      "Treatment aims to restore blood volume and oxygen delivery—through oxygen therapy, control of bleeding, and IV fluids and blood products, as needed.",
+      "For all trauma injuries, airway, breathing, and circulation are checked and stabilized first. Bleeding control, oxygen delivery, and pain relief are immediate priorities.",
+      "Signs of dehydration include skin that doesn’t snap back when pinched, dry gums, and sunken eyes."
+    ],
+    "tables": [],
+    "crawled_at": "2026-08-06T06:50:00+00:00",
+    "source_note": "offline_seed_due_to_local_cloudfront_403"
+  },
+  {
+    "url": "https://www.merckvetmanual.com/special-pet-topics/emergencies/what-to-do-in-a-dog-or-cat-emergency",
+    "title": "What to Do in a Dog or Cat Emergency",
+    "paragraphs": [
+      "Emergency care often starts with your phone call to the veterinarian. Be ready to describe what happened. The vet might give instructions for first aid and safe transport.",
+      "Examples of emergencies requiring immediate veterinary care include severe pain, severe or uncontrolled bleeding, trouble breathing, eye injuries, and suspected broken bones or a limb that can't move.",
+      "If your pet is unconscious, check for breathing by watching the chest for movement. Place your hand on the chest to see if you can feel a heartbeat.",
+      "Pet CPR starts with chest compressions at about 100–120 compressions per minute. Continue until the animal breathes on its own or until veterinary help takes over.",
+      "For bleeding, press firmly on the wound with your palm or fingers and then apply a firm (but not overly tight) bandage.",
+      "Heat stroke is an emergency. Normal rectal temperature for dogs and cats is about 101.5–102°F (38.6–38.9°C).",
+      "Signs of heat stroke include hot skin, vomiting, drooling, rapid panting, distress, uncoordinated movement, collapse, or unconsciousness.",
+      "Move the animal out of heat, and cool the head and body with cool water, ice packs, or wet towels—especially on the belly. Do not immerse the animal in cold water.",
+      "Signs of hypothermia include slow pulse, shallow breathing, confusion, collapse, or unconsciousness. Shivering is not a reliable sign of hypothermia."
+    ],
+    "tables": [
+      [
+        ["Vital sign", "Reference / action"],
+        ["Normal rectal temperature (dog/cat)", "101.5–102°F (38.6–38.9°C)"],
+        ["CPR compression rate", "100–120 compressions per minute"],
+        ["Heat stroke first aid", "Cool with cool water/wet towels; do not immerse in cold water"],
+        ["Bleeding first aid", "Direct pressure, then firm bandage; do not remove soaked bandage—add more layers"]
+      ]
+    ],
+    "crawled_at": "2026-08-06T06:50:00+00:00",
+    "source_note": "offline_seed_due_to_local_cloudfront_403"
+  },
+  {
+    "url": "https://www.merckvetmanual.com/special-pet-topics/poisoning/general-treatment-of-poisoning",
+    "title": "General Treatment of Poisoning",
+    "paragraphs": [
+      "Immediate, life-saving measures may be needed initially. Beyond this, treatment consists of preventing further absorption of the poison, providing supportive treatment, and administering specific antidotes, if available.",
+      "Thorough washing with soap and water can usually prevent further absorption of poisons on the skin. If the animal has a long or dense coat, the hair may need to be clipped.",
+      "For some poisons that have been ingested, vomiting may be induced in dogs and cats. However, vomiting is not recommended if the suspected poison could damage the stomach or esophagus on its way up, if more than a few hours have passed, if the swallowing reflex is absent, if the animal is convulsing, or if there is a risk of aspiration pneumonia.",
+      "If the animal is unconscious, the stomach may be flushed with a stomach tube, or surgery on the stomach may be needed.",
+      "If the poison cannot be physically removed, sometimes activated charcoal can be administered by mouth to prevent further absorption by the gastrointestinal tract.",
+      "Supportive treatment is often necessary until the poison can be metabolized and eliminated and may include controlling seizures, maintaining breathing, treating shock, controlling heart problems, and treating pain.",
+      "In some cases, there is a known antidote for a specific poison."
+    ],
+    "tables": [
+      [
+        ["Poisoning action", "Guidance"],
+        ["Dermal decontamination", "Wash with soap and water; clip dense coat if needed"],
+        ["Emesis", "May be indicated in some ingestions; contraindicated if corrosive risk, delayed presentation, absent swallow reflex, seizures, or aspiration risk"],
+        ["Adsorption", "Activated charcoal may reduce GI absorption when physical removal is not possible"],
+        ["Supportive care", "Control seizures, support breathing, treat shock/arrhythmias, manage pain"],
+        ["Antidotes", "Use when a specific antidote is known for the toxin"]
+      ]
+    ],
+    "crawled_at": "2026-08-06T06:50:00+00:00",
+    "source_note": "offline_seed_due_to_local_cloudfront_403"
+  },
+  {
+    "url": "https://www.merckvetmanual.com/special-pet-topics/emergencies/introduction-to-emergencies",
+    "title": "Introduction to Emergencies",
+    "paragraphs": [
+      "An emergency is any sudden, serious problem that needs quick medical attention. Examples include severe injuries from accidents, burns, poisoning, a sudden new illness, or rapid worsening of a chronic condition.",
+      "Calling your vet right away can help you figure out what to do next.",
+      "Understanding your pet’s normal behavior helps you notice when something is wrong. Sudden changes in appearance, walking, activity, eating, bathroom habits, or grooming can be signs of a medical problem.",
+      "Keep your pet’s medical information and your vet’s phone number easy to find. Know the location of the nearest 24-hour veterinary hospital. Keep a first aid kit handy for minor emergencies.",
+      "Emergency cases are challenging because life-threatening problems require fast treatment, and some injuries or illnesses might not show their full effects for 24–48 hours."
+    ],
+    "tables": [],
+    "crawled_at": "2026-08-06T06:50:00+00:00",
+    "source_note": "offline_seed_due_to_local_cloudfront_403"
+  }
+]

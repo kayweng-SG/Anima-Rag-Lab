@@ -1,0 +1,287 @@
+{
+  "version": 1,
+  "description": "ANIMA-RAG-Lab regression cases: Red-Light status, intercept, topic relevance.",
+  "cases": [
+    {
+      "id": "hr_normal_green",
+      "group": "heart_rate",
+      "description": "Normal small-dog HR question → GREEN + HR guidance",
+      "request": {
+        "question": "小狗正常心率是多少？运动后呼吸有点快，有点担心。",
+        "species": "dog",
+        "size": "small",
+        "heart_rate_bpm": 95,
+        "crt_seconds": 1.5,
+        "rectal_temp_f": 101.8
+      },
+      "expect": {
+        "red_light_status": "GREEN",
+        "intercepted": false,
+        "min_sources": 1,
+        "answer_zh_must_contain_any": ["心率", "70"],
+        "answer_zh_must_not_contain_any": ["立即就医并途中降温"],
+        "sources_content_must_match_any": ["heart_rate", "bpm", "70"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "heat_mild_yellow",
+      "group": "heat",
+      "description": "Mild heat question (alert, can walk) → YELLOW, not RED",
+      "request": {
+        "question": "中暑怎么办？散步后喘气、流口水，仍清醒能走。",
+        "species": "dog",
+        "size": "large",
+        "heart_rate_bpm": 120,
+        "crt_seconds": 1.5,
+        "rectal_temp_f": 102.8
+      },
+      "expect": {
+        "red_light_status": "YELLOW",
+        "intercepted": false,
+        "min_sources": 1,
+        "answer_zh_must_contain_any": ["中暑", "降温", "观察"],
+        "answer_zh_must_not_contain_any": ["心率参考范围"],
+        "sources_content_must_match_any": ["heat", "cool", "temperature", "hyperthermia"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "heat_severe_red",
+      "group": "heat",
+      "description": "Severe heat + collapse + high temp → RED intercept",
+      "request": {
+        "question": "中暑怎么办？爬山后虚脱、站不起来了，体温很高。",
+        "species": "dog",
+        "size": "large",
+        "heart_rate_bpm": 170,
+        "crt_seconds": 1.5,
+        "rectal_temp_f": 105.2
+      },
+      "expect": {
+        "red_light_status": "RED",
+        "intercepted": true,
+        "max_sources": 0,
+        "model_used": "red_light_intercept",
+        "answer_zh_must_contain_any": ["急诊", "中暑"],
+        "max_elapsed_ms": 500
+      }
+    },
+    {
+      "id": "poison_red",
+      "group": "poison",
+      "description": "Rat poison + vomiting → RED intercept",
+      "request": {
+        "question": "狗狗中毒怎么办？刚才吃了老鼠药，还在呕吐。",
+        "species": "dog"
+      },
+      "expect": {
+        "red_light_status": "RED",
+        "intercepted": true,
+        "max_sources": 0,
+        "model_used": "red_light_intercept",
+        "answer_zh_must_contain_any": ["急诊", "气道"],
+        "max_elapsed_ms": 500
+      }
+    },
+    {
+      "id": "paw_lick_not_hr",
+      "group": "skin",
+      "description": "Paw licking with filled vitals must not dump HR tables",
+      "request": {
+        "question": "一直舔脚怎么办？",
+        "species": "dog",
+        "size": "small",
+        "heart_rate_bpm": 95,
+        "rectal_temp_f": 101.8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "answer_zh_must_not_contain_any": [
+          "心率参考范围",
+          "70–120",
+          "70-120",
+          "Numeric metric"
+        ],
+        "sources_content_must_match_any": [
+          "prurit",
+          "itch",
+          "lick",
+          "flea",
+          "allerg",
+          "dermat",
+          "skin",
+          "paw"
+        ],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "oos_cooking",
+      "group": "oos",
+      "description": "Out-of-scope cooking question → no emergency/HR advice",
+      "request": {
+        "question": "红烧肉怎么做？需要放多少盐？",
+        "species": "dog"
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "answer_zh_must_not_contain_any": [
+          "心率参考范围",
+          "70–120",
+          "老鼠药",
+          "立即就医并途中降温"
+        ],
+        "answer_zh_must_contain_any": ["参考", "就医"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "urinary_hematuria",
+      "group": "urinary",
+      "description": "Hematuria question retrieves urinary-tract content",
+      "request": {
+        "question": "狗狗尿血怎么办？排尿时好像很痛。",
+        "species": "dog"
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "answer_zh_must_not_contain_any": ["心率参考范围", "70–120"],
+        "sources_content_must_match_any": [
+          "urin",
+          "bladder",
+          "urethra",
+          "kidney",
+          "cystitis",
+          "hematuria",
+          "blockage"
+        ],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "neuro_seizure_red",
+      "group": "neuro",
+      "description": "Active seizure language → RED emergency intercept",
+      "request": {
+        "question": "猫突然抽搐了怎么办？",
+        "species": "cat"
+      },
+      "expect": {
+        "red_light_status": "RED",
+        "intercepted": true,
+        "max_sources": 0,
+        "model_used": "red_light_intercept",
+        "answer_zh_must_contain_any": ["急诊"],
+        "max_elapsed_ms": 500
+      }
+    },
+    {
+      "id": "aspca_lily_red",
+      "group": "toxic_plant",
+      "description": "ASPCA toxic plant (lily) mention with ingestion → RED",
+      "request": {
+        "question": "猫吃了百合叶子，现在在吐，怎么办？",
+        "species": "cat"
+      },
+      "expect": {
+        "red_light_status": "RED",
+        "intercepted": true,
+        "max_sources": 0,
+        "model_used": "red_light_intercept",
+        "answer_zh_must_contain_any": ["急诊", "有毒"],
+        "max_elapsed_ms": 500
+      }
+    },
+    {
+      "id": "chocolate_ingestion_red",
+      "group": "toxic_food",
+      "description": "Ate chocolate → RED poison; chip must be 吃了巧克力 not bare 吃了",
+      "request": {
+        "question": "小狗吃了巧克力，精神还行，有点担心。",
+        "species": "dog",
+        "size": "small"
+      },
+      "expect": {
+        "red_light_status": "RED",
+        "intercepted": true,
+        "max_sources": 0,
+        "model_used": "red_light_intercept",
+        "answer_zh_must_contain_any": ["急诊", "中毒"],
+        "extracted_symptoms_must_contain_any": ["巧克力"],
+        "extracted_symptoms_must_not_contain_any": ["吃了"],
+        "max_elapsed_ms": 500
+      }
+    },
+    {
+      "id": "grape_ingestion_red",
+      "group": "toxic_food",
+      "description": "Ate grapes → RED poison intercept",
+      "request": {
+        "question": "狗狗刚才吃了几颗葡萄，现在怎么办？",
+        "species": "dog"
+      },
+      "expect": {
+        "red_light_status": "RED",
+        "intercepted": true,
+        "max_sources": 0,
+        "model_used": "red_light_intercept",
+        "answer_zh_must_contain_any": ["急诊", "中毒"],
+        "extracted_symptoms_must_contain_any": ["葡萄"],
+        "extracted_symptoms_must_not_contain_any": ["吃了"],
+        "max_elapsed_ms": 500
+      }
+    },
+    {
+      "id": "bare_ate_not_toxic_food",
+      "group": "toxic_food",
+      "description": "Ate dinner only — must not fire chocolate/grape RED",
+      "request": {
+        "question": "小狗吃了晚饭，精神很好，只是想确认正常吗？",
+        "species": "dog",
+        "size": "small",
+        "heart_rate_bpm": 95,
+        "rectal_temp_f": 101.8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "answer_zh_must_not_contain_any": ["疑似中毒", "有毒植物"],
+        "extracted_symptoms_must_not_contain_any": ["吃了"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "complaint_yellow_vomit",
+      "group": "complaint_map",
+      "description": "Owner phrase 吐黄水 expands to digestive clinical retrieval",
+      "request": {
+        "question": "狗狗吐黄水怎么办？精神还行。",
+        "species": "dog",
+        "size": "small",
+        "heart_rate_bpm": 95,
+        "rectal_temp_f": 101.8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "answer_zh_must_not_contain_any": ["心率参考范围"],
+        "sources_content_must_match_any": [
+          "vomit",
+          "gastro",
+          "digest",
+          "bile",
+          "stomach",
+          "diarrhea",
+          "nausea"
+        ],
+        "max_elapsed_ms": 8000
+      }
+    }
+  ]
+}
