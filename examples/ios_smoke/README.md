@@ -1,56 +1,58 @@
-# iOS 真机 / 模拟器冒烟
+# iOS 真机 / 模拟器冒烟（含产品打磨）
 
-把 [`../app_clients/AnimaTriageClient.swift`](../app_clients/AnimaTriageClient.swift) 与本目录的 `TriageSmokeView.swift` 拖进 Xcode App target，按下面 5 分钟跑通红/黄/绿。
+拖进同一 Xcode App target：
 
-## 1. 启动 API（带鉴权）
+| 文件 | 作用 |
+|------|------|
+| [`../app_clients/AnimaTriageClient.swift`](../app_clients/AnimaTriageClient.swift) | API + 灯号 UI 模型 + 错误文案 |
+| [`../app_clients/AnimaKeychain.swift`](../app_clients/AnimaKeychain.swift) | API Key → Keychain |
+| [`TriageSmokeView.swift`](TriageSmokeView.swift) | 冒烟 UI（鉴权 / 红黄绿 / 固定免责） |
+| [`Info+LocalNetwork.plist`](Info+LocalNetwork.plist) | Debug HTTP ATS |
+
+## 1. 启动 API
 
 ```bash
 cd anima-rag-lab
-# .env 已有 ANIMA_API_KEY
-export ANIMA_API_HOST=0.0.0.0 ANIMA_API_PORT=8000
-./scripts/run_demo.sh
+export ANIMA_API_HOST=0.0.0.0
+./scripts/run_demo.sh          # 带 ANIMA_API_KEY
+# ./scripts/run_demo_open.sh   # 临时开放、不改 .env
 ```
 
-开放演示（临时关鉴权，不改 `.env`）：
-
-```bash
-./scripts/run_demo_open.sh
-```
-
-## 2. Base URL + Key
+## 2. Base URL
 
 | 环境 | Base URL |
 |------|----------|
-| iOS Simulator | `http://127.0.0.1:8000` |
-| 真机（同 Wi‑Fi） | `http://<Mac局域网IP>:8000` |
+| Simulator | `http://127.0.0.1:8000` |
+| 真机 | `http://<Mac局域网IP>:8000`（`ipconfig getifaddr en0`） |
 
-查 IP：`ipconfig getifaddr en0`  
-Key：与 `.env` 里 `ANIMA_API_KEY` 相同（Xcode Scheme → Environment Variables，或写在 `Config` 里，**勿提交**）。
-
-## 3. ATS（仅 Debug HTTP）
-
-将 `Info+LocalNetwork.plist` 片段合并进 App 的 Info，或在 target Info 勾选 **App Transport Security → Allow Local Networking**。
-
-## 4. 接线
+## 3. 接线
 
 ```swift
-let client = AnimaTriageClient(
-  baseURL: URL(string: ProcessInfo.processInfo.environment["ANIMA_BASE_URL"]
-    ?? "http://127.0.0.1:8000")!,
-  apiKey: ProcessInfo.processInfo.environment["ANIMA_API_KEY"]
-)
-// ContentView → TriageSmokeView(client: client)
+// ContentView
+TriageSmokeView()   // 默认读 ANIMA_BASE_URL，Key 从 Keychain 解析
 ```
+
+在 App 内「鉴权」区粘贴与 `.env` 相同的 `ANIMA_API_KEY` → **保存到 Keychain**。
+
+## 4. 产品行为（已内建）
+
+| 项 | 行为 |
+|----|------|
+| Key | Keychain（`AfterFirstUnlockThisDeviceOnly`），不写 UserDefaults |
+| 401 | 中文提示：请填写/检查 API Key |
+| 超时 / 离线 | 中文提示：检查同网与网络 |
+| 免责声明 | 底部固定条：`TriageScreenModel.defaultDisclaimer` |
+| RED sources | `showSourcesAsAdvice == false`，不当护理建议展示 |
 
 ## 5. 期望结果
 
-| 按钮 | `red_light_status` | UI |
-|------|--------------------|-----|
-| 巧克力 · 精神还行 | YELLOW | 无急诊横幅；可看 sources |
-| 中毒 · 老鼠药+呕吐 | RED | 急诊横幅；`showSourcesAsAdvice=false` |
-| 正常心率 | GREEN | 建议 + sources |
+| 按钮 | 灯号 |
+|------|------|
+| 巧克力 · 精神还行 | YELLOW |
+| 中毒 · 老鼠药+呕吐 | RED + 急诊横幅 |
+| 正常心率 | GREEN |
 
-服务端也可先自检（不依赖 Xcode）：
+服务端自检：
 
 ```bash
 ./scripts/smoke_ios_api.sh

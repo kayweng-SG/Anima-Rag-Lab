@@ -4,14 +4,15 @@
  * Drop into an Xcode app target. Uses URLSession + Codable only (no extra deps).
  *
  * Usage:
+ *   AnimaKeychain.setAPIKey("…")  // once; or pass apiKey:
  *   let client = AnimaTriageClient(
- *     baseURL: URL(string: "http://127.0.0.1:8000")!,
- *     apiKey: ProcessInfo.processInfo.environment["ANIMA_API_KEY"] // nil in local demo
+ *     baseURL: URL(string: "http://127.0.0.1:8000")!
  *   )
+ *   // On failure: (error as? AnimaTriageError)?.userMessageZh
  *   let result = try await client.query(
  *     TriageQueryRequest(question: "小狗吃了巧克力，精神还行，有点担心。", species: "dog", size: "small")
  *   )
- *   // Switch on result.redLightStatus: RED / YELLOW / GREEN
+ *   // result.screen → TriageScreenModel (banner / sources / disclaimer)
  */
 
 import Foundation
@@ -186,18 +187,62 @@ struct AnimaAPIErrorBody: Decodable {
 
 enum AnimaTriageError: Error, LocalizedError {
     case invalidURL
+    case unauthorized(message: String)
+    case timeout
+    case offline
     case http(status: Int, code: String?, message: String)
     case decoding(Error)
+    case transport(Error)
 
-    var errorDescription: String? {
+    /// Fixed product copy for Chinese App UI (prefer over `localizedDescription` in views).
+    var userMessageZh: String {
         switch self {
         case .invalidURL:
-            return "Invalid Anima API URL"
-        case let .http(_, code, message):
-            return code.map { "[\($0)] \(message)" } ?? message
-        case let .decoding(err):
-            return "Decode failed: \(err.localizedDescription)"
+            return "服务地址无效，请检查 Base URL。"
+        case .unauthorized:
+            return "API Key 无效或未填写。请在设置中写入与服务器一致的密钥。"
+        case .timeout:
+            return "请求超时。请确认手机与 Mac/服务器同一网络后重试。"
+        case .offline:
+            return "网络不可用。请检查 Wi‑Fi / 蜂窝网络后重试。"
+        case let .http(status, code, message):
+            if status == 401 || code == "unauthorized" {
+                return "API Key 无效或未填写。请在设置中写入与服务器一致的密钥。"
+            }
+            if status == 503 || code == "service_unavailable" {
+                return "服务暂时不可用（向量库或模型未就绪），请稍后重试。"
+            }
+            if status == 422 || code == "validation_error" {
+                return "输入有误：\(message)"
+            }
+            return "请求失败（HTTP \(status)）：\(message)"
+        case .decoding:
+            return "服务器返回无法解析，请稍后重试或升级 App。"
+        case let .transport(err):
+            return "网络错误：\(err.localizedDescription)"
         }
+    }
+
+    var errorDescription: String? { userMessageZh }
+
+    static func mapTransport(_ error: Error) -> AnimaTriageError {
+        let ns = error as NSError
+        if let urlErr = error as? URLError {
+            switch urlErr.code {
+            case .timedOut:
+                return .timeout
+            case .notConnectedToInternet, .networkConnectionLost, .dataNotAllowed:
+                return .offline
+            case .cannotFindHost, .cannotConnectToHost, .dnsLookupFailed:
+                return .offline
+            default:
+                break
+            }
+        }
+        if ns.domain == NSURLErrorDomain && ns.code == NSURLErrorTimedOut {
+            return .timeout
+        }
+        return .transport(error)
     }
 }
 
@@ -210,20 +255,47 @@ final class AnimaTriageClient {
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
 
-    init(baseURL: URL, apiKey: String? = nil, session: URLSession = .shared) {
+    /// - Parameters:
+    ///   - apiKey: If nil, resolves from Keychain then `ANIMA_API_KEY` env.
+    ///   - timeoutSeconds: Request timeout (LLM answers can be slow; default 90s).
+    init(
+        baseURL: URL,
+        apiKey: String? = nil,
+        timeoutSeconds: TimeInterval = 90,
+        session: URLSession? = nil
+    ) {
         self.baseURL = baseURL
-        self.apiKey = apiKey
-        self.session = session
+        self.apiKey = AnimaKeychain.resolveAPIKey(explicit: apiKey)
+        if let session {
+            self.session = session
+        } else {
+            let config = URLSessionConfiguration.ephemeral
+            config.timeoutIntervalForRequest = timeoutSeconds
+            config.timeoutIntervalForResource = timeoutSeconds + 30
+            config.waitsForConnectivity = true
+            self.session = URLSession(configuration: config)
+        }
         self.decoder = JSONDecoder()
         self.encoder = JSONEncoder()
+    }
+
+    /// Rebuild client after Keychain save (same base URL, refreshed key).
+    func withResolvedAPIKey() -> AnimaTriageClient {
+        AnimaTriageClient(baseURL: baseURL, apiKey: AnimaKeychain.resolveAPIKey())
     }
 
     /// `GET /health` — public, no API key.
     func health() async throws -> [String: Any] {
         let url = baseURL.appendingPathComponent("health")
-        let (data, response) = try await session.data(from: url)
-        try Self.throwIfNeeded(data: data, response: response)
-        return (try JSONSerialization.jsonObject(with: data) as? [String: Any]) ?? [:]
+        do {
+            let (data, response) = try await session.data(from: url)
+            try Self.throwIfNeeded(data: data, response: response)
+            return (try JSONSerialization.jsonObject(with: data) as? [String: Any]) ?? [:]
+        } catch let err as AnimaTriageError {
+            throw err
+        } catch {
+            throw AnimaTriageError.mapTransport(error)
+        }
     }
 
     /// `POST /v1/triage/query`
@@ -244,27 +316,36 @@ final class AnimaTriageClient {
         }
         request.httpBody = try encoder.encode(payload)
 
-        let (data, response) = try await session.data(for: request)
-        try Self.throwIfNeeded(data: data, response: response)
         do {
-            return try decoder.decode(TriageQueryResponse.self, from: data)
+            let (data, response) = try await session.data(for: request)
+            try Self.throwIfNeeded(data: data, response: response)
+            do {
+                return try decoder.decode(TriageQueryResponse.self, from: data)
+            } catch {
+                throw AnimaTriageError.decoding(error)
+            }
+        } catch let err as AnimaTriageError {
+            throw err
         } catch {
-            throw AnimaTriageError.decoding(error)
+            throw AnimaTriageError.mapTransport(error)
         }
     }
 
     private static func throwIfNeeded(data: Data, response: URLResponse) throws {
         guard let http = response as? HTTPURLResponse else { return }
         guard !(200...299).contains(http.statusCode) else { return }
-        if let body = try? JSONDecoder().decode(AnimaAPIErrorBody.self, from: data),
-           let message = body.error?.message {
-            throw AnimaTriageError.http(
-                status: http.statusCode,
-                code: body.error?.code,
-                message: message
-            )
+        if let body = try? JSONDecoder().decode(AnimaAPIErrorBody.self, from: data) {
+            let code = body.error?.code
+            let message = body.error?.message ?? "HTTP \(http.statusCode)"
+            if http.statusCode == 401 || code == "unauthorized" {
+                throw AnimaTriageError.unauthorized(message: message)
+            }
+            throw AnimaTriageError.http(status: http.statusCode, code: code, message: message)
         }
         let raw = String(data: data, encoding: .utf8) ?? "HTTP \(http.statusCode)"
+        if http.statusCode == 401 {
+            throw AnimaTriageError.unauthorized(message: raw)
+        }
         throw AnimaTriageError.http(status: http.statusCode, code: nil, message: raw)
     }
 }

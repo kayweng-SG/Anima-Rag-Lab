@@ -4,10 +4,11 @@ Copy-paste clients for `POST /v1/triage/query`.
 
 | File | Platform | Notes |
 |------|----------|--------|
-| [`AnimaTriageClient.swift`](AnimaTriageClient.swift) | iOS | URLSession + Codable |
+| [`AnimaTriageClient.swift`](AnimaTriageClient.swift) | iOS | URLSession + Codable + 错误文案 |
+| [`AnimaKeychain.swift`](AnimaKeychain.swift) | iOS | API Key → Keychain |
 | [`AnimaTriageClient.kt`](AnimaTriageClient.kt) | Android | OkHttp + kotlinx.serialization |
 | [`triage_query.ts`](triage_query.ts) | TypeScript / RN | `fetch` |
-| [`../ios_smoke/`](../ios_smoke/) | iOS smoke UI | SwiftUI + ATS + 红黄绿按钮 |
+| [`../ios_smoke/`](../ios_smoke/) | iOS smoke UI | Keychain + 401/超时 + 固定免责 |
 
 Full contract: [`docs/APP_INTEGRATION.md`](../../docs/APP_INTEGRATION.md)
 
@@ -58,9 +59,20 @@ if ui.showSourcesAsAdvice { /* 才展示 sources 作参考 */ }
 
 | Client | 传入方式 |
 |--------|----------|
-| iOS | `AnimaTriageClient(baseURL:…, apiKey: "…")` |
-| Android | `AnimaTriageClient(baseUrl=…, apiKey="…")` |
+| iOS | **Keychain**（`AnimaKeychain.setAPIKey`）或 `AnimaTriageClient(..., apiKey:)`；Debug 可用 Scheme env |
+| Android | `AnimaTriageClient(baseUrl=…, apiKey="…")`（建议 EncryptedSharedPreferences） |
 | TS | `new AnimaTriageClient({ baseUrl, apiKey })` |
 | 本地 Web demo | 顶部输入框 → localStorage |
 
-密钥只放本机 `.env` / App 安全存储，**不要**提交到 git。
+密钥只放本机 Keychain / `.env` / App 安全存储，**不要**提交到 git。
+
+### iOS 错误态（`AnimaTriageError.userMessageZh`）
+
+| 情况 | 文案要点 |
+|------|----------|
+| 401 / unauthorized | 请填写/检查 API Key |
+| 超时 | 确认同网后重试 |
+| 离线 | 检查 Wi‑Fi / 蜂窝 |
+| 503 | 服务未就绪 |
+
+UI 固定展示 `TriageScreenModel.defaultDisclaimer`（底部条，不随结果滚动消失）。

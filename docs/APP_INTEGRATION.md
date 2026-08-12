@@ -186,11 +186,12 @@ curl -s -X POST http://127.0.0.1:8000/v1/triage/query \
 
 | File | Platform |
 |------|----------|
-| `AnimaTriageClient.swift` | iOS（URLSession + Codable；含灯号白话 + 可选 SwiftUI） |
+| `AnimaTriageClient.swift` | iOS（URLSession + Codable；灯号模型 + `userMessageZh`） |
+| `AnimaKeychain.swift` | iOS API Key → Keychain |
 | `AnimaTriageClient.kt` | Android（OkHttp + kotlinx.serialization） |
 | `triage_query.ts` | TypeScript / React Native |
 
-iOS 冒烟 UI：[`examples/ios_smoke/`](../examples/ios_smoke/)  
+iOS 冒烟 UI：[`examples/ios_smoke/`](../examples/ios_smoke/)（Keychain、401/超时、底部固定免责）  
 部署：[`docs/DEPLOY.md`](DEPLOY.md) · `docker compose up` · `./scripts/smoke_ios_api.sh`
 
 ### Swift（摘要）
