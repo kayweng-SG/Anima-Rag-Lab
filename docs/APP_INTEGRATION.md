@@ -192,7 +192,9 @@ curl -s -X POST http://127.0.0.1:8000/v1/triage/query \
 | `triage_query.ts` | TypeScript / React Native |
 
 iOS 冒烟 UI：[`examples/ios_smoke/`](../examples/ios_smoke/)（Keychain、401/超时、底部固定免责）  
-部署：[`docs/DEPLOY.md`](DEPLOY.md) · `docker compose up` · `./scripts/smoke_ios_api.sh`
+iOS 产品壳：[`examples/ios_app/`](../examples/ios_app/)（3 Tab + 首屏预算）  
+Xcode 清单：[`examples/ios_smoke/XCODE_CHECKLIST.md`](../examples/ios_smoke/XCODE_CHECKLIST.md)  
+部署：[`docs/DEPLOY.md`](DEPLOY.md) · `./scripts/run_staging.sh` · `./scripts/smoke_ios_api.sh`
 
 ### Swift（摘要）
 

@@ -17,11 +17,11 @@ cd anima-rag-lab
 cp .env.example .env
 # edit: ANIMA_API_KEY, OPENAI_API_KEY (optional), ANIMA_CORS_ORIGINS
 
-docker compose up --build -d
+./scripts/run_staging.sh
+# 或：docker compose up --build -d
 curl -s http://127.0.0.1:8000/health | jq .auth_required   # true when key set
 ./scripts/smoke_ios_api.sh
 ```
-
 ### Required `.env`
 
 ```bash
