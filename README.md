@@ -390,6 +390,9 @@ python scripts/07_api_server.py
 
 ## Project status
 
+**Lab status: Module A (emergency triage data + Red-Light + RAG API) is complete and ready to hand off to AnimaLink.**  
+See [`docs/MERGE_TO_ANIMALINK.md`](docs/MERGE_TO_ANIMALINK.md).
+
 Task 0.1 pipeline is complete and knowledge base expanded:
 
 - [x] Scrape / seed ingestion (MSD emergency + owner sections)
@@ -405,7 +408,14 @@ Task 0.1 pipeline is complete and knowledge base expanded:
 - [x] Pytest suite
 - [x] Fixed triage eval suite (`evals/cases.json`)
 - [x] Expanded owner clinical corpus (urinary / heart / neuro / immune / …)
+- [x] Web demo UX + DEMO_GUIDE smoke (`scripts/smoke_demo_guide.sh`)
+- [x] AnimaLink merge handoff doc (`docs/MERGE_TO_ANIMALINK.md`)
 
+Out of scope for this lab repo (belongs in AnimaLink product):
+
+- [ ] Wire triage API into AnimaLink UI / Edge Functions
+- [ ] Module B/C corpus ingest into AnimaLink pgvector
+- [ ] Production HTTPS / TestFlight
 ## License & disclaimer
 
 Merck Veterinary Manual content is © Merck & Co., Inc. This lab pipeline is for research/education. **Not a substitute for professional veterinary care.** Always escalate emergencies to a licensed veterinarian.
