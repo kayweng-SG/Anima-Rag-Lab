@@ -391,7 +391,8 @@ python scripts/07_api_server.py
 ## Project status
 
 **Lab status: Module A (emergency triage data + Red-Light + RAG API) is complete and ready to hand off to AnimaLink.**  
-See [`docs/MERGE_TO_ANIMALINK.md`](docs/MERGE_TO_ANIMALINK.md).
+See [`docs/MERGE_TO_ANIMALINK.md`](docs/MERGE_TO_ANIMALINK.md).  
+WBS plan vs actual: [`docs/WBS_STATUS.md`](docs/WBS_STATUS.md) (Master WBS Excel 对照表).
 
 Task 0.1 pipeline is complete and knowledge base expanded:
 

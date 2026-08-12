@@ -75,4 +75,5 @@ HF_HUB_OFFLINE=1 python scripts/09_run_eval.py
 | B 行为常模 | 未做收集 | 与 AnimaLink 既有 C-BARQ 域对齐；需要时再开收料 |
 | C 日常育养 | 未做收集 | 对齐 PetTalk / AAHA；需要时再开收料 |
 
-**结论：先完成本仓 A 线并交接；B/C 收集不阻塞「本项目完成」。**
+**结论：先完成本仓 A 线并交接；B/C 收集不阻塞「本项目 A 线完成」。**  
+完整计划 vs 实际进度：[`WBS_STATUS.md`](./WBS_STATUS.md)。
