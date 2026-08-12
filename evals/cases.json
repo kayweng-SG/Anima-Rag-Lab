@@ -322,6 +322,61 @@
         "extracted_symptoms_must_not_contain_any": ["fleas"],
         "max_elapsed_ms": 8000
       }
+    },
+    {
+      "id": "xylitol_ingestion_yellow",
+      "group": "toxic_food",
+      "description": "Xylitol exposure alone + alert → YELLOW (not RED intercept)",
+      "request": {
+        "question": "狗可能吃了无糖口香糖（木糖醇），现在精神还行。",
+        "species": "dog",
+        "size": "small"
+      },
+      "expect": {
+        "red_light_status": "YELLOW",
+        "intercepted": false,
+        "answer_zh_must_contain_any": ["可能原因", "建议行动", "尽快"],
+        "extracted_symptoms_must_contain_any": ["木糖醇"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "chocolate_delayed_seizure_red",
+      "group": "toxic_food",
+      "description": "Prior chocolate + now seizure → RED (delayed severe signs)",
+      "request": {
+        "question": "昨天吃了巧克力，刚才开始抽搐，站不起来。",
+        "species": "dog",
+        "size": "small"
+      },
+      "expect": {
+        "red_light_status": "RED",
+        "intercepted": true,
+        "max_sources": 0,
+        "model_used": "red_light_intercept",
+        "answer_zh_must_contain_any": ["急诊", "可能原因"],
+        "extracted_symptoms_must_contain_any": ["巧克力"],
+        "max_elapsed_ms": 500
+      }
+    },
+    {
+      "id": "diarrhea_alert_not_red",
+      "group": "complaint_map",
+      "description": "Mild diarrhea + alert mentation → not RED",
+      "request": {
+        "question": "小狗拉肚子两天了，精神还行，还在喝水。",
+        "species": "dog",
+        "size": "small",
+        "heart_rate_bpm": 100,
+        "rectal_temp_f": 101.5
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "answer_zh_must_contain_any": ["可能原因", "请先观察", "建议行动"],
+        "extracted_symptoms_must_contain_any": ["精神还行"],
+        "max_elapsed_ms": 8000
+      }
     }
   ]
 }

@@ -7,6 +7,7 @@ Copy-paste clients for `POST /v1/triage/query`.
 | [`AnimaTriageClient.swift`](AnimaTriageClient.swift) | iOS | URLSession + Codable |
 | [`AnimaTriageClient.kt`](AnimaTriageClient.kt) | Android | OkHttp + kotlinx.serialization |
 | [`triage_query.ts`](triage_query.ts) | TypeScript / RN | `fetch` |
+| [`../ios_smoke/`](../ios_smoke/) | iOS smoke UI | SwiftUI + ATS + 红黄绿按钮 |
 
 Full contract: [`docs/APP_INTEGRATION.md`](../../docs/APP_INTEGRATION.md)
 

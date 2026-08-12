@@ -190,6 +190,9 @@ curl -s -X POST http://127.0.0.1:8000/v1/triage/query \
 | `AnimaTriageClient.kt` | Android（OkHttp + kotlinx.serialization） |
 | `triage_query.ts` | TypeScript / React Native |
 
+iOS 冒烟 UI：[`examples/ios_smoke/`](../examples/ios_smoke/)  
+部署：[`docs/DEPLOY.md`](DEPLOY.md) · `docker compose up` · `./scripts/smoke_ios_api.sh`
+
 ### Swift（摘要）
 
 ```swift

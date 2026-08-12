@@ -1,0 +1,11 @@
+venv/
+.git/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+*.db
+data/triage_results.db
+data/raw/*.backup*
+**/__pycache__/
+.DS_Store
