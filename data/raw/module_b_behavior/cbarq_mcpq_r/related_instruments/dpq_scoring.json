@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "instrument": "Dog Personality Questionnaire (DPQ)",
+  "source_pdf": "docs/Questionaire/DPQ-forms-and-scoring-keys.pdf",
+  "archived_as": "related_instruments/DPQ_forms_and_scoring_keys.pdf",
+  "note": "Related canine personality instrument (Jones & Gosling lineage). Not C-BARQ/MCPQ-R but useful cross-reference for AnimaLink behavior domains.",
+  "item_scale": "1–7 Likert (Disagree strongly … Agree strongly)",
+  "reverse_code_prefix": "R",
+  "long_form": {
+    "items": 75,
+    "factors": [
+      {
+        "id": "fearfulness",
+        "facets": [
+          {"name": "Fear of People", "items": ["R1", "12", "30", "47", "54"]},
+          {"name": "Nonsocial Fear", "items": ["6", "R19", "24", "R38", "R58"]},
+          {"name": "Fear of Dogs", "items": ["R9", "21", "36", "66", "70"]},
+          {"name": "Fear of Handling", "items": ["28", "32", "42", "61", "74"]}
+        ]
+      },
+      {
+        "id": "aggression_towards_people",
+        "facets": [
+          {"name": "General Aggression", "items": ["13", "23", "R33", "68", "73"]},
+          {"name": "Situational Aggression", "items": ["2", "17", "43", "51", "62"]}
+        ]
+      },
+      {
+        "id": "activity_excitability",
+        "facets": [
+          {"name": "Excitability", "items": ["27", "53", "55", "R69", "72"]},
+          {"name": "Playfulness", "items": ["R3", "R16", "31", "46", "59"]},
+          {"name": "Active Engagement", "items": ["R10", "14", "25", "40", "48"]},
+          {"name": "Companionability", "items": ["7", "35", "R44", "63", "67"]}
+        ]
+      },
+      {
+        "id": "responsiveness_to_training",
+        "facets": [
+          {"name": "Trainability", "items": ["37", "R45", "R50", "R64", "71"]},
+          {"name": "Controllability", "items": ["R4", "11", "R18", "R29", "56"]}
+        ]
+      },
+      {
+        "id": "aggression_towards_animals",
+        "facets": [
+          {"name": "Aggression towards Dogs", "items": ["5", "8", "R34", "57", "R60"]},
+          {"name": "Prey Drive", "items": ["15", "22", "26", "39", "65"]},
+          {"name": "Dominance over Other Dogs", "items": ["20", "41", "R49", "52", "75"]}
+        ]
+      }
+    ]
+  },
+  "short_form": {
+    "items": 45,
+    "factors": [
+      {
+        "id": "fearfulness",
+        "facets": [
+          {"name": "Fear of People", "items": ["R1", "6", "27"]},
+          {"name": "Nonsocial Fear", "items": ["3", "R11", "R22"]},
+          {"name": "Fear of Dogs", "items": ["13", "21", "42"]},
+          {"name": "Fear of Handling", "items": ["16", "35", "44"]}
+        ]
+      },
+      {
+        "id": "aggression_towards_people",
+        "facets": [
+          {"name": "General Aggression", "items": ["7", "R18", "40"]},
+          {"name": "Situational Aggression", "items": ["25", "30", "36"]}
+        ]
+      },
+      {
+        "id": "activity_excitability",
+        "facets": [
+          {"name": "Excitability", "items": ["15", "31", "R41"]},
+          {"name": "Playfulness", "items": ["R9", "17", "33"]},
+          {"name": "Active Engagement", "items": ["R4", "14", "24"]},
+          {"name": "Companionability", "items": ["20", "R26", "37"]}
+        ]
+      },
+      {
+        "id": "responsiveness_to_training",
+        "facets": [
+          {"name": "Trainability", "items": ["R29", "R38", "43"]},
+          {"name": "Controllability", "items": ["5", "R10", "32"]}
+        ]
+      },
+      {
+        "id": "aggression_towards_animals",
+        "facets": [
+          {"name": "Aggression towards Dogs", "items": ["2", "R19", "R34"]},
+          {"name": "Prey Drive", "items": ["8", "23", "39"]},
+          {"name": "Dominance over Other Dogs", "items": ["12", "R28", "45"]}
+        ]
+      }
+    ]
+  }
+}

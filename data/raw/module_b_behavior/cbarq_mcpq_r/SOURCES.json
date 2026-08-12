@@ -2,34 +2,42 @@
   "wbs_id": "0.4",
   "title": "C-BARQ & MCPQ-R academic norms",
   "collected_at": "2026-08-12",
-  "status": "manifest_only",
-  "note": "Do not bulk-mirror paywalled PDFs. Download OA copies manually into this folder when licensed.",
-  "search_queries": [
-    "C-BARQ canine behavior assessment questionnaire norms",
-    "MCPQ-R Monash Canine Personality Questionnaire Revised",
-    "Hsu Serpell C-BARQ validation"
+  "updated_at": "2026-08-12",
+  "status": "questionnaire_folder_indexed",
+  "owner_folder": "docs/Questionaire/",
+  "owner_folder_readme": "docs/Questionaire/README.md",
+  "note": "Primary instruments from owner Questionaire folder. Serpell © UPenn — research staging only.",
+  "scoring_methods": [
+    {"file": "scoring_methods/C-BARQ_short_version_scoring_method.pdf", "source": "docs/Questionaire/C-BARQ short version scoring method.pdf", "completeness": "cbarq42_all_14_formulas"},
+    {"file": "scoring_methods/C-BARQ_101_scoring_method.pdf", "source": "docs/Questionaire/C-BARQ(101) scoring method.PDF", "completeness": "definitions_only_4_of_14_formulas"},
+    {"file": "scoring_methods/51Q_therapy_dogs_cbarq_factor_study.pdf", "source": "docs/Questionaire/51Q-Selection_of_Appropriate_Dogs_to_Be_Therapy_Dogs_U.pdf", "doi": "10.3390/ani13050834"},
+    {"file": "scoring_methods/51Q_therapy_dogs_14_factors_zh.pdf", "source": "docs/Questionaire/51Q-日本防護犬 51問題與因子14.pdf", "completeness": "51_items_14_factors_zh"}
   ],
-  "reference_links": [
-    {
-      "title": "C-BARQ project (Penn Vet / Serpell)",
-      "url": "https://vetapps.vet.upenn.edu/cbarq/",
-      "type": "instrument_home"
-    },
-    {
-      "title": "PubMed search: C-BARQ",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=C-BARQ",
-      "type": "search"
-    },
-    {
-      "title": "PubMed search: MCPQ-R OR Monash Canine Personality",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=MCPQ-R+OR+Monash+Canine+Personality",
-      "type": "search"
-    },
-    {
-      "title": "AnimaLink domain rule (product already implements frameworks)",
-      "url": "file://AnimaLink/.cursor/rules/400-domain-animalink.mdc",
-      "type": "product_alignment"
-    }
+  "questionnaire_forms": [
+    {"file": "forms/CBARQ_short_questionnaire_2018.pdf", "source": "docs/Questionaire/CBARQ_short-final_copy.pdf", "items": "~42"},
+    {"file": "forms/CBARQ_101_questionnaire_2015.pdf", "source": "docs/Questionaire/dog-aggression-questionnaire.pdf", "items": 101}
   ],
-  "acceptance_gap": "WBS asks for PDF norms + scoring weights on disk. Next: add 1–3 OA PDFs under ./pdfs/ when available."
+  "related_instruments": [
+    {"file": "related_instruments/DPQ_forms_and_scoring_keys.pdf", "source": "docs/Questionaire/DPQ-forms-and-scoring-keys.pdf", "extract": "related_instruments/dpq_scoring.json"}
+  ],
+  "not_archived": [
+    {"file": "docs/Questionaire/Pet function research.pptx", "reason": "large presentation; catalog only"}
+  ],
+  "derived_extracts": [
+    "norms_and_scoring.json",
+    "therapy_dog_51q_factors.json",
+    "therapy_dog_51q_zh.json",
+    "related_instruments/dpq_scoring.json"
+  ],
+  "pdfs_literature": [
+    "pdfs/plosone_2024_cbarq_short_validation.pdf",
+    "pdfs/plosone_2023_cbarq_shelter_adoption.pdf",
+    "pdfs/animals_2023_cbarq_italian_validation.pdf",
+    "pdfs/animals_2023_therapy_dogs_cbarq_51items.pdf",
+    "pdfs/frontiers_2024_modified_cbarq_working_dogs.pdf",
+    "pdfs/ley_2009_mcpq_r_reliability.pdf",
+    "pdfs/pone_2016_puppy_personality_mcpq_related.pdf",
+    "pdfs/pone_2022_kelpie_personality_mcpq_context.pdf"
+  ],
+  "acceptance_gap": "C-BARQ(101) missing 10 subscale formulae; MCPQ-R scoring sheet still absent."
 }

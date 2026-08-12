@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "source_pdf": "docs/Questionaire/51Q-日本防護犬 51問題與因子14.pdf",
+  "archived_as": "scoring_methods/51Q_therapy_dogs_14_factors_zh.pdf",
+  "language": "zh-TW",
+  "related_study": "therapy_dog_51q_factors.json",
+  "item_scale": "0–4 Likert (0 = none/rare, 4 = very frequent/severe)",
+  "factors": [
+    {
+      "id": 1,
+      "name_zh": "可訓練性與服從性",
+      "name_en": "Trainability and Obedience",
+      "items": [
+        {"q": 1, "text_zh": "聽到 Wait/Stay 指令時能立即服從"},
+        {"q": 2, "text_zh": "未繫牽繩時，一被叫喚能立即返回"},
+        {"q": 3, "text_zh": "學習新動作或新任務的速度很慢", "reverse_scored": true}
+      ]
+    },
+    {
+      "id": 2,
+      "name_zh": "分離相關焦慮行為",
+      "name_en": "Separation-related Anxiety Behaviours",
+      "items": [
+        {"q": 4, "text_zh": "獨處或與飼主分離時，焦躁不安、踱步或無法定心"},
+        {"q": 5, "text_zh": "獨處或與飼主分離時，會發出嗚嗚哀鳴聲"},
+        {"q": 6, "text_zh": "獨處或與飼主分離時，會持續吠叫"}
+      ]
+    },
+    {
+      "id": 3,
+      "name_zh": "分離相關生理與破壞反應",
+      "name_en": "Separation-related Physiological Reactions",
+      "items": [
+        {"q": 7, "text_zh": "獨處或與飼主分離時，會過度流口水"},
+        {"q": 8, "text_zh": "獨處或與飼主分離時，會啃咬或抓撕門、地板、窗戶或窗簾等"},
+        {"q": 9, "text_zh": "獨處或與飼主分離時，出現食慾喪失或拒絕進食"}
+      ]
+    },
+    {
+      "id": 4,
+      "name_zh": "對人攻擊性",
+      "name_en": "Aggression Towards People",
+      "items": [
+        {"q": 10, "text_zh": "當跨過犬隻身體時（由同住家庭成員操作）"},
+        {"q": 11, "text_zh": "散步或運動繫繩時，有不認識的小孩直接靠近"},
+        {"q": 12, "text_zh": "被同住家庭成員直接眼神凝視時"},
+        {"q": 13, "text_zh": "散步或運動繫繩時，有不認識的成年人直接靠近"},
+        {"q": 14, "text_zh": "當陌生人試圖摸或撫摸犬隻時"}
+      ]
+    },
+    {
+      "id": 5,
+      "name_zh": "對陌生人、陌生犬及新環境之恐懼與焦慮",
+      "name_en": "Fear/Anxiety Towards Strangers, Dogs, Unfamiliar Situations",
+      "items": [
+        {"q": 15, "text_zh": "在戶外時，有不認識的成年男性直接靠近"},
+        {"q": 16, "text_zh": "在戶外時，有不認識的小孩直接靠近"},
+        {"q": 17, "text_zh": "當陌生人試圖摸或撫摸犬隻時"},
+        {"q": 18, "text_zh": "有不認識、同體型或較大體型的犬隻直接靠近時"},
+        {"q": 19, "text_zh": "有不認識、較小體型的犬隻直接靠近時"},
+        {"q": 20, "text_zh": "第一次接觸或暴露於不熟悉的新情境時（如首次搭車、搭電梯、看獸醫等）"},
+        {"q": 21, "text_zh": "面對強風吹襲或被風吹動的物體時"},
+        {"q": 22, "text_zh": "由家庭成員為其剪指甲時"},
+        {"q": 23, "text_zh": "被不認識的犬隻對其吠叫、低吼或衝撞時"}
+      ]
+    },
+    {
+      "id": 6,
+      "name_zh": "領域攻擊性",
+      "name_en": "Territorial Aggression",
+      "items": [
+        {"q": 24, "text_zh": "當犬隻在自家院子裡，有陌生人走過家門口時"},
+        {"q": 25, "text_zh": "當郵差、外送員或物流人員靠近家門口時"},
+        {"q": 26, "text_zh": "對於前來家中拜訪的陌生訪客"},
+        {"q": 27, "text_zh": "當犬隻在院子裡，有慢跑者、自行車手或滑板者經過家門口時"},
+        {"q": 28, "text_zh": "在家中，當陌生人靠近飼主或其家庭成員時"},
+        {"q": 29, "text_zh": "對於進入自家院子的貓、松鼠或其他小動物"}
+      ]
+    },
+    {
+      "id": 7,
+      "name_zh": "過動與多動",
+      "name_en": "Hyperactivity",
+      "items": [
+        {"q": 30, "text_zh": "平時非常活潑、精力充沛、總是不停活動"},
+        {"q": 31, "text_zh": "像幼犬般愛玩、吵鬧且粗魯喧鬧"},
+        {"q": 32, "text_zh": "過度活躍、浮躁不安、難以平靜定下來"}
+      ]
+    },
+    {
+      "id": 8,
+      "name_zh": "對接近之陌生犬攻擊",
+      "name_en": "Aggression Towards Approaching Unknown Dogs",
+      "items": [
+        {"q": 33, "text_zh": "散步繫繩時，有不認識的公犬直接靠近"},
+        {"q": 34, "text_zh": "散步繫繩時，有不認識的母犬直接靠近"}
+      ]
+    },
+    {
+      "id": 9,
+      "name_zh": "資源護衛/護食攻擊",
+      "name_en": "Resource Guarding-related Aggression",
+      "items": [
+        {"q": 35, "text_zh": "當食物被家庭成員拿走或移開時"}
+      ]
+    },
+    {
+      "id": 10,
+      "name_zh": "異常/強迫行為",
+      "name_en": "Abnormal Behaviour",
+      "items": [
+        {"q": 36, "text_zh": "過度舔舐人類或周遭物體"},
+        {"q": 37, "text_zh": "喜歡在其他動物的排泄物或有強烈異味的物質上打滾"}
+      ]
+    },
+    {
+      "id": 11,
+      "name_zh": "興奮度",
+      "name_en": "Excitability",
+      "items": [
+        {"q": 38, "text_zh": "當有訪客抵達家中時"},
+        {"q": 39, "text_zh": "準備被帶出門散步前"},
+        {"q": 40, "text_zh": "準備被帶上車出遊前"},
+        {"q": 41, "text_zh": "當飼主或家庭成員短暫離家後返回家中時"},
+        {"q": 42, "text_zh": "與飼主或家庭成員一起玩耍時"},
+        {"q": 43, "text_zh": "當門鈴響起時"}
+      ]
+    },
+    {
+      "id": 12,
+      "name_zh": "對家庭成員之依戀行為",
+      "name_en": "Attachment Behaviour to Family Members",
+      "items": [
+        {"q": 44, "text_zh": "當家庭成員坐下時，傾向坐得很靠近或緊貼著該成員"},
+        {"q": 45, "text_zh": "當家庭成員坐下時，會用鼻子推、蹭或用腳掌抓人以尋求關注"},
+        {"q": 46, "text_zh": "當家庭成員對其他犬隻或動物表達親暱/關愛時，會顯得焦躁不安"},
+        {"q": 47, "text_zh": "在家中傾向跟隨家庭成員從一個房間走到另一個房間"}
+      ]
+    },
+    {
+      "id": 13,
+      "name_zh": "對同戶家犬之警戒攻擊",
+      "name_en": "Vigilant Aggression Towards Family Dogs",
+      "multi_dog_household_only": true,
+      "items": [
+        {"q": 48, "text_zh": "當靠近自家另一隻熟悉家犬喜愛的休息或睡覺地點時"},
+        {"q": 49, "text_zh": "面對家中另一隻熟悉的家犬時"}
+      ]
+    },
+    {
+      "id": 14,
+      "name_zh": "對同戶家犬之資源護衛/護食攻擊",
+      "name_en": "Resource Guarding Aggression Towards Family Dogs",
+      "multi_dog_household_only": true,
+      "items": [
+        {"q": 50, "text_zh": "當正在玩耍/啃咬喜愛的玩具或骨頭時，被家中另一隻熟悉的家犬靠近"},
+        {"q": 51, "text_zh": "當正在進食時，被家中另一隻熟悉的家犬靠近"}
+      ]
+    }
+  ]
+}

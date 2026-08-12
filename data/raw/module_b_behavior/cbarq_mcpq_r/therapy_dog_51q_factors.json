@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "wbs_id": "0.4",
+  "source_pdf": "docs/Questionaire/51Q-Selection_of_Appropriate_Dogs_to_Be_Therapy_Dogs_U.pdf",
+  "archived_as": [
+    "pdfs/animals_2023_therapy_dogs_cbarq_51items.pdf",
+    "scoring_methods/51Q_therapy_dogs_cbarq_factor_study.pdf"
+  ],
+  "citation": {
+    "title": "Selection of Appropriate Dogs to Be Therapy Dogs Using the C-BARQ",
+    "authors": "Sakurama M, Ito M, Nakanowataru Y, Kooriyama T",
+    "journal": "Animals",
+    "year": 2023,
+    "volume": "13",
+    "article": "834",
+    "doi": "10.3390/ani13050834",
+    "license": "CC BY 4.0"
+  },
+  "study": {
+    "n_dogs": 110,
+    "breeds_total": 30,
+    "top_breeds": ["Labrador Retriever", "Golden Retriever", "Toy Poodle"],
+    "cbarq_version": "2020 (101 questions; analysis used 98 items meeting response-rate filters)",
+    "items_retained_after_factor_analysis": 51,
+    "factors_extracted": 14,
+    "sample": "Dogs that passed Hokkaido Volunteer Dog Association therapy-dog aptitude test",
+    "item_scale": "0–4"
+  },
+  "therapy_dog_factor_trends": [
+    {"factor": "Trainability and obedience", "trend": "High", "mean": 2.7, "sd": 0.91, "cronbach_alpha": 0.6},
+    {"factor": "Attachment behaviour to family members", "trend": "Mild to moderate", "mean": 1.8, "sd": 0.49, "cronbach_alpha": 0.8},
+    {"factor": "Excitability", "trend": "Mild", "mean": 1.5, "sd": 0.09, "cronbach_alpha": 0.87},
+    {"factor": "Separation-related anxiety behaviours", "trend": "Low", "mean": 0.4, "sd": 0.11, "cronbach_alpha": 0.71},
+    {"factor": "Separation-related physiological reactions", "trend": "Low", "mean": 0.1, "sd": 0.04, "cronbach_alpha": 0.75},
+    {"factor": "Aggression towards people", "trend": "Low", "mean": 0.1, "sd": 0.03, "cronbach_alpha": 0.8},
+    {"factor": "Fear and anxiety towards strangers, dogs, unfamiliar situations", "trend": "Low", "mean": 0.6, "sd": 0.29, "cronbach_alpha": 0.87},
+    {"factor": "Territorial aggression", "trend": "Low", "mean": 0.3, "sd": 0.11, "cronbach_alpha": 0.91},
+    {"factor": "Hyperactivity", "trend": "Low", "mean": 0.8, "sd": 0.19, "cronbach_alpha": 0.86},
+    {"factor": "Aggression towards approaching unknown dogs", "trend": "Low", "mean": 0.4, "sd": 0.0, "cronbach_alpha": 0.99},
+    {"factor": "Resource guarding-related aggression", "trend": "Low", "mean": 0.1, "sd": 0.44, "cronbach_alpha": null},
+    {"factor": "Abnormal behavior", "trend": "Low", "mean": 0.6, "sd": 0.02, "cronbach_alpha": 0.5},
+    {"factor": "Vigilant aggression towards family dogs", "trend": "Low", "mean": 0.2, "sd": 0.01, "cronbach_alpha": 0.89},
+    {"factor": "Resource guarding-related aggression towards family dogs", "trend": "Low", "mean": 0.4, "sd": 0.07, "cronbach_alpha": 0.78}
+  ],
+  "factors": [
+    {
+      "id": 1,
+      "name": "Trainability and obedience",
+      "mean": 2.7,
+      "items": [
+        {"text": "Obeys a stay command immediately.", "mean": 3.4, "loading": 0.68},
+        {"text": "When off the leash, returns immediately when called.", "mean": 3.2, "loading": 0.595},
+        {"text": "Slow to learn new tricks or tasks.", "mean": 1.4, "loading": -0.584, "note": "Negative loading — reverse-sense item in factor"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Separation-related anxiety behaviours",
+      "mean": 0.4,
+      "items": [
+        {"text": "Restlessness/agitation/pacing.", "mean": 0.5, "loading": 0.71},
+        {"text": "Whining.", "mean": 0.4, "loading": 0.76},
+        {"text": "Barking.", "mean": 0.3, "loading": 0.6}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Separation-related physiological reactions",
+      "mean": 0.1,
+      "items": [
+        {"text": "Excessive salivation.", "mean": 0.0, "loading": 0.81},
+        {"text": "Chewing/scratching at doors, floor, windows, curtains, etc.", "mean": 0.1, "loading": 0.54},
+        {"text": "Loss of appetite", "mean": 0.1, "loading": 0.88}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Aggression towards people",
+      "mean": 0.1,
+      "items": [
+        {"text": "When stepped over by a member of the household.", "mean": 0.0, "loading": 0.804},
+        {"text": "When approached directly by an unfamiliar child while being walked or exercised on a leash.", "mean": 0.1, "loading": 0.638},
+        {"text": "When stared at directly by a member of the household.", "mean": 0.0, "loading": 0.623},
+        {"text": "When approached directly by an unfamiliar adult while being walked or exercised on a leash.", "mean": 0.1, "loading": 0.524},
+        {"text": "When an unfamiliar person tries to touch or pet the dog.", "mean": 0.1, "loading": 0.511}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Fear and anxiety towards strangers, dogs, unfamiliar situations",
+      "mean": 0.6,
+      "items": [
+        {"text": "When approached directly by an unfamiliar male adult while away from the home.", "mean": 0.2, "loading": 0.73},
+        {"text": "When approached directly by an unfamiliar child while away from the home.", "mean": 0.3, "loading": 0.8},
+        {"text": "When an unfamiliar person tries to touch or pet the dog.", "mean": 0.2, "loading": 0.7},
+        {"text": "When approached directly by an unfamiliar dog of the same or larger size.", "mean": 0.6, "loading": 0.75},
+        {"text": "When approached directly by an unfamiliar dog of a smaller size.", "mean": 0.4, "loading": 0.67},
+        {"text": "When first exposed to unfamiliar situations (e.g., first car trip, first time in elevator, first visit to veterinarian, etc.).", "mean": 0.9, "loading": 0.76},
+        {"text": "In response to wind or wind-blown objects.", "mean": 0.5, "loading": 0.65},
+        {"text": "When having nails clipped by a household member.", "mean": 0.9, "loading": 0.51},
+        {"text": "When barked, growled, or lunged at by an unfamiliar dog.", "mean": 1.0, "loading": 0.62}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Territorial aggression",
+      "mean": 0.3,
+      "items": [
+        {"text": "When strangers walk past the home while the dog is in the yard.", "mean": 0.3, "loading": 0.923},
+        {"text": "When mailmen or other delivery workers approach the home.", "mean": 0.4, "loading": 0.905},
+        {"text": "Toward unfamiliar persons visiting your home.", "mean": 0.3, "loading": 0.868},
+        {"text": "When joggers, cyclists, roller skaters, or skateboarders pass the home while the dog is in the yard.", "mean": 0.3, "loading": 0.857},
+        {"text": "When an unfamiliar person approaches the owner or a member of the owner's family at home.", "mean": 0.2, "loading": 0.712},
+        {"text": "Toward cats, squirrels, and other animals entering its yard.", "mean": 0.5, "loading": 0.507}
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Hyperactivity",
+      "mean": 0.8,
+      "items": [
+        {"text": "Active, energetic, always on the go.", "mean": 0.9, "loading": 0.805},
+        {"text": "Playful, puppyish, boisterous.", "mean": 1.0, "loading": 0.766},
+        {"text": "Hyperactive, restless, has trouble settling down.", "mean": 0.5, "loading": 0.707}
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Aggression towards approaching unknown dogs",
+      "mean": 0.4,
+      "items": [
+        {"text": "When approached directly by an unfamiliar male dog while being walked or exercised on a leash.", "mean": 0.4, "loading": 0.953},
+        {"text": "When approached directly by an unfamiliar female dog while being walked or exercised on a leash.", "mean": 0.4, "loading": 0.951}
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Resource guarding-related aggression",
+      "mean": 0.1,
+      "items": [
+        {"text": "When food is taken away by a member of the household.", "mean": 0.1, "loading": 0.618}
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Abnormal behavior",
+      "mean": 0.6,
+      "items": [
+        {"text": "Licks people or objects excessively.", "mean": 0.6, "loading": 0.619},
+        {"text": "Rolls in animal droppings or other \"smelly\" substances.", "mean": 0.5, "loading": 0.554}
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Excitability",
+      "mean": 1.5,
+      "items": [
+        {"text": "When visitors arrive at its home.", "mean": 1.6, "loading": 0.838},
+        {"text": "Just before being taken for a walk.", "mean": 1.5, "loading": 0.793},
+        {"text": "Just before being taken on a car trip.", "mean": 1.6, "loading": 0.78},
+        {"text": "When you or other members of the household come home after a brief absence.", "mean": 1.4, "loading": 0.713},
+        {"text": "When playing with you or other members of your household.", "mean": 1.4, "loading": 0.637},
+        {"text": "When the doorbell rings.", "mean": 1.6, "loading": 0.61}
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Attachment behaviour to family members",
+      "mean": 1.8,
+      "items": [
+        {"text": "Tends to sit close to or in contact with a member of the household when that individual is sitting down.", "mean": 2.4, "loading": 0.83},
+        {"text": "Tends to nudge, nuzzle, or paw a member of the household for attention when that individual is sitting down.", "mean": 1.7, "loading": 0.733},
+        {"text": "Becomes agitated when a member of the household shows affection for another dog or animal.", "mean": 1.0, "loading": 0.676},
+        {"text": "Tends to follow a member of household from room to room about the house.", "mean": 1.9, "loading": 0.636}
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Vigilant aggression towards family dogs",
+      "mean": 0.2,
+      "multi_dog_household_only": true,
+      "items": [
+        {"text": "When approached at a favorite resting/sleeping place by another (familiar) household dog.", "mean": 0.2, "loading": 1.015},
+        {"text": "Towards another (familiar) dog in your household.", "mean": 0.3, "loading": 0.773}
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Resource guarding-related aggression towards family dogs",
+      "mean": 0.4,
+      "multi_dog_household_only": true,
+      "items": [
+        {"text": "When approached while playing with/chewing a favorite toy, bone, object, etc., by another (familiar) household dog.", "mean": 0.5, "loading": 0.914},
+        {"text": "When approached while eating by another (familiar) household dog.", "mean": 0.3, "loading": 0.67}
+      ]
+    }
+  ],
+  "use_in_lab": "Reference norms for therapy-suitable C-BARQ profiles (Japan certified sample). Not a replacement for Serpell official subscale scoring; factor structure is study-specific (51 items → 14 named factors)."
+}
