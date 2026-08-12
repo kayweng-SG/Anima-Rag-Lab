@@ -1,0 +1,21 @@
+{
+  "wbs_id": "0.6",
+  "title": "AAHA dog and cat life stage guidelines",
+  "collected_at": "2026-08-12",
+  "status": "url_manifest",
+  "note": "Direct PDF fetch returned HTTP 403 from this environment. Archive PDFs manually from a browser into ./pdfs/.",
+  "reference_links": [
+    {
+      "title": "AAHA Canine Life Stage Guidelines (resources hub)",
+      "url": "https://www.aaha.org/resources/canine-life-stage-guidelines/"
+    },
+    {
+      "title": "AAHA Feline Life Stage Guidelines (resources hub)",
+      "url": "https://www.aaha.org/resources/feline-life-stage-guidelines/"
+    },
+    {
+      "title": "AAHA guidelines library",
+      "url": "https://www.aaha.org/aaha-guidelines/"
+    }
+  ]
+}

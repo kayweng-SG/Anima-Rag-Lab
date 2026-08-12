@@ -1,0 +1,35 @@
+{
+  "wbs_id": "0.4",
+  "title": "C-BARQ & MCPQ-R academic norms",
+  "collected_at": "2026-08-12",
+  "status": "manifest_only",
+  "note": "Do not bulk-mirror paywalled PDFs. Download OA copies manually into this folder when licensed.",
+  "search_queries": [
+    "C-BARQ canine behavior assessment questionnaire norms",
+    "MCPQ-R Monash Canine Personality Questionnaire Revised",
+    "Hsu Serpell C-BARQ validation"
+  ],
+  "reference_links": [
+    {
+      "title": "C-BARQ project (Penn Vet / Serpell)",
+      "url": "https://vetapps.vet.upenn.edu/cbarq/",
+      "type": "instrument_home"
+    },
+    {
+      "title": "PubMed search: C-BARQ",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=C-BARQ",
+      "type": "search"
+    },
+    {
+      "title": "PubMed search: MCPQ-R OR Monash Canine Personality",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=MCPQ-R+OR+Monash+Canine+Personality",
+      "type": "search"
+    },
+    {
+      "title": "AnimaLink domain rule (product already implements frameworks)",
+      "url": "file://AnimaLink/.cursor/rules/400-domain-animalink.mdc",
+      "type": "product_alignment"
+    }
+  ],
+  "acceptance_gap": "WBS asks for PDF norms + scoring weights on disk. Next: add 1–3 OA PDFs under ./pdfs/ when available."
+}

@@ -1,0 +1,9 @@
+{
+  "wbs_id": "0.7",
+  "title": "PetTalk / Asia climate husbandry URL inventory",
+  "collected_at": "2026-08-12",
+  "status": "url_inventory_on_disk",
+  "files": ["url_inventory.json"],
+  "note": "Homepage crawl of pettalk.tw + curated AAHA/AVMA/MSD links. Full article scrape deferred; use inventory for later ingest.",
+  "primary_site": "https://www.pettalk.tw/"
+}

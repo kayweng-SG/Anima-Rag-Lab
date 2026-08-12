@@ -1,0 +1,22 @@
+{
+  "wbs_id": "0.5",
+  "title": "AKC breed genetic / trait open dataset",
+  "collected_at": "2026-08-12",
+  "status": "files_on_disk",
+  "source": {
+    "repo": "https://github.com/tmfilho/akcdata",
+    "file": "https://raw.githubusercontent.com/tmfilho/akcdata/master/data/akc-data-latest.csv",
+    "license_note": "Data extracted from AKC site for analysis; respect AKC rights for redistribution."
+  },
+  "files": [
+    "akc-data-latest.csv",
+    "akc-data-latest.json"
+  ],
+  "fields_of_interest": [
+    "min_expectancy",
+    "max_expectancy",
+    "temperament",
+    "group",
+    "description"
+  ]
+}

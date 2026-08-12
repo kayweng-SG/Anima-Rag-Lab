@@ -62,18 +62,18 @@ HF_HUB_OFFLINE=1 python scripts/09_run_eval.py
 
 ## 建议的 AnimaLink 合并顺序（本仓完成后）
 
-1. AnimaLink 环境变量：`VITE_ANIMA_TRIAGE_URL`、`ANIMA_API_KEY`（仅服务端 / Edge）  
-2. Edge 或 `src/lib` 封装 `triageQuery()`  
-3. 预警 / 聊天入口：先 triage，RED 短路  
-4. （可选）将 Merck chunk 同步进 Supabase `pgvector`，与现有语料分区  
+1. ~~AnimaLink 环境变量 + `triageQuery()`~~ → **已落地**（`AnimaLink/src/lib/triage/triageQuery.ts`，`VITE_ANIMA_TRIAGE_URL`；生产金钥仍建议 Edge 代理）  
+2. ~~聊天入口：先 triage，RED 短路~~ → **已落地**（`sendRagMessage`）  
+3. （可选）将 Merck chunk 同步进 Supabase `pgvector`，与现有语料分区  
+4. 联调：Lab `./scripts/run_demo_open.sh` + AnimaLink `.env` 指向 `http://127.0.0.1:8000`
 
 ## 模块 B / C 与本仓关系
 
 | Lab 表 | 本仓状态 | 说明 |
 |--------|----------|------|
-| A 急症 | **完成** | 可交接 AnimaLink |
-| B 行为常模 | 未做收集 | 与 AnimaLink 既有 C-BARQ 域对齐；需要时再开收料 |
-| C 日常育养 | 未做收集 | 对齐 PetTalk / AAHA；需要时再开收料 |
+| A 急症 | **完成** | 可交接 AnimaLink（产品侧已接线） |
+| B 行为常模 | **收料中** | 0.5 AKC ✅；0.4 公开检索清单，OA PDF 待补 |
+| C 日常育养 | **收料中** | 0.7 URL 清单 ✅；0.6 AAHA 需人工下 PDF |
 
-**结论：先完成本仓 A 线并交接；B/C 收集不阻塞「本项目 A 线完成」。**  
+**结论：A 线可交接且产品已短路接线；B/C 继续收料不阻塞 A。**  
 完整计划 vs 实际进度：[`WBS_STATUS.md`](./WBS_STATUS.md)。
