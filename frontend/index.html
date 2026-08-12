@@ -37,7 +37,7 @@
     }
 
     .shell {
-      width: min(980px, calc(100% - 2rem));
+      width: min(1100px, calc(100% - 2rem));
       margin: 0 auto;
       padding: 2rem 0 3.5rem;
     }
@@ -207,6 +207,100 @@
     }
 
     .examples button:hover { background: #e3eee8; }
+    .examples button .expect {
+      display: inline-block;
+      margin-left: 0.25rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+    .examples button[data-expect="GREEN"] .expect { color: #047857; }
+    .examples button[data-expect="YELLOW"] .expect { color: #b45309; }
+    .examples button[data-expect="RED"] .expect { color: #b91c1c; }
+
+    .light-legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 720px) {
+      .light-legend { grid-template-columns: 1fr; }
+    }
+    .light-legend .leg {
+      border: 1px solid var(--line);
+      border-radius: 0.85rem;
+      padding: 0.65rem 0.75rem;
+      background: var(--panel);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+    .light-legend .leg strong { display: block; margin-bottom: 0.2rem; }
+    .light-legend .leg.RED { border-color: #fecaca; background: var(--red-bg); }
+    .light-legend .leg.YELLOW { border-color: #fde68a; background: var(--amber-bg); }
+    .light-legend .leg.GREEN { border-color: #a7f3d0; background: var(--green-bg); }
+    .light-legend .leg span { color: var(--muted); }
+
+    .history-panel { margin-top: 1.25rem; }
+    .history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .history-head h2 { margin: 0; }
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 280px;
+      overflow: auto;
+    }
+    .history-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.65rem;
+      align-items: start;
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      background: #fbfcfb;
+      border-radius: 0.75rem;
+      padding: 0.65rem 0.8rem;
+      font: inherit;
+      cursor: pointer;
+      color: var(--ink);
+    }
+    .history-item:hover { border-color: var(--teal); background: #fff; }
+    .history-item .mini-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.45rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .history-item .mini-badge.RED { background: var(--red-bg); color: var(--red); }
+    .history-item .mini-badge.YELLOW { background: var(--amber-bg); color: var(--amber); }
+    .history-item .mini-badge.GREEN { background: var(--green-bg); color: #047857; }
+    .history-item .q {
+      font-size: 0.88rem;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .history-item .when {
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .history-empty {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+    }
 
     .actions {
       display: flex;
@@ -417,6 +511,11 @@
         紧急分诊演示：先跑 Red-Light 生理拦截，再检索 Merck 知识库。
         RED 时直接提示就医，不进入 LLM。
       </p>
+      <div class="light-legend" aria-label="灯号说明">
+        <div class="leg RED"><strong>红灯 RED</strong><span>紧急，先送医 · 已拦截，跳过 LLM</span></div>
+        <div class="leg YELLOW"><strong>黄灯 YELLOW</strong><span>需小心，持续观察 · 建议 + 知识库</span></div>
+        <div class="leg GREEN"><strong>绿灯 GREEN</strong><span>暂无紧急信号 · 非常规保证没事</span></div>
+      </div>
       <div class="status-bar">
         <span class="pill"><span class="dot" id="healthDot"></span><span id="healthText">检查 API…</span></span>
         <span class="pill" id="vectorInfo">向量库：—</span>
@@ -437,11 +536,12 @@
       <section class="panel">
         <h2>病例输入</h2>
         <div class="examples">
-          <button type="button" data-example="normal">示例：正常心率</button>
-          <button type="button" data-example="heatMild">示例：中暑轻微</button>
-          <button type="button" data-example="heatSevere">示例：中暑严重</button>
-          <button type="button" data-example="chocolate">示例：吃了巧克力</button>
-          <button type="button" data-example="poison">示例：中毒</button>
+          <button type="button" data-example="normal" data-expect="GREEN">示例：正常心率<span class="expect">绿灯</span></button>
+          <button type="button" data-example="heatMild" data-expect="YELLOW">示例：中暑轻微<span class="expect">黄灯</span></button>
+          <button type="button" data-example="heatSevere" data-expect="RED">示例：中暑严重<span class="expect">红灯</span></button>
+          <button type="button" data-example="chocolate" data-expect="YELLOW">示例：吃了巧克力<span class="expect">黄灯</span></button>
+          <button type="button" data-example="poison" data-expect="RED">示例：中毒<span class="expect">红灯</span></button>
+          <button type="button" data-example="lily" data-expect="RED">示例：有毒植物<span class="expect">红灯</span></button>
         </div>
 
         <form id="triageForm" novalidate>
@@ -543,7 +643,7 @@
         <h2>分诊结果</h2>
         <div id="errorBox" class="error" hidden></div>
         <div id="emptyState" class="result-empty">
-          填写左侧病例，或点一个示例，然后点「开始分诊」。
+          按口播顺序点示例（绿灯 → 黄灯中暑 → 红灯中暑 → 巧克力黄灯 → 中毒红灯），再点「开始分诊」。
         </div>
         <div id="resultPanel" hidden>
           <div class="badge" id="statusBadge">GREEN</div>
@@ -570,6 +670,17 @@
         </div>
       </section>
     </div>
+
+    <section class="panel history-panel">
+      <div class="history-head">
+        <h2>分诊记录</h2>
+        <button type="button" class="btn btn-ghost" id="historyRefreshBtn">刷新</button>
+      </div>
+      <div class="field-hint" style="margin:0 0 0.65rem">最近入库结果；点击可回看灯号与回答（对应 API <code>GET /v1/triage/results</code>）。</div>
+      <div id="historyList" class="history-list">
+        <div class="history-empty">暂无记录。完成一次分诊后会出现在这里。</div>
+      </div>
+    </section>
 
     <footer>
       仅供研究 / Demo，不能替代执业兽医诊断。
@@ -601,6 +712,13 @@
 
     function triageHeaders() {
       const headers = { "Content-Type": "application/json" };
+      const key = getStoredApiKey();
+      if (key) headers["X-API-Key"] = key;
+      return headers;
+    }
+
+    function authHeaders() {
+      const headers = {};
       const key = getStoredApiKey();
       if (key) headers["X-API-Key"] = key;
       return headers;
@@ -646,6 +764,15 @@
       poison: {
         question: "狗狗中毒怎么办？刚才吃了老鼠药，还在呕吐。",
         species: "dog",
+        size: "",
+        heart_rate_bpm: "",
+        crt_seconds: "",
+        rectal_temp_f: "",
+        rectal_temp_c: "",
+      },
+      lily: {
+        question: "猫吃了百合叶子，现在在吐。",
+        species: "cat",
         size: "",
         heart_rate_bpm: "",
         crt_seconds: "",
@@ -799,6 +926,7 @@
           throw new Error(formatApiError(data, res.status));
         }
         renderResult(data);
+        loadHistory();
       } catch (err) {
         if (err && err.name === "AbortError") {
           showError("请求超时。请确认 API 仍在运行后重试。");
@@ -998,7 +1126,9 @@
       const sources = data.sources || [];
       const list = $("sourcesList");
       if (!sources.length) {
-        list.innerHTML = `<div class="source"><div class="text">无检索来源（可能被 Red-Light 拦截）。</div></div>`;
+        list.innerHTML = data.intercepted
+          ? `<div class="source"><div class="text">无检索来源（红灯已拦截 · 跳过 LLM / 检索）。</div></div>`
+          : `<div class="source"><div class="text">无检索来源。</div></div>`;
         return;
       }
       list.innerHTML = sources
@@ -1025,10 +1155,104 @@
     }
 
     function escapeHtml(text) {
-      return text
+      return String(text || "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;");
+    }
+
+    function formatWhen(iso) {
+      if (!iso) return "—";
+      try {
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return iso;
+        return d.toLocaleString("zh-CN", {
+          month: "numeric",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      } catch (_) {
+        return iso;
+      }
+    }
+
+    function storeRowToResult(row) {
+      return {
+        red_light_status: row.red_light_status || "GREEN",
+        intercepted: !!row.intercepted,
+        model_used: row.model_used,
+        elapsed_ms: row.elapsed_ms,
+        answer_zh: row.answer_zh,
+        answer_en: row.answer_en,
+        extracted_symptoms: row.extracted_symptoms || [],
+        sources: row.sources || [],
+        record_id: row.id || row.record_id,
+        recommendation_zh: row.recommendation_zh,
+      };
+    }
+
+    async function loadHistory() {
+      const box = $("historyList");
+      if (!box) return;
+      try {
+        const res = await fetch("/v1/triage/results?limit=15", {
+          headers: authHeaders(),
+        });
+        let data = null;
+        try {
+          data = await res.json();
+        } catch (_) {
+          throw new Error(`历史加载失败（HTTP ${res.status}）`);
+        }
+        if (!res.ok) {
+          box.innerHTML = `<div class="history-empty">${escapeHtml(formatApiError(data, res.status))}</div>`;
+          return;
+        }
+        const rows = data.results || [];
+        if (!rows.length) {
+          box.innerHTML = `<div class="history-empty">暂无记录。完成一次分诊后会出现在这里。</div>`;
+          return;
+        }
+        box.innerHTML = rows
+          .map((row) => {
+            const status = row.red_light_status || "GREEN";
+            const badge =
+              (STATUS_EXPLAIN[status] && STATUS_EXPLAIN[status].badge) || status;
+            const q = row.question || row.chief_complaint || "(无主诉)";
+            return `
+              <button type="button" class="history-item" data-record-id="${escapeHtml(row.id)}">
+                <span class="mini-badge ${escapeHtml(status)}">${escapeHtml(badge)}</span>
+                <span class="q">${escapeHtml(q)}</span>
+                <span class="when">${escapeHtml(formatWhen(row.created_at))}</span>
+              </button>`;
+          })
+          .join("");
+      } catch (err) {
+        box.innerHTML = `<div class="history-empty">${escapeHtml((err && err.message) || String(err))}</div>`;
+      }
+    }
+
+    async function openHistoryRecord(recordId) {
+      clearError();
+      try {
+        const res = await fetch(`/v1/triage/results/${encodeURIComponent(recordId)}`, {
+          headers: authHeaders(),
+        });
+        let data = null;
+        try {
+          data = await res.json();
+        } catch (_) {
+          throw new Error(`无法读取记录（HTTP ${res.status}）`);
+        }
+        if (!res.ok) {
+          throw new Error(formatApiError(data, res.status));
+        }
+        renderResult(storeRowToResult(data));
+        $("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } catch (err) {
+        showError((err && err.message) || String(err));
+      }
     }
 
     document.querySelectorAll("[data-example]").forEach((btn) => {
@@ -1042,6 +1266,16 @@
         clearError();
         $("question").focus();
       });
+    });
+
+    $("historyList").addEventListener("click", (event) => {
+      const item = event.target.closest("[data-record-id]");
+      if (!item) return;
+      openHistoryRecord(item.getAttribute("data-record-id"));
+    });
+
+    $("historyRefreshBtn").addEventListener("click", () => {
+      loadHistory();
     });
 
     $("clearBtn").addEventListener("click", () => {
@@ -1059,7 +1293,7 @@
     });
 
     fillForm(EXAMPLES.normal);
-    checkHealth();
+    checkHealth().then(() => loadHistory());
   </script>
 </body>
 </html>
