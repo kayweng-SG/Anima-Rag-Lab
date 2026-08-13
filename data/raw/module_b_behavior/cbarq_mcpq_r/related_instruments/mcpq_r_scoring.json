@@ -1,0 +1,17 @@
+{
+  "instrument": "MCPQ-R",
+  "source_pdfs": [
+    "pdfs/ley_2008_mcpq_refinement_validation.pdf",
+    "pdfs/ley_2009_mcpq_r_reliability.pdf"
+  ],
+  "doi": "10.1016/j.applanim.2008.09.009",
+  "item_scale": {"min": 1, "max": 6},
+  "scoring": "POMP: 100 * sum / (n_items * 6)",
+  "dimensions": {
+    "extraversion": ["Active", "Energetic", "Excitable", "Hyperactive", "Lively", "Restless"],
+    "motivation": ["Assertive", "Determined", "Independent", "Persevering", "Tenacious"],
+    "training_focus": ["Attentive", "Biddable", "Intelligent", "Obedient", "Reliable", "Trainable"],
+    "amicability": ["Easy going", "Friendly", "Non-aggressive", "Relaxed", "Sociable"],
+    "neuroticism": ["Fearful", "Nervous", "Submissive", "Timid"]
+  }
+}

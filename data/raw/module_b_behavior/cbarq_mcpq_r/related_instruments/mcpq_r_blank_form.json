@@ -1,0 +1,222 @@
+{
+  "instrument": "MCPQ-R",
+  "form_type": "lab_derived_blank",
+  "not_official_monash_pdf": true,
+  "gap_note": "No standalone Monash one-page blank PDF was publicly mirrored. This form is reconstructed from Ley 2008/2009 published adjective lists for Lab/product UI staging only.",
+  "source_json": "mcpq_r_scoring.json",
+  "doi": "10.1016/j.applanim.2008.09.009",
+  "instructions_en": "Owner rates each adjective 1-6 for the subject dog. Dimension score uses POMP: 100 * sum / (n_items * 6).",
+  "item_count": 26,
+  "items": [
+    {
+      "item_no": 1,
+      "adjective": "Active",
+      "dimension": "extraversion",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Active» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 2,
+      "adjective": "Energetic",
+      "dimension": "extraversion",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Energetic» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 3,
+      "adjective": "Excitable",
+      "dimension": "extraversion",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Excitable» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 4,
+      "adjective": "Hyperactive",
+      "dimension": "extraversion",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Hyperactive» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 5,
+      "adjective": "Lively",
+      "dimension": "extraversion",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Lively» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 6,
+      "adjective": "Restless",
+      "dimension": "extraversion",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Restless» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 7,
+      "adjective": "Assertive",
+      "dimension": "motivation",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Assertive» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 8,
+      "adjective": "Determined",
+      "dimension": "motivation",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Determined» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 9,
+      "adjective": "Independent",
+      "dimension": "motivation",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Independent» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 10,
+      "adjective": "Persevering",
+      "dimension": "motivation",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Persevering» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 11,
+      "adjective": "Tenacious",
+      "dimension": "motivation",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Tenacious» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 12,
+      "adjective": "Attentive",
+      "dimension": "training_focus",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Attentive» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 13,
+      "adjective": "Biddable",
+      "dimension": "training_focus",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Biddable» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 14,
+      "adjective": "Intelligent",
+      "dimension": "training_focus",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Intelligent» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 15,
+      "adjective": "Obedient",
+      "dimension": "training_focus",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Obedient» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 16,
+      "adjective": "Reliable",
+      "dimension": "training_focus",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Reliable» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 17,
+      "adjective": "Trainable",
+      "dimension": "training_focus",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Trainable» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 18,
+      "adjective": "Easy going",
+      "dimension": "amicability",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Easy going» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 19,
+      "adjective": "Friendly",
+      "dimension": "amicability",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Friendly» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 20,
+      "adjective": "Non-aggressive",
+      "dimension": "amicability",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Non-aggressive» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 21,
+      "adjective": "Relaxed",
+      "dimension": "amicability",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Relaxed» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 22,
+      "adjective": "Sociable",
+      "dimension": "amicability",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Sociable» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 23,
+      "adjective": "Fearful",
+      "dimension": "neuroticism",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Fearful» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 24,
+      "adjective": "Nervous",
+      "dimension": "neuroticism",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Nervous» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 25,
+      "adjective": "Submissive",
+      "dimension": "neuroticism",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Submissive» describes this dog (1=not at all … 6=extremely)."
+    },
+    {
+      "item_no": 26,
+      "adjective": "Timid",
+      "dimension": "neuroticism",
+      "scale_min": 1,
+      "scale_max": 6,
+      "prompt_en": "Rate how well «Timid» describes this dog (1=not at all … 6=extremely)."
+    }
+  ],
+  "scoring": "POMP: 100 * sum / (n_items * 6)",
+  "generated_at": "2026-08-13T06:29:48.089037+00:00"
+}

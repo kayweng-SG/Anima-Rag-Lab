@@ -2,42 +2,36 @@
   "wbs_id": "0.4",
   "title": "C-BARQ & MCPQ-R academic norms",
   "collected_at": "2026-08-12",
-  "updated_at": "2026-08-12",
-  "status": "questionnaire_folder_indexed",
+  "updated_at": "2026-08-13",
+  "status": "cbarq101_complete_mcpq_r_extract_ready",
   "owner_folder": "docs/Questionaire/",
-  "owner_folder_readme": "docs/Questionaire/README.md",
-  "note": "Primary instruments from owner Questionaire folder. Serpell © UPenn — research staging only.",
+  "note": "C-BARQ(101) full subscale map via Duffy 2012 + Serpell form. MCPQ-R via Ley 2008/2009 (no separate blank form PDF).",
   "scoring_methods": [
-    {"file": "scoring_methods/C-BARQ_short_version_scoring_method.pdf", "source": "docs/Questionaire/C-BARQ short version scoring method.pdf", "completeness": "cbarq42_all_14_formulas"},
-    {"file": "scoring_methods/C-BARQ_101_scoring_method.pdf", "source": "docs/Questionaire/C-BARQ(101) scoring method.PDF", "completeness": "definitions_only_4_of_14_formulas"},
-    {"file": "scoring_methods/51Q_therapy_dogs_cbarq_factor_study.pdf", "source": "docs/Questionaire/51Q-Selection_of_Appropriate_Dogs_to_Be_Therapy_Dogs_U.pdf", "doi": "10.3390/ani13050834"},
-    {"file": "scoring_methods/51Q_therapy_dogs_14_factors_zh.pdf", "source": "docs/Questionaire/51Q-日本防護犬 51問題與因子14.pdf", "completeness": "51_items_14_factors_zh"}
+    {"file": "scoring_methods/C-BARQ_short_version_scoring_method.pdf", "completeness": "cbarq42_all_14_formulas"},
+    {"file": "scoring_methods/C-BARQ_101_scoring_method.pdf", "completeness": "definitions_plus_4_of_14_official; rest reconstructed"},
+    {"file": "scoring_methods/51Q_therapy_dogs_cbarq_factor_study.pdf", "doi": "10.3390/ani13050834"},
+    {"file": "scoring_methods/51Q_therapy_dogs_14_factors_zh.pdf", "completeness": "51_items_14_factors_zh"}
   ],
   "questionnaire_forms": [
-    {"file": "forms/CBARQ_short_questionnaire_2018.pdf", "source": "docs/Questionaire/CBARQ_short-final_copy.pdf", "items": "~42"},
-    {"file": "forms/CBARQ_101_questionnaire_2015.pdf", "source": "docs/Questionaire/dog-aggression-questionnaire.pdf", "items": 101}
+    {"file": "forms/CBARQ_short_questionnaire_2018.pdf", "items": "~42"},
+    {"file": "forms/CBARQ_101_questionnaire_2015.pdf", "items": 101}
+  ],
+  "key_literature_pdfs": [
+    {"file": "pdfs/duffy_serpell_2012_cbarq_subscale_items.pdf", "role": "complete C-BARQ subscale item stems (Table 3)"},
+    {"file": "pdfs/hsu_serpell_2003_cbarq_validation.pdf", "role": "original C-BARQ validation"},
+    {"file": "pdfs/ley_2008_mcpq_refinement_validation.pdf", "role": "MCPQ-R 26 adjectives + POMP scoring"},
+    {"file": "pdfs/ley_2009_mcpq_r_reliability.pdf", "role": "MCPQ-R reliability"}
   ],
   "related_instruments": [
-    {"file": "related_instruments/DPQ_forms_and_scoring_keys.pdf", "source": "docs/Questionaire/DPQ-forms-and-scoring-keys.pdf", "extract": "related_instruments/dpq_scoring.json"}
-  ],
-  "not_archived": [
-    {"file": "docs/Questionaire/Pet function research.pptx", "reason": "large presentation; catalog only"}
+    {"file": "related_instruments/DPQ_forms_and_scoring_keys.pdf", "extract": "related_instruments/dpq_scoring.json"},
+    {"file": "related_instruments/mcpq_r_scoring.json", "readme": "related_instruments/MCPQ_R_README.md"}
   ],
   "derived_extracts": [
     "norms_and_scoring.json",
     "therapy_dog_51q_factors.json",
     "therapy_dog_51q_zh.json",
-    "related_instruments/dpq_scoring.json"
+    "related_instruments/dpq_scoring.json",
+    "related_instruments/mcpq_r_scoring.json"
   ],
-  "pdfs_literature": [
-    "pdfs/plosone_2024_cbarq_short_validation.pdf",
-    "pdfs/plosone_2023_cbarq_shelter_adoption.pdf",
-    "pdfs/animals_2023_cbarq_italian_validation.pdf",
-    "pdfs/animals_2023_therapy_dogs_cbarq_51items.pdf",
-    "pdfs/frontiers_2024_modified_cbarq_working_dogs.pdf",
-    "pdfs/ley_2009_mcpq_r_reliability.pdf",
-    "pdfs/pone_2016_puppy_personality_mcpq_related.pdf",
-    "pdfs/pone_2022_kelpie_personality_mcpq_context.pdf"
-  ],
-  "acceptance_gap": "C-BARQ(101) missing 10 subscale formulae; MCPQ-R scoring sheet still absent."
+  "acceptance_gap": "Optional: obtain a publisher-issued one-page MCPQ-R blank form if Monash releases one; not blocking for Lab scoring implementation."
 }

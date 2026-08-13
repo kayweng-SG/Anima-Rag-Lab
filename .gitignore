@@ -7,3 +7,12 @@ venv/
 .env
 evals/last_report.json
 .DS_Store
+tools/bin/
+tools/openssl/
+tools/openssl-stub/
+data/processed/supabase_export/
+data/processed/module_bc_vector_store/
+data/pgvector_local/
+docs/~$*
+evals/last_report.json
+

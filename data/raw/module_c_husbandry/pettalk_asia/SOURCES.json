@@ -3,7 +3,12 @@
   "title": "PetTalk / Asia climate husbandry URL inventory",
   "collected_at": "2026-08-12",
   "status": "url_inventory_on_disk",
-  "files": ["url_inventory.json"],
+  "files": [
+    "url_inventory.json"
+  ],
   "note": "Homepage crawl of pettalk.tw + curated AAHA/AVMA/MSD links. Full article scrape deferred; use inventory for later ingest.",
-  "primary_site": "https://www.pettalk.tw/"
+  "primary_site": "https://www.pettalk.tw/",
+  "articles_jsonl": "articles.jsonl",
+  "articles_count": 30,
+  "updated_at": "2026-08-13T06:30:51.311804+00:00"
 }

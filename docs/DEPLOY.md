@@ -75,8 +75,64 @@ Use [`examples/ios_smoke/`](../examples/ios_smoke/) for first paint; TLS in prod
 Terminate TLS at Caddy / nginx / Cloudflare Tunnel → `127.0.0.1:8000`.  
 Forward `X-API-Key` and `X-Request-Id` unchanged.
 
+## Vector store (A + B/C)
+
+Default load order:
+
+1. `ANIMA_VECTOR_STORE_DIR` if set  
+2. else `data/processed/merged_vector_store/` when present  
+3. else Module A only: `data/processed/merck_vector_store/`
+
+Rebuild B/C merge (does **not** re-embed Merck):
+
+```bash
+python scripts/12_chunk_module_bc.py
+MERCK_EMBEDDER=sentence_transformers python scripts/13_embed_module_bc.py
+```
+
+## Redis semantic cache (optional, WBS 4.1)
+
+```bash
+# One-shot (Docker Redis if present, else memory://local):
+./scripts/run_with_cache.sh
+
+# Or Compose:
+docker compose --profile cache up --build -d
+# in .env:
+REDIS_URL=redis://127.0.0.1:6379/0
+# inside Compose network: redis://redis:6379/0
+# no Docker smoke: REDIS_URL=memory://local
+```
+
+Caches non-intercepted triage responses (~1h TTL). RED never served from cache. Without `REDIS_URL`, API behaves as before. `/health` reports `cache_enabled` + `cache_backend`.
+
+```bash
+python scripts/smoke_semantic_cache.py
+```
+
+## Public HTTPS (checklist)
+
+| Step | Notes |
+|------|--------|
+| 1. VPS / Fly / Railway | Run `docker compose up -d` with `.env` secrets |
+| 2. TLS | Cloudflare Tunnel **or** Caddy reverse proxy |
+| 3. DNS | `api.yourdomain.com` → tunnel / proxy |
+| 4. Smoke | `ANIMA_BASE_URL=https://api.yourdomain.com ./scripts/smoke_ios_api.sh` |
+| 5. App | Point `VITE_ANIMA_TRIAGE_URL` / iOS Base URL at HTTPS |
+
+### Quick public URL (no domain yet)
+
+1. Start API locally (`./scripts/run_demo.sh` or `./scripts/run_with_cache.sh`)
+2. In another terminal: `./scripts/run_public_tunnel.sh`  
+   (downloads `cloudflared` into `tools/bin/` on first run)
+3. Copy the printed `https://….trycloudflare.com` URL → iOS / `ANIMA_BASE_URL`
+4. Smoke: `ANIMA_BASE_URL=https://….trycloudflare.com ./scripts/smoke_ios_api.sh`
+
+Quick tunnels are ephemeral. For a stable hostname, use a named Cloudflare Tunnel or Caddy on an operator-owned VPS.
+
 ## Ops notes
 
 - First container boot may download `paraphrase-multilingual-MiniLM-L12-v2` unless the HF cache volume is warm.
 - RED intercept never calls OpenAI; GREEN/YELLOW quality improves with `OPENAI_API_KEY`.
 - Rotate `ANIMA_API_KEY` by editing `.env` and recreating the container (`docker compose up -d --force-recreate`).
+- Path alias `data/vector_store/` in older notes = `data/processed/merck_vector_store/` (or merged).

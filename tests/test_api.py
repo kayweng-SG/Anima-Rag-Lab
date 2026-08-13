@@ -34,6 +34,8 @@ def test_health(api_client):
     assert "auth_required" in body
     assert "toxic_plants_loaded" in body
     assert "complaint_map_loaded" in body
+    assert "cache_enabled" in body
+    assert "cache_backend" in body
 
 
 def test_triage_query_green(api_client):

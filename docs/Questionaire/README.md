@@ -36,13 +36,13 @@ Archived copies + machine-readable extracts live under:
 
 ---
 
-## Gaps
+## Gaps (updated 2026-08-13)
 
-- **C-BARQ(101)**：仍缺 Serpell 官方 **10 个分量表**的 item→公式（101 计分 PDF 不完整）。
-- **MCPQ-R**：尚无计分/题目 PDF（仅有 Ley 2009 信度 OA 文献）。
+- **C-BARQ(101)**：Serpell 计分 PDF 仍只有 4 条官方公式；其余 10 条已用 Duffy & Serpell (2012) Table 3 题面与 2015 问卷编号对齐，写入 `data/raw/.../norms_and_scoring.json`。
+- **MCPQ-R**：无独立空白问卷 PDF；Ley 2008/2009 提供 26 形容词 + POMP 计分（已提取）。
 
 ---
 
 ## Rights
 
-Serpell C-BARQ forms © University of Pennsylvania. Lab use = research ingest staging only.
+Serpell C-BARQ forms © University of Pennsylvania. MCPQ-R © Ley / Monash publications. Lab use = research ingest staging only.

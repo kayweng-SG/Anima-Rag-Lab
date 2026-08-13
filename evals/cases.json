@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "description": "ANIMA-RAG-Lab regression cases: Red-Light status, intercept, topic relevance.",
+  "version": 2,
+  "description": "ANIMA-RAG-Lab regression cases: Red-Light status, intercept, topic relevance, Module B/C retrieval.",
   "cases": [
     {
       "id": "hr_normal_green",
@@ -375,6 +375,117 @@
         "intercepted": false,
         "answer_zh_must_contain_any": ["可能原因", "请先观察", "建议行动"],
         "extracted_symptoms_must_contain_any": ["精神还行"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "bc_cbarq_stranger_aggression",
+      "group": "module_bc",
+      "description": "C-BARQ stranger-directed aggression scoring hits Module B cbarq chunks",
+      "request": {
+        "question": "C-BARQ stranger-directed aggression 怎么计分？有哪些题目？",
+        "species": "dog",
+        "top_k": 8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "sources_module_must_include_any": ["B"],
+        "sources_source_must_include_any": ["cbarq"],
+        "sources_content_must_match_any": [
+          "stranger",
+          "aggression",
+          "C-BARQ",
+          "subscale"
+        ],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "bc_akc_labrador",
+      "group": "module_bc",
+      "description": "Labrador temperament/trainability retrieves AKC breed profile",
+      "request": {
+        "question": "Labrador Retriever temperament and trainability AKC breed profile",
+        "species": "dog",
+        "top_k": 8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "sources_module_must_include_any": ["B"],
+        "sources_source_must_include_any": ["akc"],
+        "sources_content_must_match_any": ["Labrador"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "bc_aaha_feline_senior",
+      "group": "module_bc",
+      "description": "AAHA feline senior age band from Table 1 text",
+      "request": {
+        "question": "AAHA feline senior life stage age years",
+        "species": "cat",
+        "top_k": 8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "sources_module_must_include_any": ["C"],
+        "sources_source_must_include_any": ["aaha"],
+        "sources_content_must_match_any": [
+          "Senior",
+          "10",
+          "life stage",
+          "AAHA"
+        ],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "bc_mcpq_extraversion",
+      "group": "module_bc",
+      "description": "MCPQ-R Extraversion adjectives / blank form",
+      "request": {
+        "question": "MCPQ-R Extraversion dimension adjectives Active Energetic scoring",
+        "species": "dog",
+        "top_k": 8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "sources_module_must_include_any": ["B"],
+        "sources_source_must_include_any": ["mcpq_r"],
+        "sources_content_must_match_any": [
+          "Extraversion",
+          "extraversion",
+          "Active",
+          "Energetic",
+          "MCPQ"
+        ],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "bc_pettalk_bichon",
+      "group": "module_bc",
+      "description": "PetTalk Bichon / 比熊 husbandry article retrieves Module C",
+      "request": {
+        "question": "比熊犬常见疾病泪痕皮肤敏感怎么照顾？",
+        "species": "dog",
+        "top_k": 8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "sources_module_must_include_any": ["C"],
+        "sources_source_must_include_any": ["pettalk_asia"],
+        "sources_content_must_match_any": ["比熊", "PetTalk", "泪痕"],
         "max_elapsed_ms": 8000
       }
     }

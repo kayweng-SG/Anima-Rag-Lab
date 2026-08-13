@@ -2,6 +2,8 @@
 #
 #   cp .env.example .env   # set ANIMA_API_KEY + OPENAI_API_KEY
 #   docker compose up --build
+#   # optional Redis cache:
+#   docker compose --profile cache up --build
 #
 # iOS Base URL examples:
 #   Simulator → http://127.0.0.1:8000
@@ -18,12 +20,12 @@ services:
     environment:
       ANIMA_API_HOST: "0.0.0.0"
       ANIMA_API_PORT: "8000"
-      # Comma-separated; include your App / web origins. Empty → localhost defaults.
       ANIMA_CORS_ORIGINS: "${ANIMA_CORS_ORIGINS:-}"
       HF_HUB_OFFLINE: "${HF_HUB_OFFLINE:-0}"
       TRANSFORMERS_OFFLINE: "${TRANSFORMERS_OFFLINE:-0}"
+      REDIS_URL: "${REDIS_URL:-}"
+      ANIMA_VECTOR_STORE_DIR: "${ANIMA_VECTOR_STORE_DIR:-}"
     volumes:
-      # Persist triage history + allow swapping vector indexes without rebuild.
       - ./data:/app/data
       - hf_cache:/cache/huggingface
     restart: unless-stopped
@@ -34,5 +36,20 @@ services:
       retries: 3
       start_period: 120s
 
+  redis:
+    image: redis:7-alpine
+    profiles: ["cache"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
 volumes:
   hf_cache:
+  redis_data:

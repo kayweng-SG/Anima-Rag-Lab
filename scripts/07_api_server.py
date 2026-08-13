@@ -88,6 +88,8 @@ RAGQueryRequest = _pipeline_mod.RAGQueryRequest
 TriageResultStore = _store_mod.TriageResultStore
 
 _pipeline: Optional[AnimaRAGPipeline] = None
+_store = None
+_cache = None
 _store: Optional[TriageResultStore] = None
 
 
@@ -129,14 +131,21 @@ def _error_body(
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    global _pipeline, _store
+    global _pipeline, _store, _cache
     logger.info("Starting ANIMA triage API — loading vector store and Red-Light index")
     _pipeline = AnimaRAGPipeline()
     _pipeline.vector_store.load()
     _store = TriageResultStore()
+    try:
+        from semantic_cache import SemanticCache
+
+        _cache = SemanticCache()
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Semantic cache init skipped: %s", exc)
+        _cache = None
     auth_mode = "required" if _configured_api_key() else "open (dev)"
     logger.info(
-        "Pipeline ready; triage DB: %s; LLM: %s; auth: %s",
+        "Pipeline ready; triage DB: %s; LLM: %s; auth: %s; store: %s; cache: %s",
         _store.db_path,
         (
             f"on ({_pipeline.openai_model})"
@@ -144,6 +153,12 @@ async def lifespan(_: FastAPI):
             else "off (extractive fallback)"
         ),
         auth_mode,
+        getattr(_pipeline.vector_store, "store_dir", "?"),
+        (
+            f"on ({getattr(_cache, 'backend', '?')})"
+            if getattr(_cache, "enabled", False)
+            else "off"
+        ),
     )
     yield
     logger.info("Shutting down ANIMA triage API")
@@ -241,6 +256,7 @@ class TriageQueryResponse(BaseModel):
     elapsed_ms: float = 0.0
     evaluated_at: str = ""
     extracted_symptoms: List[str] = Field(default_factory=list)
+    cache_hit: bool = False
 
 
 class HealthResponse(BaseModel):
@@ -254,6 +270,8 @@ class HealthResponse(BaseModel):
     llm_model: Optional[str] = None
     toxic_plants_loaded: bool = False
     complaint_map_loaded: bool = False
+    cache_enabled: bool = False
+    cache_backend: Optional[str] = None
 
 
 class ResultsListResponse(BaseModel):
@@ -358,6 +376,17 @@ def _run_triage(
     )
     try:
         request_payload = body.model_dump(exclude={"client_request_id"})
+        species = str(request_payload.get("species") or "")
+        question = str(request_payload.get("question") or "")
+        if _cache is not None and getattr(_cache, "enabled", False):
+            cached = _cache.get(question, species)
+            if cached and not cached.get("intercepted"):
+                cached = dict(cached)
+                cached["api_version"] = API_VERSION
+                cached["request_id"] = request_id
+                cached["cache_hit"] = True
+                return cached
+
         rag_request = RAGQueryRequest(**request_payload)
         result = _pipeline.query(rag_request)
         payload = result.to_dict()
@@ -365,6 +394,12 @@ def _run_triage(
         payload["record_id"] = record_id
         payload["api_version"] = API_VERSION
         payload["request_id"] = request_id
+        if (
+            _cache is not None
+            and getattr(_cache, "enabled", False)
+            and not payload.get("intercepted")
+        ):
+            _cache.set(question, payload, species)
         return payload
     except HTTPException:
         raise
@@ -385,9 +420,10 @@ def _run_triage(
 def health() -> HealthResponse:
     if _pipeline is None:
         raise HTTPException(status_code=503, detail="Pipeline not initialized")
-    manifest_path = os.path.join(
-        PROJECT_ROOT, "data", "processed", "merck_vector_store", "manifest.json"
+    store_dir = getattr(_pipeline.vector_store, "store_dir", None) or os.path.join(
+        PROJECT_ROOT, "data", "processed", "merck_vector_store"
     )
+    manifest_path = os.path.join(store_dir, "manifest.json")
     embedder = None
     vector_count = None
     if os.path.exists(manifest_path):
@@ -417,6 +453,8 @@ def health() -> HealthResponse:
         ),
         toxic_plants_loaded=os.path.isfile(toxic_path),
         complaint_map_loaded=os.path.isfile(complaint_path),
+        cache_enabled=bool(getattr(_cache, "enabled", False)),
+        cache_backend=getattr(_cache, "backend", None) if _cache else "off",
     )
 
 

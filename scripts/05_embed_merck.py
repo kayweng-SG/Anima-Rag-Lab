@@ -187,6 +187,18 @@ class SentenceTransformerEmbedder(BaseEmbedder):
         return np.asarray(vectors, dtype=np.float32)
 
 
+def resolve_vector_store_dir(project_root: Optional[str] = None) -> str:
+    """Prefer merged A+B+C store when present; override with ANIMA_VECTOR_STORE_DIR."""
+    root = project_root or PROJECT_ROOT
+    env = (os.getenv("ANIMA_VECTOR_STORE_DIR") or "").strip()
+    if env:
+        return env if os.path.isabs(env) else os.path.join(root, env)
+    merged = os.path.join(root, "data", "processed", "merged_vector_store")
+    if os.path.isfile(os.path.join(merged, "manifest.json")):
+        return merged
+    return os.path.join(root, "data", "processed", "merck_vector_store")
+
+
 class MerckVectorStore:
     """Build, persist, and query a Merck chunk vector index."""
 
@@ -196,13 +208,11 @@ class MerckVectorStore:
         store_dir: Optional[str] = None,
         embedder_backend: Optional[str] = None,
     ) -> None:
-        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        project_root = PROJECT_ROOT
         self.chunks_path = chunks_path or os.path.join(
             project_root, "data", "processed", "merck_emergencies_chunks.json"
         )
-        self.store_dir = store_dir or os.path.join(
-            project_root, "data", "processed", "merck_vector_store"
-        )
+        self.store_dir = store_dir or resolve_vector_store_dir(project_root)
         self.embedder_backend = (
             embedder_backend or os.getenv("MERCK_EMBEDDER", "tfidf").lower()
         )

@@ -1,21 +1,31 @@
 {
   "wbs_id": "0.6",
   "title": "AAHA dog and cat life stage guidelines",
-  "collected_at": "2026-08-12",
-  "status": "url_manifest",
-  "note": "Direct PDF fetch returned HTTP 403 from this environment. Archive PDFs manually from a browser into ./pdfs/.",
-  "reference_links": [
+  "collected_at": "2026-08-13",
+  "status": "pdfs_on_disk",
+  "note": "Official AAHA guideline PDFs downloaded from aaha.org wp-content paths (hub pages previously returned 403; direct PDF URLs work).",
+  "pdfs": [
     {
-      "title": "AAHA Canine Life Stage Guidelines (resources hub)",
-      "url": "https://www.aaha.org/resources/canine-life-stage-guidelines/"
+      "file": "pdfs/2019_aaha_canine_life_stage_guidelines.pdf",
+      "title": "2019 AAHA Canine Life Stage Guidelines",
+      "journal": "J Am Anim Hosp Assoc 2019;55:267–290",
+      "doi": "10.5326/JAAHA-MS-6999",
+      "url": "https://www.aaha.org/wp-content/uploads/globalassets/02-guidelines/canine-life-stage-2019/2019-aaha-canine-life-stage-guidelines-final.pdf",
+      "pages": 24
     },
     {
-      "title": "AAHA Feline Life Stage Guidelines (resources hub)",
-      "url": "https://www.aaha.org/resources/feline-life-stage-guidelines/"
-    },
-    {
-      "title": "AAHA guidelines library",
-      "url": "https://www.aaha.org/aaha-guidelines/"
+      "file": "pdfs/2021_aaha_aafp_feline_life_stage_guidelines.pdf",
+      "title": "2021 AAHA/AAFP Feline Life Stage Guidelines",
+      "journal": "J Am Anim Hosp Assoc 2021;57:51–72 (also JFMS)",
+      "doi": "10.5326/JAAHA-MS-7189",
+      "url": "https://www.aaha.org/wp-content/uploads/globalassets/02-guidelines/feline-life-stage-2021/2021-aaha-aafp-feline-life-stage-guidelines.pdf",
+      "pages": 22
     }
-  ]
+  ],
+  "hubs": [
+    "https://www.aaha.org/resources/life-stage-canine-2019/",
+    "https://www.aaha.org/resources/2021-aaha-aafp-feline-life-stage-guidelines/"
+  ],
+  "derived_extract": "life_stages.json",
+  "rights": "AAHA / AAFP copyright — Lab research staging only; do not redistribute commercially."
 }

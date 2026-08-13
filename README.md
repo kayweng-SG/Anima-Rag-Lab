@@ -76,7 +76,9 @@ In the UI: pick an example（正常 / 中暑 / 巧克力 / 中毒）→ click **
 结果区会显示 **红 / 黄 / 绿灯白话说明**。
 
 **团队演示脚本：** 见 [`docs/DEMO_GUIDE.md`](docs/DEMO_GUIDE.md)（5–8 分钟口播 + 检查清单）。  
-**App 对接契约：** 见 [`docs/APP_INTEGRATION.md`](docs/APP_INTEGRATION.md)（`POST /v1/triage/query`）。  
+**App 对接契约：** 见 [`docs/APP_INTEGRATION.md`](docs/APP_INTEGRATION.md)（`POST /v1/triage/query`；对接延后）。  
+**Lab 交接包：** 见 [`docs/LAB_HANDOFF.md`](docs/LAB_HANDOFF.md)（交付物 / 验收 / 缺口）。  
+**文档索引：** 见 [`docs/README.md`](docs/README.md)。  
 **App 客户端样例：** 见 [`examples/app_clients/`](examples/app_clients/)（Swift / Kotlin / TypeScript）。
 
 ### Run tests
@@ -109,6 +111,11 @@ Report writes to `evals/last_report.json`. LLM is off by default for determinism
 | Red-Light | `scripts/03_red_light_intercept.py` | demo CLI (+ ASPCA plant match) |
 | Chunk | `scripts/04_chunk_merck.py` | `data/processed/merck_emergencies_chunks.json` |
 | Embed | `scripts/05_embed_merck.py` | `data/processed/merck_vector_store/` |
+| B/C chunk | `scripts/12_chunk_module_bc.py` | `data/processed/module_bc_chunks.json` |
+| B/C embed（追加） | `scripts/13_embed_module_bc.py` | `data/processed/merged_vector_store/` |
+| B/C 补洞 | `scripts/17_enrich_module_bc_gaps.py` | AAHA Table1 / PetTalk / MCPQ blank |
+| Lab pgvector | `scripts/16_local_pgvector.py` | `data/pgvector_local/` |
+| 交接清单 | `scripts/18_handoff_manifest.py` | `docs/handoff_manifest.json` |
 | RAG query | `scripts/06_rag_query.py` | CLI / `--json` stdin |
 | API | `scripts/07_api_server.py` | FastAPI server |
 | Eval | `scripts/09_run_eval.py` | `evals/last_report.json` |
@@ -390,32 +397,36 @@ python scripts/07_api_server.py
 
 ## Project status
 
-**Lab status: Module A (emergency triage data + Red-Light + RAG API) is complete and ready to hand off to AnimaLink.**  
-See [`docs/MERGE_TO_ANIMALINK.md`](docs/MERGE_TO_ANIMALINK.md).  
-WBS plan vs actual: [`docs/WBS_STATUS.md`](docs/WBS_STATUS.md) (Master WBS Excel 对照表).
+**Lab status: Module A + B/C data & vectors are complete for Lab handoff.**  
+App / AnimaLink wiring is **deferred** (Lab-only scope).  
 
-Task 0.1 pipeline is complete and knowledge base expanded:
+- Handoff pack: [`docs/LAB_HANDOFF.md`](docs/LAB_HANDOFF.md)  
+- Merge notes (later): [`docs/MERGE_TO_ANIMALINK.md`](docs/MERGE_TO_ANIMALINK.md)  
+- WBS: [`docs/WBS_STATUS.md`](docs/WBS_STATUS.md)
+
+Done in this lab:
 
 - [x] Scrape / seed ingestion (MSD emergency + owner sections)
 - [x] ASPCA toxic plant list for Red-Light matching (Task 0.2)
 - [x] Owner complaint → clinical term map (Task 0.3)
-- [x] App integration contract (`/v1/triage/query` + API key)
+- [x] App integration **contract** (`/v1/triage/query` + API key) — wiring deferred
 - [x] Structured processing + Red-Light metrics
 - [x] Red-Light intercept (<500 ms)
-- [x] RAG chunking + embedding (~13.5k vectors, sentence-transformers)
+- [x] RAG chunking + embedding — **merged store ~14k** (A + B/C)
+- [x] Module B/C collect + chunk + embed + local pgvector mirror
+- [x] Module B/C eval cases (`group=module_bc`)
 - [x] CLI + FastAPI query endpoint
 - [x] Bilingual answers + SQLite history
 - [x] OpenAI GREEN/YELLOW answers (optional `.env`)
-- [x] Pytest suite
-- [x] Fixed triage eval suite (`evals/cases.json`)
-- [x] Expanded owner clinical corpus (urinary / heart / neuro / immune / …)
-- [x] Web demo UX + DEMO_GUIDE smoke (`scripts/smoke_demo_guide.sh`)
-- [x] AnimaLink merge handoff doc (`docs/MERGE_TO_ANIMALINK.md`)
+- [x] Pytest + triage eval suite (`evals/cases.json`, 23 cases)
+- [x] Web demo UX + DEMO_GUIDE smoke
+- [x] Lab handoff docs (`LAB_HANDOFF.md` + manifest)
 
-Out of scope for this lab repo (belongs in AnimaLink product):
+Out of scope for this lab repo (belongs in AnimaLink product — **later**):
 
 - [ ] Wire triage API into AnimaLink UI / Edge Functions
-- [ ] Module B/C corpus ingest into AnimaLink pgvector
+- [ ] Apply Lab `supabase/migrations/` in AnimaLink + `15_upsert_supabase.py --apply`
+- [ ] Module B/C product UI / norms in AnimaLink
 - [ ] Production HTTPS / TestFlight
 ## License & disclaimer
 

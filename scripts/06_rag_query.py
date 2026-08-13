@@ -579,6 +579,29 @@ def _question_wants_temperature(text: str) -> bool:
     )
 
 
+_CORPUS_META_RE = re.compile(
+    r"C-?BARQ|MCPQ(?:-?R)?|AAHA|AKC|PetTalk|breed\s*profile|subscale|"
+    r"计分|計分|常模|life\s*stage|形容词|adjective|trainability|temperament|"
+    r"比熊|泪痕|淚痕",
+    re.I,
+)
+
+
+def _is_corpus_meta_question(text: str) -> bool:
+    """Behavior / husbandry / instrument lookups — do not expand as clinical complaints."""
+    return bool(_CORPUS_META_RE.search(text or ""))
+
+
+def _overlap_tokens(text: str) -> List[str]:
+    """Latin words + CJK bigrams (full CJK runs are too coarse for overlap checks)."""
+    tokens: List[str] = []
+    for word in re.findall(r"[A-Za-z]{3,}|\d+", (text or "").lower()):
+        tokens.append(word)
+    chars = re.findall(r"[\u4e00-\u9fff]", text or "")
+    tokens.extend("".join(chars[i : i + 2]) for i in range(len(chars) - 1))
+    return tokens
+
+
 def _metric_relevant_to_question(metric: str, question: str) -> bool:
     if metric == "heart_rate_bpm":
         return _question_wants_heart_rate(question)
@@ -603,12 +626,25 @@ def _source_relevant_to_question(
 
     meta = source.get("metadata") or {}
     chunk_type = meta.get("chunk_type", "paragraph")
+    module = str(meta.get("module") or "A").upper()
     question = request.question or ""
     content_l = content.lower()
 
     if chunk_type == "numeric_metric":
         fields = _parse_metric_fields(content)
         return _metric_relevant_to_question(fields.get("metric", ""), question)
+
+    # Module B/C (behavior / husbandry): skip Merck clinical topic gates.
+    if module in {"B", "C"}:
+        tokens = _overlap_tokens(question)
+        if not tokens:
+            return True
+        hits = sum(1 for token in tokens if token.lower() in content_l)
+        # Also accept instrument name / source token hits.
+        src = str(meta.get("source") or "").lower()
+        if src and src.replace("_", "") in re.sub(r"[^a-z0-9]", "", question.lower()):
+            return True
+        return hits >= 1
 
     # Prefer question-topic match; otherwise require lexical overlap with content.
     for pattern, _items in TOPIC_GUIDANCE_ZH:
@@ -636,10 +672,10 @@ def _source_relevant_to_question(
             return True
 
     # Generic overlap check for non-topic questions (e.g. paw licking).
-    tokens = re.findall(r"[A-Za-z]{3,}|\d+|[\u4e00-\u9fff]{2,}", question.lower())
+    tokens = _overlap_tokens(question)
     if not tokens:
         return False
-    hits = sum(1 for token in tokens if token in content_l)
+    hits = sum(1 for token in tokens if token.lower() in content_l)
     return hits >= 1
 
 
@@ -1060,6 +1096,8 @@ class AnimaRAGPipeline:
         )
 
     def _detect_preferred_types(self, text: str) -> Tuple[str, ...]:
+        if _is_corpus_meta_question(text):
+            return ()
         preferred: List[str] = []
         for pattern, _expansion, types in QUERY_EXPANSIONS:
             if types and pattern.search(text):
@@ -1078,7 +1116,16 @@ class AnimaRAGPipeline:
             raw_parts.append(request.species)
         if request.size:
             raw_parts.append(request.size)
-        blob = " ".join(raw_parts)
+        blob = " ".join(p for p in raw_parts if p)
+
+        # Instrument / husbandry corpus lookups: keep the query clean so
+        # complaint-map expansions (e.g. "Active" → lifestyle fluff) do not
+        # bury C-BARQ / MCPQ-R / AAHA / PetTalk hits.
+        if _is_corpus_meta_question(blob):
+            parts = [request.question or ""]
+            if request.species:
+                parts.append(request.species)
+            return " ".join(p for p in parts if p)
 
         expansions: List[str] = []
         for pattern, expansion, _types in QUERY_EXPANSIONS:

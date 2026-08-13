@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-08-13T07:25:16.527942+00:00",
+  "lab": "anima-rag-lab",
+  "scope": "lab_only_no_animalink_wiring",
+  "handoff_doc": "docs/LAB_HANDOFF.md",
+  "vectors": {
+    "merged_count": 14000,
+    "module_a_count": 13572,
+    "module_bc_count": 428,
+    "embedder": "sentence_transformers:paraphrase-multilingual-MiniLM-L12-v2",
+    "dimension": 384,
+    "store_dir": "data/processed/merged_vector_store"
+  },
+  "module_bc_chunks": {
+    "count": 428,
+    "sources": [
+      "aaha",
+      "akc",
+      "cbarq",
+      "mcpq_r",
+      "pettalk_asia",
+      "therapy_cbarq_51q"
+    ],
+    "path": "data/processed/module_bc_chunks.json"
+  },
+  "pettalk_articles": 30,
+  "evals": {
+    "total_cases": 23,
+    "module_bc_cases": 5,
+    "module_bc_ids": [
+      "bc_cbarq_stranger_aggression",
+      "bc_akc_labrador",
+      "bc_aaha_feline_senior",
+      "bc_mcpq_extraversion",
+      "bc_pettalk_bichon"
+    ]
+  },
+  "paths": {
+    "data/processed/merged_vector_store/manifest.json": true,
+    "data/processed/module_bc_chunks.json": true,
+    "data/pgvector_local/knowledge_chunks.sqlite3": true,
+    "supabase/migrations/20260813_knowledge_chunks.sql": true,
+    "scripts/12_chunk_module_bc.py": true,
+    "scripts/13_embed_module_bc.py": true,
+    "scripts/14_export_pgvector.py": true,
+    "scripts/15_upsert_supabase.py": true,
+    "scripts/16_local_pgvector.py": true,
+    "scripts/17_enrich_module_bc_gaps.py": true,
+    "docs/LAB_HANDOFF.md": true,
+    "docs/APP_INTEGRATION.md": true,
+    "docs/SUPABASE_MERGE.md": true,
+    "evals/cases.json": true,
+    "data/raw/module_c_husbandry/pettalk_asia/articles.jsonl": true,
+    "data/raw/module_c_husbandry/aaha/pdf_extracts/table1.json": true,
+    "data/raw/module_b_behavior/cbarq_mcpq_r/related_instruments/mcpq_r_blank_form.json": true
+  },
+  "deferred": [
+    "AnimaLink code / App联调",
+    "Supabase cloud upsert (needs SUPABASE_*)",
+    "Stable public HTTPS",
+    "Official Monash MCPQ-R blank PDF"
+  ]
+}

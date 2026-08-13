@@ -1,6 +1,6 @@
 # 0.4 C-BARQ & MCPQ-R
 
-**Status (2026-08-12):** `docs/Questionaire/` 业主问卷包已索引并归档。
+**Status (2026-08-13):** C-BARQ(101) **14/14** subscale item formulas filled; MCPQ-R adjective + POMP scoring from Ley 2008/2009.
 
 ## Source of truth (owner folder)
 
@@ -10,20 +10,23 @@
 
 | Path | Contents |
 |------|----------|
-| `scoring_methods/` | Serpell 计分说明 + 治疗犬 51Q 中英文摘要 |
-| `forms/` | C-BARQ42 / C-BARQ101 问卷正文 PDF |
-| `pdfs/` | OA 验证/应用文献 |
-| `related_instruments/` | DPQ（相关犬性格量表，非 MCPQ-R） |
-| `*.json` | 机器可读计分与因子表 |
+| `scoring_methods/` | Serpell 计分说明 + 治疗犬 51Q |
+| `forms/` | C-BARQ42 / C-BARQ101 问卷正文 |
+| `pdfs/` | OA 文献（含 Duffy 2012、Ley 2008/2009、Hsu 2003） |
+| `related_instruments/` | DPQ + **MCPQ-R** 计分提取 |
+| `norms_and_scoring.json` | 机器可读完整计分 |
 
-## Key JSON
+## How the 10 missing C-BARQ(101) formulas were filled
 
-- `norms_and_scoring.json` — C-BARQ42 完整公式；101 仅 4 条
-- `therapy_dog_51q_factors.json` — Sakurama 2023 英文因子+常模趋势
-- `therapy_dog_51q_zh.json` — 51 题中文题面（14 因子）
-- `related_instruments/dpq_scoring.json` — DPQ 计分键
+Serpell’s own 101 scoring PDF only lists 4 subscales. The other 10 were reconstructed by matching **Duffy & Serpell (2012) Table 3** item stems to the **2015 101-item form** numbering, then cross-checked against the 4 official formulas.
 
-## Remaining gaps
+Source PDF: `pdfs/duffy_serpell_2012_cbarq_subscale_items.pdf`
 
-- C-BARQ(101) 其余 10 个分量表公式
-- MCPQ-R 官方计分/题目 PDF
+## MCPQ-R
+
+See `related_instruments/MCPQ_R_README.md` — 26 adjectives + POMP `%` scoring. No blank Monash form PDF found; Ley papers are the operable source.
+
+## Remaining caveats
+
+- Item **51** duplicates the “stepped over” stem of item **30**; score under owner-directed only (Duffy lists once).
+- Some stems appear in both aggression and fear sections (different item numbers) — map per section as in JSON.

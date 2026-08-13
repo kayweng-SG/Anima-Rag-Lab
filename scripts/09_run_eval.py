@@ -209,6 +209,36 @@ def evaluate_case(pipeline: Any, rag_mod: Any, case: Dict[str, Any]) -> CaseResu
             )
         )
 
+    meta_sources = [
+        str((s.get("metadata") or {}).get("source") or "") for s in sources
+    ]
+    meta_modules = [
+        str((s.get("metadata") or {}).get("module") or "") for s in sources
+    ]
+
+    must_src = _as_list(expect.get("sources_source_must_include_any"))
+    if must_src and not any(
+        any(needle.lower() == src.lower() for needle in must_src) for src in meta_sources
+    ):
+        failures.append(
+            CheckFailure(
+                "sources_source_must_include_any",
+                f"expected one of {must_src} in source metadata, got {meta_sources}",
+            )
+        )
+
+    must_mod = _as_list(expect.get("sources_module_must_include_any"))
+    if must_mod and not any(
+        any(needle.upper() == mod.upper() for needle in must_mod)
+        for mod in meta_modules
+    ):
+        failures.append(
+            CheckFailure(
+                "sources_module_must_include_any",
+                f"expected one of {must_mod} in module metadata, got {meta_modules}",
+            )
+        )
+
     extracted = list(getattr(response, "extracted_symptoms", None) or [])
     extracted_blob = " | ".join(extracted)
 
@@ -280,8 +310,13 @@ def run_eval(
     cases_path: str = DEFAULT_CASES,
     with_llm: bool = False,
     report_path: Optional[str] = DEFAULT_REPORT,
+    group: Optional[str] = None,
 ) -> Dict[str, Any]:
     cases = load_cases(cases_path)
+    if group:
+        cases = [c for c in cases if str(c.get("group") or "") == group]
+        if not cases:
+            raise ValueError(f"No cases with group={group!r} in {cases_path}")
     pipeline, rag_mod = build_pipeline(with_llm=with_llm)
     results = [evaluate_case(pipeline, rag_mod, case) for case in cases]
     passed = sum(1 for r in results if r.passed)
@@ -289,6 +324,7 @@ def run_eval(
     report = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
         "cases_path": cases_path,
+        "group_filter": group,
         "with_llm": with_llm,
         "total": len(results),
         "passed": passed,
@@ -304,14 +340,16 @@ def run_eval(
 
 
 def _print_human(report: Dict[str, Any]) -> None:
+    filt = report.get("group_filter")
+    filt_note = f" group={filt}" if filt else ""
     print(
-        f"\nEval: {report['passed']}/{report['total']} passed"
+        f"\nEval{filt_note}: {report['passed']}/{report['total']} passed"
         f"  (LLM={'on' if report.get('with_llm') else 'off'})\n"
     )
     for item in report["results"]:
         mark = "PASS" if item["passed"] else "FAIL"
         print(
-            f"  [{mark}] {item['id']:20s}  "
+            f"  [{mark}] {item['id']:28s}  "
             f"status={item['red_light_status']}  "
             f"intercepted={item['intercepted']}  "
             f"sources={item['source_count']}  "
@@ -335,6 +373,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         action="store_true",
         help="Allow OpenAI answers when OPENAI_API_KEY is set",
     )
+    parser.add_argument(
+        "--group",
+        default=None,
+        help="Only run cases with this group (e.g. module_bc)",
+    )
     parser.add_argument("--json", action="store_true", help="Print report JSON only")
     args = parser.parse_args(argv)
 
@@ -343,6 +386,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         cases_path=args.cases,
         with_llm=args.with_llm,
         report_path=report_path,
+        group=args.group,
     )
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))

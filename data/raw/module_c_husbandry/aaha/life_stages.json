@@ -1,0 +1,185 @@
+{
+  "schema_version": 2,
+  "wbs_id": "0.6",
+  "extracted_at": "2026-08-13T06:29:48.088291+00:00",
+  "disclaimer": "Stage definitions taken from AAHA guideline PDF text extract (Table 1). Always prefer the official PDF for clinical decisions. Research staging only.",
+  "canine": {
+    "guideline": "2019 AAHA Canine Life Stage Guidelines",
+    "doi": "10.5326/JAAHA-MS-6999",
+    "pdf": "pdfs/2019_aaha_canine_life_stage_guidelines.pdf",
+    "stages": [
+      {
+        "id": "puppy",
+        "label": "Puppy",
+        "definition": "Birth to cessation of rapid growth (~6-9 mo, varying with breed and size)",
+        "definition_source": "table1_pdf_text"
+      },
+      {
+        "id": "young_adult",
+        "label": "Young adult",
+        "definition": "Cessation of rapid growth to completion of physical and social maturation, which occurs in most dogs by 3 to 4 yr of age",
+        "definition_source": "table1_pdf_text"
+      },
+      {
+        "id": "mature_adult",
+        "label": "Mature adult",
+        "definition": "Completion of physical and social maturation until the last 25% of estimated lifespan (breed and size dependent)",
+        "definition_source": "table1_pdf_text"
+      },
+      {
+        "id": "senior",
+        "label": "Senior",
+        "definition": "The last 25% of estimated lifespan through end of life",
+        "definition_source": "table1_pdf_text"
+      },
+      {
+        "id": "end_of_life",
+        "label": "End of life",
+        "definition": "Terminal stage (depends on the specific pathologies)",
+        "definition_source": "table1_pdf_text"
+      }
+    ],
+    "wellness_focus_areas": [
+      "lifestyle / safety",
+      "zoonotic and human safety",
+      "behavior",
+      "nutrition",
+      "parasite control",
+      "vaccination",
+      "dental health",
+      "reproduction",
+      "breed-specific conditions",
+      "baseline diagnostics"
+    ],
+    "visit_frequency_notes": [
+      "Puppies: frequent visits per vaccination / socialization needs",
+      "Young adults: semiannual to annual consultation and physical exam",
+      "Mature adults: semiannual-to-annual exams; annual minimum database (Table 4)",
+      "Seniors: at least semiannual exams and minimum database (Table 4)"
+    ],
+    "table1": {
+      "source": "2019 AAHA Canine Life Stage Guidelines — TABLE 1",
+      "extracted_via": "pypdf text (not OCR)",
+      "stages": [
+        {
+          "id": "puppy",
+          "label": "Puppy",
+          "definition_verbatim": "Birth to cessation of rapid growth (~6-9 mo, varying with breed and size)"
+        },
+        {
+          "id": "young_adult",
+          "label": "Young adult",
+          "definition_verbatim": "Cessation of rapid growth to completion of physical and social maturation, which occurs in most dogs by 3 to 4 yr of age"
+        },
+        {
+          "id": "mature_adult",
+          "label": "Mature adult",
+          "definition_verbatim": "Completion of physical and social maturation until the last 25% of estimated lifespan (breed and size dependent)"
+        },
+        {
+          "id": "senior",
+          "label": "Senior",
+          "definition_verbatim": "The last 25% of estimated lifespan through end of life"
+        },
+        {
+          "id": "end_of_life",
+          "label": "End of life",
+          "definition_verbatim": "Terminal stage (depends on the specific pathologies)"
+        }
+      ],
+      "visit_frequency_notes": [
+        "Puppies: frequent visits per vaccination / socialization needs",
+        "Young adults: semiannual to annual consultation and physical exam",
+        "Mature adults: semiannual-to-annual exams; annual minimum database (Table 4)",
+        "Seniors: at least semiannual exams and minimum database (Table 4)"
+      ],
+      "pdf_has_table1_text": true
+    }
+  },
+  "feline": {
+    "guideline": "2021 AAHA/AAFP Feline Life Stage Guidelines",
+    "doi": "10.5326/JAAHA-MS-7189",
+    "pdf": "pdfs/2021_aaha_aafp_feline_life_stage_guidelines.pdf",
+    "stages": [
+      {
+        "id": "kitten",
+        "label": "Kitten",
+        "age_band": "Birth up to 1 year",
+        "definition_source": "table1_pdf_text"
+      },
+      {
+        "id": "young_adult",
+        "label": "Young adult",
+        "age_band": "1-6 years",
+        "definition_source": "table1_pdf_text"
+      },
+      {
+        "id": "mature_adult",
+        "label": "Mature adult",
+        "age_band": "7-10 years",
+        "definition_source": "table1_pdf_text"
+      },
+      {
+        "id": "senior",
+        "label": "Senior",
+        "age_band": "Greater than 10 years",
+        "definition_source": "table1_pdf_text"
+      },
+      {
+        "id": "end_of_life",
+        "label": "End of life",
+        "definition": "Separate stage; see 2016 AAHA/IAAHPC EOL Guidelines and 2021 AAFP End of Life toolkit (not expanded here)",
+        "definition_source": "table1_pdf_text"
+      }
+    ],
+    "wellness_focus_areas": [
+      "behavior and environmental needs",
+      "elimination",
+      "life stage nutrition and weight management",
+      "oral health",
+      "parasite control",
+      "vaccination",
+      "zoonoses and human safety",
+      "diagnostics by life stage",
+      "feline-friendly handling / visit barriers"
+    ],
+    "visit_frequency_notes": [
+      "Senior cats should be seen at least every 6 months (and more often as needed)"
+    ],
+    "table1": {
+      "source": "2021 AAHA/AAFP Feline Life Stage Guidelines — TABLE 1 / summary",
+      "extracted_via": "pypdf text (not OCR)",
+      "stages": [
+        {
+          "id": "kitten",
+          "label": "Kitten",
+          "age_band_verbatim": "Birth up to 1 year"
+        },
+        {
+          "id": "young_adult",
+          "label": "Young adult",
+          "age_band_verbatim": "1-6 years"
+        },
+        {
+          "id": "mature_adult",
+          "label": "Mature adult",
+          "age_band_verbatim": "7-10 years"
+        },
+        {
+          "id": "senior",
+          "label": "Senior",
+          "age_band_verbatim": "Greater than 10 years"
+        },
+        {
+          "id": "end_of_life",
+          "label": "End of life",
+          "definition_verbatim": "Separate stage; see 2016 AAHA/IAAHPC EOL Guidelines and 2021 AAFP End of Life toolkit (not expanded here)"
+        }
+      ],
+      "visit_frequency_notes": [
+        "Senior cats should be seen at least every 6 months (and more often as needed)"
+      ],
+      "pdf_has_stage_text": true
+    }
+  }
+}
