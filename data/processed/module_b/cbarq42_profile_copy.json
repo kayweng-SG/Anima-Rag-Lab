@@ -1,0 +1,538 @@
+{
+  "schema_version": 4,
+  "instrument": "C-BARQ42",
+  "module": "B",
+  "purpose": "口語題 → 分量表均分 → 五档。教養建議對應該檔可見反應：當下怎麼做、日常怎麼練、別做什麼。",
+  "scale": {
+    "min": 0,
+    "max": 4,
+    "meaning": "subscale mean after reverse-coding, mapped to 5 bands"
+  },
+  "bands": {
+    "0": {
+      "max_exclusive": 0.5,
+      "label_zh": "0 几乎没有",
+      "label_en": "none",
+      "owner_zh": "几乎不怎么这样"
+    },
+    "1": {
+      "max_exclusive": 1.5,
+      "label_zh": "1 一点点",
+      "label_en": "mild",
+      "owner_zh": "偶尔有一点"
+    },
+    "2": {
+      "max_exclusive": 2.5,
+      "label_zh": "2 普通",
+      "label_en": "moderate",
+      "owner_zh": "有时会，能收回来"
+    },
+    "3": {
+      "max_exclusive": 3.5,
+      "label_zh": "3 很明显",
+      "label_en": "strong",
+      "owner_zh": "常常很明显"
+    },
+    "4": {
+      "max_exclusive": 4.01,
+      "label_zh": "4 非常强",
+      "label_en": "extreme",
+      "owner_zh": "几乎每次都这样、很难收"
+    }
+  },
+  "disclaimer_zh": "这是性格测验报告，不是看病。分数来自你刚填的行为问卷（0 几乎没有～4 非常强）。不能代替兽医或行为专家。问卷版权属宾夕法尼亚大学。",
+  "disclaimer_en": "Personality report, not a medical diagnosis. Five bands match the 0–4 questionnaire. C-BARQ © University of Pennsylvania.",
+  "subscales": {
+    "excitability": {
+      "label_zh": "兴奋度",
+      "label_en": "Excitability",
+      "ask_zh": "出门、上车前它会不会整个人开了？",
+      "0": {
+        "snapshot_zh": "出门上车完全没反应。",
+        "personality_zh": "绳子、车钥匙出现，它还是躺着。几乎不跳不叫。",
+        "care_zh": "它拿绳子、拿钥匙都还躺着：这不是冷漠，是门槛很高。你主动约它——叫名字、拿玩具晃两下、短短玩 3～5 分钟再出门。别一整周都「它不闹就不理」，不然它会更退缩。若突然从淡定变成整天昏睡，先问兽医。",
+        "care_en": "Match the dog’s level-0 reaction (出门上车完全没反应。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "会抬头看一下，马上又平静。",
+        "personality_zh": "知道要出门，兴奋很轻，几秒就好。",
+        "care_zh": "它只抬头看一眼就平静：说明它认得「要出门了」，但身体还没热。出门前摸两下、叫名字、让它闻一下绳子就够，不必再加刺激。客人来也别故意弄得很嗨，保持「有事发生→很快平静」的节奏。",
+        "care_en": "Match the dog’s level-1 reaction (会抬头看一下，马上又平静。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "会开心跳两下，一下子能冷静。",
+        "personality_zh": "转个圈、叫一声，通常一两分钟就收得回来。",
+        "care_zh": "它会转圈或叫一声，一两分钟能收回：先别急着出门。等它屁股坐下、呼吸慢一点，再开门。出门、客人、洗澡别排在同一小时。你一冷静、动作慢，它也比较容易跟着降下来。",
+        "care_en": "Match the dog’s level-2 reaction (会开心跳两下，一下子能冷静。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "会叫、转圈、拉绳子，要一会儿才停。",
+        "personality_zh": "还没出门就已经很热，需要你帮忙降温。",
+        "care_zh": "它已经叫、转圈、扯绳，脑子有点热：绳子先别拿出来。让它去垫子上坐／趴，或把零食撒开让它用鼻子找 1～2 分钟，等叫停了、身体不弹了再戴绳。客人进门前先牵好或定点，扑人不要当可爱。",
+        "care_en": "Match the dog’s level-3 reaction (会叫、转圈、拉绳子，要一会儿才停。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "一拿绳子就炸，跳、叫、很难停。",
+        "personality_zh": "过热到很难沟通，扑人、扯绳都会有。",
+        "care_zh": "它一见绳子就跳、叫、扑、停不下来：这是过热，不是「开心就可以放任」。绳子放柜子里，先练「屁股落地才出现绳子」；门一开就扯就关门重来。客人进门必须牵着或关在定点，扑到人身上立刻转身带走，不要又摸又笑。每天固定两次短「冷静游戏」，别用狂奔当唯一消耗。",
+        "care_en": "Match the dog’s level-4 reaction (一拿绳子就炸，跳、叫、很难停。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "stranger_directed_aggression": {
+      "label_zh": "对陌生人凶不凶",
+      "label_en": "Stranger-directed aggression",
+      "ask_zh": "不熟的人靠近，它会不会警告或咬？",
+      "0": {
+        "snapshot_zh": "生人靠近，完全不凶。",
+        "personality_zh": "快递员、路人走过来，它当没看见。",
+        "care_zh": "生人走过来它当没看见：很好相处。仍教它「可以走开」——有人伸手它不想碰，就带它侧身离开。小孩扑过来你挡在中间。别因为「它很乖」就让所有人摸头。",
+        "care_en": "Match the dog’s level-0 reaction (生人靠近，完全不凶。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "顶多看一眼，几乎不叫。",
+        "personality_zh": "会注意陌生人，但没有警告。",
+        "care_zh": "它会看陌生人一眼、几乎不叫：这是在收集信息。你站在它和生人之间，用零食换「看一眼→看回你」。别逼它上前闻手。路人盯着它看时，带它继续走，别停下来解释半天。",
+        "care_en": "Match the dog’s level-1 reaction (顶多看一眼，几乎不叫。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "会叫两声看门，你一安抚就好。",
+        "personality_zh": "门口叫一下算通报，你说话它通常收得回来。",
+        "care_zh": "它门口叫一两声、你一说话就收：那是通报，不是宣战。叫两声可以说「收到了」，再叫名字看你、给零食。别为了叫而骂或打——骂完它常叫得更凶。访客进门先不理狗，等它自己靠近。",
+        "care_en": "Match the dog’s level-2 reaction (会叫两声看门，你一安抚就好。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "会持续叫、挡路、露牙。",
+        "personality_zh": "不熟的人靠近它会进入防卫，但还没到咬。",
+        "care_zh": "它持续叫、挡路、露牙：身体已经紧了。出门缩短绳、拉开距离，对方近了就转弯走。不要「摸摸它就好」硬塞给陌生人。家里访客：狗先关在另一间或定点，人坐定、狗冷静后再隔着距离见。若越来越常露牙，约行为咨询。",
+        "care_en": "Match the dog’s level-3 reaction (会持续叫、挡路、露牙。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "生人靠近就很凶，可能咬或想咬。",
+        "personality_zh": "叫、挡、咬的风险都高。这档要当安全问题。",
+        "care_zh": "生人靠近就很凶、有咬或想咬：先当安全问题。公共场合始终牵绳、必要时口罩（在专业指导下）。禁止强迫社交、禁止对峙训练。家门口快递：你先出门收，狗留在门后。尽快找认证行为专家 + 兽医排除疼痛，不要自己硬练。",
+        "care_en": "Match the dog’s level-4 reaction (生人靠近就很凶，可能咬或想咬。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "owner_directed_aggression": {
+      "label_zh": "对家里人凶不凶",
+      "label_en": "Owner-directed aggression",
+      "ask_zh": "拿走食物、玩具或靠近吃饭，会对家人凶吗？",
+      "0": {
+        "snapshot_zh": "家人拿东西、靠近饭碗，完全不凶。",
+        "personality_zh": "你拿玩具、靠近吃饭，它都能接受。",
+        "care_zh": "你拿玩具、靠近饭碗它都接受：保持「用手给、不用抢」。偶尔用零食换骨头，让「人靠近＝更好吃的来了」。小孩靠近吃饭的狗时仍要盯着。",
+        "care_en": "Match the dog’s level-0 reaction (家人拿东西、靠近饭碗，完全不凶。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "偶尔不高兴看你一眼，没有吼。",
+        "personality_zh": "被打扰会皱一下脸，马上算了。",
+        "care_zh": "它被打扰会皱一下脸就过：那是轻微不舒服。拿东西前先出声「我要拿了」，伸手慢一点。别突然从正上方罩下去。它松口后马上夸奖。",
+        "care_en": "Match the dog’s level-1 reaction (偶尔不高兴看你一眼，没有吼。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "被打扰会哼一声，很快算了。",
+        "personality_zh": "抢骨头会瞪你或小声哼，不会真咬。",
+        "care_zh": "它会哼一声或瞪你，但不会真咬：停掉「硬抢」。用更高价值零食放旁边，等它松口再拿旧的。吃饭时人路过先绕开，别逗弄碗边。同一套规矩全家人统一。",
+        "care_en": "Match the dog’s level-2 reaction (被打扰会哼一声，很快算了。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "会吼、露牙，家人要小心。",
+        "personality_zh": "吃饭、被抱时警告很清楚，有升级风险。",
+        "care_zh": "它会吼、露牙：警告已经很清楚。立刻停止对骂、打鼻子、按住。所有高价值物品分开给、人远离。摸它身体前先伸手让它闻。尽快兽医检查疼痛（牙、耳、关节），并约行为指导。",
+        "care_en": "Match the dog’s level-3 reaction (会吼、露牙，家人要小心。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "家人一碰食物或身体，会警告甚至咬。",
+        "personality_zh": "对家里人已经有咬的风险，很危险。",
+        "care_zh": "家人一碰食物或身体就警告甚至咬：危险。先隔离资源：门后门喂、不抢玩具。任何体罚都停。24～48 小时内看兽医排疼痛，同时联系认证行为专家；家里有小孩先物理隔离，不要「再试一次看会不会咬」。",
+        "care_en": "Match the dog’s level-4 reaction (家人一碰食物或身体，会警告甚至咬。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "dog_directed_aggression": {
+      "label_zh": "对不熟的狗凶不凶",
+      "label_en": "Dog-directed aggression",
+      "ask_zh": "路上遇到不认识的狗，会不会冲、叫、咬？",
+      "0": {
+        "snapshot_zh": "遇到别的狗，完全不找架。",
+        "personality_zh": "不熟的狗走过来，它当散步。",
+        "care_zh": "路上遇狗它不找架：继续轻松路过。遇到很冲、硬凑上来的狗，你主动带开，别让「一次被扑」教会它以后要先出手。",
+        "care_en": "Match the dog’s level-0 reaction (遇到别的狗，完全不找架。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "会看一眼，很少叫。",
+        "personality_zh": "注意到对方，身体还松。",
+        "care_zh": "它会看一眼、很少叫：身体还松。并排走过即可，不必对脸闻。它看对方时叫名字、给零食，强化「看到狗→看主人」。",
+        "care_en": "Match the dog’s level-1 reaction (会看一眼，很少叫。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "有的狗可以，有的狗会叫两声。",
+        "personality_zh": "看对象：有的能一起走，有的会叫。",
+        "care_zh": "有的狗可以、有的会叫：尊重它的名单。只约处过的玩伴；窄路对来就转弯加大距离。叫两声能收回就夸，别硬拖上去社交。",
+        "care_en": "Match the dog’s level-2 reaction (有的狗可以，有的狗会叫两声。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "看到不熟的狗就紧、叫、想冲。",
+        "personality_zh": "窄路对到狗很容易升级。",
+        "care_zh": "见不熟的狗就紧、叫、想冲：已进入战斗准备。距离要大到它能看但叫得少，用零食换看你。避开高峰狗道与狗公园。对冲来了就挡视线、加速离开，不要停着对骂对方狗。",
+        "care_en": "Match the dog’s level-3 reaction (看到不熟的狗就紧、叫、想冲。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "见狗就开战，咬的风险高。",
+        "personality_zh": "不适合狗公园，也不适合「互相教」。",
+        "care_zh": "见狗就开战、咬风险高：永远牵绳、必要时双扣。不进狗公园、不「让它们打出地位」。训练改在没狗的时段。这档需要专业行为方案，自己硬练容易升级。",
+        "care_en": "Match the dog’s level-4 reaction (见狗就开战，咬的风险高。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "familiar_dog_aggression": {
+      "label_zh": "对家里另一只狗凶不凶",
+      "label_en": "Familiar-dog aggression",
+      "ask_zh": "吃饭、啃骨头时，家里另一只靠近会不会吵？",
+      "0": {
+        "snapshot_zh": "家里狗一起吃饭、玩，完全不吵。",
+        "personality_zh": "同住的狗靠近食盆也没事。",
+        "care_zh": "家里狗相处平稳：仍把高价值零食、骨头分开，预防以后抢。各有自己的碗和床。人不要在两狗之间故意挑起吃醋。",
+        "care_en": "Match the dog’s level-0 reaction (家里狗一起吃饭、玩，完全不吵。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "偶尔瞪一眼，没有真吵。",
+        "personality_zh": "抢位置会看一下，很快过去。",
+        "care_zh": "偶尔瞪一眼就过：过道别挤着过，一狗先走完另一狗再走。抢位置时你平静用零食或牵引带走较高压的那只，别大声骂架——骂会让两狗更紧。饭碗仍分开放。",
+        "care_en": "Match the dog’s level-1 reaction (偶尔瞪一眼，没有真吵。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "偶尔拌嘴，多数时候能住一起。",
+        "personality_zh": "会哼两声，真打起来的少。",
+        "care_zh": "偶尔拌嘴、多数能共处：各碗、各床、各啃的东西。人进门先冷静再打招呼，避免两狗同时扑人抢关注。哼两声能分开就够，不要强行按住和好。",
+        "care_en": "Match the dog’s level-2 reaction (偶尔拌嘴，多数时候能住一起。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "抢饭、抢人时会明显打架前兆。",
+        "personality_zh": "同住狗靠近高价值东西就爆。",
+        "care_zh": "抢饭、抢人时打架前兆明显：喂食关门分开；骨头只在隔离时给。人坐沙发时两狗不要同时挤上来。一有僵住、低吼就用门或牵引分开，别等咬上去。",
+        "care_en": "Match the dog’s level-3 reaction (抢饭、抢人时会明显打架前兆。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "很容易打起来，不能「让它们自己解决」。",
+        "personality_zh": "冲突已经危险。",
+        "care_zh": "很容易打起来：严格分区（门、围栏），资源零共享。打起来不要徒手拆，用门板或毯子隔开。立刻行为专家介入；有人受伤先处理伤口再谈「谁对谁错」。",
+        "care_en": "Match the dog’s level-4 reaction (很容易打起来，不能「让它们自己解决」。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "stranger_directed_fear": {
+      "label_zh": "怕不怕陌生人",
+      "label_en": "Stranger-directed fear",
+      "ask_zh": "生人走过来或想摸它，会不会躲、抖？",
+      "0": {
+        "snapshot_zh": "生人靠近，完全不怕。",
+        "personality_zh": "外面有人走过来，它很少躲。",
+        "care_zh": "生人靠近它不怕：仍保护选择权。小孩跑过来你蹲下挡一下，让它自己决定要不要靠近。被抱起来若挣扎就放下。",
+        "care_en": "Match the dog’s level-0 reaction (生人靠近，完全不怕。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "会看一下，身体还稳。",
+        "personality_zh": "有点谨慎，不会逃。",
+        "care_zh": "它看一下、身体还稳：客人先蹲着侧身、别盯着眼睛、别伸手。你站它旁边当「安全岛」，它看客一眼就给零食。",
+        "care_en": "Match the dog’s level-1 reaction (会看一下，身体还稳。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "先看一眼，熟了才靠近。",
+        "personality_zh": "生人来会退半步，过一会儿才出来。",
+        "care_zh": "它先退半步、熟了才靠近：访客进门先完全不理狗（不摸不叫不看）。它自己走过去闻再摸胸口侧面。别拉项圈往前送。",
+        "care_en": "Match the dog’s level-2 reaction (先看一眼，熟了才靠近。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "会躲、夹尾，或又怕又叫。",
+        "personality_zh": "不熟的人伸手它就不舒服。",
+        "care_zh": "它躲、夹尾、又怕又叫：那是怕，不是坏。距离拉开到它能看但不再发抖；用零食喂在远距离。禁止「去给叔叔摸摸」。客人越多越要缩短见面时间。",
+        "care_en": "Match the dog’s level-3 reaction (会躲、夹尾，或又怕又叫。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "生人一靠近就躲、抖、逃不了。",
+        "personality_zh": "这是很怕，不是坏。硬拖只会更怕。",
+        "care_zh": "生人一靠近就躲、抖、逃不了：停止一切强迫社交。家门口用门禁隔离；出门选人少路线。脱敏只能极小步，最好在行为专家计划下做。突然恶化先排除疼痛与听力问题。",
+        "care_en": "Match the dog’s level-4 reaction (生人一靠近就躲、抖、逃不了。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "nonsocial_fear": {
+      "label_zh": "怕不怕声音和陌生环境",
+      "label_en": "Nonsocial fear",
+      "ask_zh": "雷、吸尘器、第一次坐车，会不会慌？",
+      "0": {
+        "snapshot_zh": "打雷、新地方，完全没事。",
+        "personality_zh": "大声、新路况，它当背景音。",
+        "care_zh": "雷、新地方都没事：偶尔换路线、坐电梯，保持弹性。新吸尘器第一次开时仍可 dist 远一点观察，不必刻意吓。",
+        "care_en": "Match the dog’s level-0 reaction (打雷、新地方，完全没事。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "会愣一下，马上继续走。",
+        "personality_zh": "吓一跳但不会慌。",
+        "care_zh": "愣一下就继续走：大声出现时你平静讲话、丢颗零食在地上。别大笑指着它「你怕呀」。同一刺激连续出现时，中间穿插好玩的事。",
+        "care_en": "Match the dog’s level-1 reaction (会愣一下，马上继续走。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "会吓一跳，能自己缓过来。",
+        "personality_zh": "鞭炮、吸尘器会抖一下，几分钟通常好。",
+        "care_zh": "吓一跳但几分钟能缓：先出小声版（远距离吸尘器、录音低音量）+ 零食，再慢慢靠近。它躲就停逼近。车、电梯第一次只待几秒就出。",
+        "care_en": "Match the dog’s level-2 reaction (会吓一跳，能自己缓过来。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "会躲、发抖，要一阵才恢复。",
+        "personality_zh": "雷、新地面会让它很难走。",
+        "care_zh": "会躲、发抖、好一阵才恢复：准备一个它能钻进去的安静角落（遮光、白噪音可选）。预报雷雨天少出门；必要外出选人少时段。恢复前不要硬拉去「看看没多可怕」。",
+        "care_en": "Match the dog’s level-3 reaction (会躲、发抖，要一阵才恢复。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "会慌到躲起来、走不了。",
+        "personality_zh": "风吹袋子、电梯、打雷都可能崩溃。",
+        "care_zh": "慌到躲起来、走不了：安全第一——别拖、别抱紧挣扎中的狗。安静藏身处 + 减少暴露。严重发抖、失禁、自伤要问兽医是否需行为辅助用药，并搭配专业脱敏，不要一日曝晒式治疗。",
+        "care_en": "Match the dog’s level-4 reaction (会慌到躲起来、走不了。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "dog_directed_fear": {
+      "label_zh": "怕不怕别的狗",
+      "label_en": "Dog-directed fear",
+      "ask_zh": "别的狗走过来或冲过来，会不会怕？",
+      "0": {
+        "snapshot_zh": "看到别的狗，完全不怕。",
+        "personality_zh": "狗靠近，它较少夹尾。",
+        "care_zh": "见狗不太怕：保持礼貌路过即可。仍练召回，遇到不舒服的互动能叫走。别因为「它不怕」就放任被陌生狗扑，或硬把它塞给人；一次坏经验就能改写胆小。",
+        "care_en": "Match the dog’s level-0 reaction (看到别的狗，完全不怕。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "会看一下，不太躲。",
+        "personality_zh": "有点谨慎，还能走。",
+        "care_zh": "看一眼不太躲：从旁边走过即可，不必对脸闻。它看对方时叫名字给零食。对方太热情、冲过来，你主动带开，保护「我可以选择离开」。",
+        "care_en": "Match the dog’s level-1 reaction (会看一下，不太躲。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "有的狗还好，有的狗会紧张。",
+        "personality_zh": "很冲或体型差很多的，它会躲。",
+        "care_zh": "有的狗紧张、有的还好：只约体型合适、处过的玩伴。对冲来了就弧线走过。它夹一下尾能自己缓就夸「可以走了」。",
+        "care_en": "Match the dog’s level-2 reaction (有的狗还好，有的狗会紧张。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "远远看到就会夹尾、想逃。",
+        "personality_zh": "别的狗一出现它就不舒服。",
+        "care_zh": "远远夹尾、想逃：距离要大到它能看但不逃。用零食做「看到狗→看你」。不进狗公园「泡勇气」。被冲过一次后，几天内降低难度，别马上再试。",
+        "care_en": "Match the dog’s level-3 reaction (远远看到就会夹尾、想逃。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "远远就狂叫或躲到不行。",
+        "personality_zh": "硬拖过去只会更怕。不要用狗公园治胆小。",
+        "care_zh": "远远就狂叫或躲到不行：这是恐慌。管理距离与视线（车子挡一下也行），不强迫见面。系统脱敏需专业计划；狗公园不是治疗。同时排除曾被咬的创伤与疼痛。",
+        "care_en": "Match the dog’s level-4 reaction (远远就狂叫或躲到不行。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "touch_sensitivity": {
+      "label_zh": "摸脚、梳毛怕不怕",
+      "label_en": "Touch sensitivity",
+      "ask_zh": "剪指甲、洗澡、梳毛，会不会躲？",
+      "0": {
+        "snapshot_zh": "剪指甲、洗澡，完全配合。",
+        "personality_zh": "碰脚、耳朵都没事。",
+        "care_zh": "剪指甲、洗澡都配合：每周假装摸脚、看耳朵 10 秒就给零食，保持「被碰＝好事」。第一次换新梳子仍慢一点。",
+        "care_en": "Match the dog’s level-0 reaction (剪指甲、洗澡，完全配合。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "会缩一下，马上又给碰。",
+        "personality_zh": "不太喜欢但能接受。",
+        "care_zh": "缩一下又给碰：先摸它喜欢的胸口侧面，再轻轻碰一下爪子就停、给吃的。今天缩得厉害就改明天，别一次剪完。",
+        "care_en": "Match the dog’s level-1 reaction (会缩一下，马上又给碰。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "摸可以，碰到脚或耳朵会缩。",
+        "personality_zh": "摸头还好，一碰爪子就想走。",
+        "care_zh": "摸头行、碰脚想走：热身 30 秒抚摸 → 碰爪一秒 → 零食 → 结束。剪指甲拆成「一天一只爪子」。它挣扎就停，下次更短。",
+        "care_en": "Match the dog’s level-2 reaction (摸可以，碰到脚或耳朵会缩。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "剪指甲、洗澡会躲、挣扎。",
+        "personality_zh": "护理开始变成打仗。",
+        "care_zh": "护理会躲、挣扎：改成几秒一轮，一天多次。用舔垫固定注意力再碰。不要按住硬剪；实在需要先问宠物医院互助。家里统一：谁护理谁遵守「停＝真的停」。",
+        "care_en": "Match the dog’s level-3 reaction (剪指甲、洗澡会躲、挣扎。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "会拼命逃，甚至警告咬。",
+        "personality_zh": "突然变严重要先看是不是痛。",
+        "care_zh": "拼命逃甚至警告咬：先停家庭硬来。兽医查皮肤、耳朵、关节疼痛。回家只做「手靠近→零食」的超短练习，剪毛/指甲交给医院或专家辅助的脱敏课。",
+        "care_en": "Match the dog’s level-4 reaction (会拼命逃，甚至警告咬。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "separation_related_problems": {
+      "label_zh": "你不在时会不会慌",
+      "label_en": "Separation-related problems",
+      "ask_zh": "单独留它时，会不会走来走去、叫、咬门？",
+      "0": {
+        "snapshot_zh": "你出门，它完全能自己待。",
+        "personality_zh": "单独在家很少叫、不拆家。",
+        "care_zh": "你出门它能自己待：很好。仍避免连续丢 10 小时；偶尔练你出门 5～10 分钟再回，保持「出门会回来」。回来先冷静再摸。",
+        "care_en": "Match the dog’s level-0 reaction (你出门，它完全能自己待。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "刚走会看门，很快就躺下。",
+        "personality_zh": "有一点点不舍，能自己过。",
+        "care_zh": "刚走看门、很快躺下：出门仪式缩短（钥匙、鞋子动作小）。留一件你味道的衣物。回来若它已躺着，安静表扬即可。",
+        "care_en": "Match the dog’s level-1 reaction (刚走会看门，很快就躺下。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "刚出门会叫一下，随后能安静。",
+        "personality_zh": "拿钥匙会哼，过一会儿通常停。",
+        "care_zh": "叫一下随后能安静：拿钥匙前先给安全啃的东西。录像确认它是叫完就睡还是叫很久。回来大惊小怪会强化分离戏。",
+        "care_en": "Match the dog’s level-2 reaction (刚出门会叫一下，随后能安静。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "会叫、踱步一段时间，你不在它不安。",
+        "personality_zh": "单独待着对它偏难，但还没拆家。",
+        "care_zh": "会叫、踱步一阵：从出门 10～30 秒练起，回来时它还没崩溃就进门。逐渐加长。离开前充分闻嗅运动，但别累到过热。拆家前兆出现就缩短时间，不要硬撑「再久一点」。",
+        "care_en": "Match the dog’s level-3 reaction (会叫、踱步一段时间，你不在它不安。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "你一走就慌：叫、踱步、咬门。",
+        "personality_zh": "这是真的难受，不是报复。",
+        "care_zh": "一走就慌：叫、踱步、咬门：这是焦虑，不是报复。停止因拆家而骂（你不在时骂不到「当下」）。从几秒阈值练；严重失禁、自伤、邻里投诉要兽医+行为专家，评估是否需药物辅助。临时用照看或日托降低独处时长。",
+        "care_en": "Match the dog’s level-4 reaction (你一走就慌：叫、踱步、咬门。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "attachment_attention_seeking": {
+      "label_zh": "黏不黏人",
+      "label_en": "Attachment / attention-seeking",
+      "ask_zh": "走到哪它跟到哪、坐下它就贴过来吗？",
+      "0": {
+        "snapshot_zh": "它有自己的事，完全不黏。",
+        "personality_zh": "你走动、坐下，它不一定跟。",
+        "care_zh": "它不太黏：每天你主动约一段（散步或训练 10 分钟），别只在它烦你时才理。它偶尔靠过来要给回应，强化「靠近你是安全的」。",
+        "care_en": "Match the dog’s level-0 reaction (它有自己的事，完全不黏。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "偶尔跟过来看看，又去玩了。",
+        "personality_zh": "亲近，但不粘着。",
+        "care_zh": "偶尔跟过来又去玩：它过来时摸两下，然后指向床或玩具让它自己去。别全程抱着走，也不要它一离开房间你就喊回来，留给它一点独立时间。",
+        "care_en": "Match the dog’s level-1 reaction (偶尔跟过来看看，又去玩了。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "亲近你，但也能自己躺着。",
+        "personality_zh": "会跟房间，也能自己睡。刚刚好。",
+        "care_zh": "亲近也能自己躺：固定每天一对一时间（饭后短训或散步）。其余时间它躺着你就让它躺，不必一直喊它来；它主动躺下可以安静丢一颗零食强化。",
+        "care_en": "Match the dog’s level-2 reaction (亲近你，但也能自己躺着。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "走到哪跟到哪，你一坐它就贴。",
+        "personality_zh": "很黏，上厕所都要看门。",
+        "care_zh": "走到哪跟到哪、一坐就贴：奖励「去床上躺」——屁股碰床就丢零食。上厕所可关门，回来先不理黏人扑，等四脚落地再摸。别它一拱就无限投喂关注。",
+        "care_en": "Match the dog’s level-3 reaction (走到哪跟到哪，你一坐它就贴。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "几乎不能自己待，一刻都要贴着。",
+        "personality_zh": "黏到你没法做事。",
+        "care_zh": "一刻不能自己待：先练你离开房间 3 秒就回，慢慢加长。关注一律你开启：叫它来才摸，拱人就转身。分离焦虑若同时很高，两条线一起处理，必要时专业指导。",
+        "care_en": "Match the dog’s level-4 reaction (几乎不能自己待，一刻都要贴着。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "training_difficulty": {
+      "label_zh": "好不好教（越高越难教）",
+      "label_en": "Training difficulty (higher = harder)",
+      "ask_zh": "「坐」「待着」听不听？外面会不会神游？",
+      "0": {
+        "snapshot_zh": "说坐就坐，学得很快。",
+        "personality_zh": "指令几乎不用喊第二遍。",
+        "care_zh": "说坐就坐：保持短课有趣，换花样（转圈、碰手）避免无聊。偶尔在门口、小区练，别只在客厅——换场地它才把「听你的」带到外面。",
+        "care_en": "Match the dog’s level-0 reaction (说坐就坐，学得很快。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "家里听得懂，偶尔要提醒。",
+        "personality_zh": "大多数时候配合，有时恍神。",
+        "care_zh": "多数配合、偶尔恍神：做对马上给零食，口令只说一次。恍神就降低难度（更近、更安静），成功再升级。连喊名字五遍会教它「可以晚一点再听」。",
+        "care_en": "Match the dog’s level-1 reaction (家里听得懂，偶尔要提醒。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "家里会，外面有时会忘。",
+        "personality_zh": "安静时听得懂，外面容易看别的。",
+        "care_zh": "家里会、外面易忘：先在门口、楼道练，再上路。一次只练一个动作。外面失败就退回上一个环境，别连续喊名字。",
+        "care_en": "Match the dog’s level-2 reaction (家里会，外面有时会忘。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "喊了常当没听见，外面更难。",
+        "personality_zh": "学得慢，或学会了也不稳定。",
+        "care_zh": "常当没听见：课缩到 1～3 分钟，用它超爱的零食。先在零干扰处练「名字→看你」。绳子短一点减少神游范围。",
+        "care_en": "Match the dog’s level-3 reaction (喊了常当没听见，外面更难。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "几乎叫不动，外面完全神游。",
+        "personality_zh": "需要更好吃的奖励和更短的课。不要连喊名字五遍。",
+        "care_zh": "几乎叫不动、外面完全神游：环境降到极简单（空地、清晨）。口令改手势+超高价值食物。暂停复杂花样，只保命召回。请训练师拆步骤；排除听力与疼痛问题。",
+        "care_en": "Match the dog’s level-4 reaction (几乎叫不动，外面完全神游。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "chasing": {
+      "label_zh": "爱不爱追",
+      "label_en": "Chasing",
+      "ask_zh": "鸟、松鼠跑过去，会不会想冲？",
+      "0": {
+        "snapshot_zh": "鸟、松鼠跑过去，完全不追。",
+        "personality_zh": "移动的小东西点不着它。",
+        "care_zh": "鸟松鼠跑过去也不追：仍练召回当保险。公园里突然出现猎物时，先叫名字给零食，预防「第一次追到」上瘾。别用放开绳子考验运气。",
+        "care_en": "Match the dog’s level-0 reaction (鸟、松鼠跑过去，完全不追。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "会看一眼，不会冲出去。",
+        "personality_zh": "有兴趣，但停得住。",
+        "care_zh": "看一眼不冲：它头一转过去，你立刻「看我」+零食，比事后拉绳有效。成功几次后，可以在更远一点的松鼠出现时再练。",
+        "care_en": "Match the dog’s level-1 reaction (会看一眼，不会冲出去。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "会盯、会动一下，多数叫得回来。",
+        "personality_zh": "看到松鼠会绷，常常还回得来。",
+        "care_zh": "会盯、会动，多数叫得回：看过去就标记「好」，马上换看你，召回成功给大奖。松鼠多的路改时段或绕开；失败就缩短距离，别连续失败。",
+        "care_en": "Match the dog’s level-2 reaction (会盯、会动一下，多数叫得回来。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "一看会跑的就想冲，叫回有点难。",
+        "personality_zh": "脑子会被猎物抢走。",
+        "care_zh": "一看就想冲、叫回难：户外始终牵好；可加牵引前胸背带。先在没猎物处练紧急叫回，再远远看静态鸟。追起来不要对骂，先挡住视线再叫。",
+        "care_en": "Match the dog’s level-3 reaction (一看会跑的就想冲，叫回有点难。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "一看就冲，很难叫停。",
+        "personality_zh": "鸟、松鼠、自行车都可能让它空白。",
+        "care_zh": "一看就冲、很难叫停：没围栏空地不放绳。双扣或长绳在空地练，失败率高就缩短距离。自行车、跑步者从侧面来时提前拐弯。猎物驱动强的狗需要专业追逐控制训练，单靠累跑不够。",
+        "care_en": "Match the dog’s level-4 reaction (一看就冲，很难叫停。) with management + short training; see Chinese care_zh for full steps."
+      }
+    },
+    "energy": {
+      "label_zh": "精力旺不旺",
+      "label_en": "Energy",
+      "ask_zh": "它是爱玩停不下来，还是偏宅？",
+      "0": {
+        "snapshot_zh": "非常宅，玩一下就想躺。",
+        "personality_zh": "电池很小。突然整天睡要看医生。",
+        "care_zh": "非常宅、玩一下就躺：短散步 + 轻度闻嗅即可，别硬逼跑步。注意关节与体重。若从爱玩突然变全天睡，先看兽医。",
+        "care_en": "Match the dog’s level-0 reaction (非常宅，玩一下就想躺。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "1": {
+        "snapshot_zh": "偏安静，有一点玩就满足。",
+        "personality_zh": "需求不高，不是懒。",
+        "care_zh": "偏安静、一点点玩就满足：每天一小段走+闻就够。屋里放解谜玩具轮换，避免无聊拆家，也别安排马拉松行程把平静狗逼成过热。",
+        "care_en": "Match the dog’s level-1 reaction (偏安静，有一点玩就满足。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "2": {
+        "snapshot_zh": "能玩也能睡，节奏刚好。",
+        "personality_zh": "出门走走、回家能关灯。",
+        "care_zh": "能玩能睡：维持固定散步与休息点。周末突然玩爆、工作日全关，最容易周末晚上疯。运动后给安静啃的东西帮它关灯。",
+        "care_en": "Match the dog’s level-2 reaction (能玩也能睡，节奏刚好。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "3": {
+        "snapshot_zh": "精力很旺，闷在家会坐不住。",
+        "personality_zh": "需要明显消耗，不然会烦。",
+        "care_zh": "精力旺、闷着坐不住：一天多段——走路、鼻子找食、3 分钟训练，比一次狂奔有效。出门前先闻嗅降温，回来才安静趴。",
+        "care_en": "Match the dog’s level-3 reaction (精力很旺，闷在家会坐不住。) with management + short training; see Chinese care_zh for full steps."
+      },
+      "4": {
+        "snapshot_zh": "精力很大，闷着就会拆家找事做。",
+        "personality_zh": "没消耗完，家里东西会遭殃。",
+        "care_zh": "精力很大、闷着就拆家找事：把消耗拆成早晨／午／晚；加脑力（藏食、解谜）。只狂奔会越练越疯。拆家时段用隔离+安全啃物，并检查是不是能量+分离焦虑叠在一起。",
+        "care_en": "Match the dog’s level-4 reaction (精力很大，闷着就会拆家找事做。) with management + short training; see Chinese care_zh for full steps."
+      }
+    }
+  },
+  "care_style_zh": "每档 care_zh 结构：贴着该档狗的反应 → 当下怎么处理 → 日常练习 → 不要做什么（高档含安全与求助）。"
+}

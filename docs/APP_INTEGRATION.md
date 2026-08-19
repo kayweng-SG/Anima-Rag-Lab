@@ -270,6 +270,104 @@ AnimaTriageClient(
 
 开发时若只想跑开放 demo：注释掉 / 清空 `ANIMA_API_KEY` 再重启即可。
 
+## Module B — C-BARQ 性格报告（不是分诊）
+
+饲主填完 C-BARQ42 后，App **只把题号分数**交给 Lab（官方题面不在本仓库）。
+
+```
+GET  /v1/personality/cbarq          → 分量表、题号、反向题
+POST /v1/personality/cbarq/score    → { "answers": { "1": 2, "2": 4, ... } }
+```
+
+分数 0–4。返回三层：
+
+| 层 | 字段 | 用途 |
+|----|------|------|
+| L1 真相 | `subscales[]` | 14 维均分、五档、照护（主报告） |
+| L2 摘要 | `facets[]` | 日常四个重点（用人话，不是测验词） |
+| L3 贴纸 | `mbti_like` | 由四个重点二分得到的角色码；四条都贴中线时 `code=BALANCED`（均衡陪伴型），`lean_code` 仍是四字母 |
+
+`mbti_like` 里新增：
+- `mbti_desc_zh`：类 MBTI 的短描述（依四字母组合自动生成，主要用于 App 展示）。
+
+14 维是原始依据；字母码是产品层类比，不是人类 MBTI、不是诊断。鉴权与分诊相同（`X-API-Key`）。
+
+四个重点在报告里用**饲主听得懂的话**（字母 E/I 等只在内部算类型用）：
+
+| 重点 | 偏低时像 | 偏高时像 | 问卷来源 |
+|------|----------|----------|----------|
+| 熟不熟得起来 | 慢热 | 见谁都热 | 依恋；三种怕 |
+| 精力 | 安静 | 嗨、坐不住 | 追猎、精力、兴奋 |
+| 防卫 | 好说话 | 会看家、容易炸 | 四种攻击 |
+| 听话程度 | 听话 | 有主见、不太听话 | 训练难度、触摸敏感 |
+
+分离相关问题不进四个重点，仍出现在 14 维照护清单。App 建议先画四条重点条，再给角色贴纸。
+
+### `facets[]` 字段（App 该用哪些）
+
+**主画面请用：**
+
+| 字段 | 用途 |
+|------|------|
+| `owner_label_zh` | 条目标题，如「熟不熟得起来」 |
+| `owner_title_zh` | 短结论，如「见谁都热」（贴中线时为空） |
+| `owner_summary_zh` | 一句解释（或贴中线时用 `owner_mid_zh`） |
+| `owner_mid_zh` | 分数靠近中间时的说法 |
+| `score` | 0–4 均分，画条形图 |
+| `borderline` | 是否贴中线 |
+
+**不要直接给饲主看：** `letter`、`pole`（内部算 16 型贴纸用）。`pole_short_zh` 现已是人话短结论，可作条形图两端标签。
+
+也可直接用 **`owner_report.sections[id=facets]`** 的 `bullets_zh`，已是完整句子。
+
+示例（demo 高嗨好教）：
+
+```json
+{
+  "id": "EI",
+  "facet_id": "social",
+  "owner_label_zh": "熟不熟得起来",
+  "owner_title_zh": "见谁都热",
+  "owner_summary_zh": "对人比较热，不太怕生人、不太怕不熟的狗，新声音和新环境也比较吃得消。",
+  "score": 2.5,
+  "borderline": false
+}
+```
+
+完整主人报告在 **`owner_report`**：`sections[]`（个性、特色、对人、对狗、在家、出门、怎么教、别做、何时找专业、问卷最明显几条）以及可直接展示的 `full_zh`。16 型立体文案在 `cbarq42_mbti_types.json`。
+
+## Module B — MCPQ-R 性格报告（26 个形容词）
+
+MCPQ-R 也是 Module B 的性格工具，但形式更简单：饲主对 26 个形容词打分，范围 **1–6**。
+
+```
+GET  /v1/personality/mcpq
+POST /v1/personality/mcpq/score   → { "answers": { "1": 3, "2": 5, ... } }
+```
+
+返回内容：
+
+| 字段 | 用途 |
+|------|------|
+| `dimensions[]` | 五个维度分数（POMP 0–100）+ 人话解释 |
+| `profile_zh` | 一句总览 |
+| `owner_report` | 可直接给饲主看的分段总结 |
+
+五个维度用人话显示：
+
+| 维度 | 偏低 | 偏高 |
+|------|------|------|
+| 活力 | 安静 | 精力旺、容易上头 |
+| 主动性 | 随和 | 很有主见 |
+| 训练专注 | 容易走神 | 跟得上、学得快 |
+| 亲和力 | 有距离感 | 好相处 |
+| 敏感度 | 稳定 | 敏感谨慎 |
+
+说明：
+- 计分方式是 **POMP**：`100 * sum / (n_items * 6)`
+- 这是 **Ley 2008/2009** 公开词表做的 Lab 版 blank form，**不是** Monash 官方单页空白 PDF
+- 适合做性格画像与相处建议，**不是** 医疗诊断
+
 ## Compatibility notes
 
 - Local demo UI continues to call `/triage/query` (alias of `/v1/triage/query`) and sends `X-API-Key` when the browser has a saved key.

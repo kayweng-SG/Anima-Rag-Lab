@@ -83,6 +83,12 @@ Default load order:
 2. else `data/processed/merged_vector_store/` when present  
 3. else Module A only: `data/processed/merck_vector_store/`
 
+Lab API retrieval (`ANIMA_RETRIEVAL`, default `auto`):
+
+- `auto` — call Supabase `match_knowledge_chunks` when URL + service_role are set; fall back to local numpy on RPC error  
+- `supabase` — RPC only (no fallback)  
+- `local` — numpy store only (pytest / eval)
+
 Rebuild B/C merge (does **not** re-embed Merck):
 
 ```bash

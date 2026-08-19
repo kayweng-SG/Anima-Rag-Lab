@@ -199,6 +199,24 @@ def resolve_vector_store_dir(project_root: Optional[str] = None) -> str:
     return os.path.join(root, "data", "processed", "merck_vector_store")
 
 
+def supabase_credentials() -> Tuple[str, str]:
+    url = (os.getenv("SUPABASE_URL") or "").strip()
+    key = (os.getenv("SUPABASE_SERVICE_ROLE_KEY") or "").strip()
+    return url, key
+
+
+def resolve_retrieval_mode(explicit: Optional[str] = None) -> str:
+    """local | supabase | auto (RPC when keys exist, else local numpy)."""
+    raw = (explicit or os.getenv("ANIMA_RETRIEVAL") or "auto").strip().lower()
+    aliases = {"rpc": "supabase", "cloud": "supabase", "pgvector": "supabase"}
+    raw = aliases.get(raw, raw)
+    if raw not in {"local", "supabase", "auto"}:
+        raise ValueError(
+            f"ANIMA_RETRIEVAL={raw!r} invalid; use local, supabase, or auto"
+        )
+    return raw
+
+
 class MerckVectorStore:
     """Build, persist, and query a Merck chunk vector index."""
 
@@ -207,6 +225,7 @@ class MerckVectorStore:
         chunks_path: Optional[str] = None,
         store_dir: Optional[str] = None,
         embedder_backend: Optional[str] = None,
+        retrieval: Optional[str] = None,
     ) -> None:
         project_root = PROJECT_ROOT
         self.chunks_path = chunks_path or os.path.join(
@@ -215,6 +234,12 @@ class MerckVectorStore:
         self.store_dir = store_dir or resolve_vector_store_dir(project_root)
         self.embedder_backend = (
             embedder_backend or os.getenv("MERCK_EMBEDDER", "tfidf").lower()
+        )
+        self.retrieval = resolve_retrieval_mode(retrieval)
+        self.last_backend: str = (
+            "supabase"
+            if self.retrieval == "supabase"
+            else "local"
         )
         self.embedder: Optional[BaseEmbedder] = None
         self.vectors: Optional[np.ndarray] = None
@@ -337,16 +362,120 @@ class MerckVectorStore:
                 f"{len(self.records)} records in {self.store_dir}"
             )
 
-    def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        if self.embedder is None or self.vectors is None:
+    def active_backend(self) -> str:
+        """Backend that search() will try first."""
+        if self.retrieval == "auto":
+            url, key = supabase_credentials()
+            return "supabase" if url and key else "local"
+        return self.retrieval
+
+    def search(
+        self,
+        query: str,
+        top_k: int = 5,
+        filter_module: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        if self.embedder is None:
+            self.load()
+        query_text = (query or "").strip()
+        if not query_text or top_k <= 0:
+            return []
+        module = (filter_module or "").strip().upper() or None
+        if module and module not in {"A", "B", "C"}:
+            raise ValueError(f"filter_module must be A, B, or C; got {module!r}")
+
+        backend = self.active_backend()
+        if backend == "supabase":
+            try:
+                hits = self._search_supabase(query_text, top_k, filter_module=module)
+                self.last_backend = "supabase"
+                return hits
+            except Exception as exc:
+                if self.retrieval == "supabase":
+                    raise
+                logger.warning("Supabase RPC failed (%s); falling back to local", exc)
+
+        self.last_backend = "local"
+        return self._search_local(query_text, top_k, filter_module=module)
+
+    def _embed_query(self, query_text: str) -> np.ndarray:
+        if self.embedder is None:
+            self.load()
+        assert self.embedder is not None
+        return self._sanitize_vector(self.embedder.embed_texts([query_text])[0])
+
+    def _search_supabase(
+        self,
+        query_text: str,
+        top_k: int,
+        filter_module: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        import httpx
+
+        url, key = supabase_credentials()
+        if not url or not key:
+            raise RuntimeError(
+                "ANIMA_RETRIEVAL=supabase requires SUPABASE_URL and "
+                "SUPABASE_SERVICE_ROLE_KEY"
+            )
+        query_vector = self._embed_query(query_text)
+        emb = "[" + ",".join(f"{float(x):.8f}" for x in query_vector.tolist()) + "]"
+        payload: Dict[str, Any] = {
+            "query_embedding": emb,
+            "match_count": int(top_k),
+        }
+        if filter_module:
+            payload["filter_module"] = str(filter_module).upper()
+
+        endpoint = url.rstrip("/") + "/rest/v1/rpc/match_knowledge_chunks"
+        headers = {
+            "apikey": key,
+            "Authorization": f"Bearer {key}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+        with httpx.Client(timeout=30.0) as client:
+            resp = client.post(endpoint, headers=headers, json=payload)
+            if resp.status_code >= 400:
+                raise RuntimeError(
+                    f"match_knowledge_chunks HTTP {resp.status_code}: {resp.text[:300]}"
+                )
+            rows = resp.json()
+        if not isinstance(rows, list):
+            raise RuntimeError(f"Unexpected RPC payload type: {type(rows).__name__}")
+
+        results: List[Dict[str, Any]] = []
+        for rank, row in enumerate(rows, start=1):
+            meta = dict(row.get("metadata") or {})
+            if row.get("module") and "module" not in meta:
+                meta["module"] = row["module"]
+            if row.get("source") and "source" not in meta:
+                meta["source"] = row["source"]
+            results.append(
+                {
+                    "rank": rank,
+                    "score": float(row.get("similarity") or 0.0),
+                    "chunk_id": row.get("id") or "",
+                    "content": row.get("content") or "",
+                    "metadata": meta,
+                }
+            )
+        return results
+
+    def _search_local(
+        self,
+        query_text: str,
+        top_k: int,
+        filter_module: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        if self.vectors is None or not self.records:
             self.load()
         assert self.embedder is not None and self.vectors is not None
 
-        query_text = (query or "").strip()
-        if not query_text or top_k <= 0 or self.vectors.shape[0] == 0:
+        if self.vectors.shape[0] == 0:
             return []
 
-        query_vector = self._sanitize_vector(self.embedder.embed_texts([query_text])[0])
+        query_vector = self._embed_query(query_text)
         if query_vector.shape[0] != self.vectors.shape[1]:
             raise ValueError(
                 f"Query dim {query_vector.shape[0]} != store dim {self.vectors.shape[1]}"
@@ -357,8 +486,23 @@ class MerckVectorStore:
         scores = self.vectors.dot(query_vector)
         scores = np.nan_to_num(scores, copy=False, nan=0.0, posinf=0.0, neginf=0.0)
         scores = np.clip(scores, -1.0, 1.0)
+        if filter_module:
+            mask = np.array(
+                [
+                    str((rec.get("metadata") or {}).get("module") or "A").upper()
+                    == filter_module
+                    for rec in self.records
+                ],
+                dtype=bool,
+            )
+            if mask.shape[0] != scores.shape[0]:
+                raise ValueError("module mask / score length mismatch")
+            scores = np.where(mask, scores, -np.inf)
 
-        k = min(int(top_k), scores.shape[0])
+        finite = np.isfinite(scores)
+        if not np.any(finite):
+            return []
+        k = min(int(top_k), int(np.count_nonzero(finite)))
         # argpartition then sort the shortlist — stable top-k without full argsort.
         candidate_idx = np.argpartition(scores, -k)[-k:]
         top_indices = candidate_idx[np.argsort(scores[candidate_idx])[::-1]]

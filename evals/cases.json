@@ -488,6 +488,44 @@
         "sources_content_must_match_any": ["比熊", "PetTalk", "泪痕"],
         "max_elapsed_ms": 8000
       }
+    },
+    {
+      "id": "bc_aaha_dog_puppy",
+      "group": "module_bc",
+      "description": "AAHA dog puppy life stage from Table 1 text",
+      "request": {
+        "question": "AAHA dog puppy life stage age months",
+        "species": "dog",
+        "top_k": 8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "sources_module_must_include_any": ["C"],
+        "sources_source_must_include_any": ["aaha"],
+        "sources_content_must_match_any": ["Puppy", "6-9", "life stage", "AAHA"],
+        "max_elapsed_ms": 8000
+      }
+    },
+    {
+      "id": "bc_aaha_dog_senior",
+      "group": "module_bc",
+      "description": "AAHA dog senior life stage from Table 1 text",
+      "request": {
+        "question": "AAHA dog senior life stage age years",
+        "species": "dog",
+        "top_k": 8
+      },
+      "expect": {
+        "red_light_status": ["GREEN", "YELLOW"],
+        "intercepted": false,
+        "min_sources": 1,
+        "sources_module_must_include_any": ["C"],
+        "sources_source_must_include_any": ["aaha"],
+        "sources_content_must_match_any": ["Senior", "life stage", "AAHA"],
+        "max_elapsed_ms": 8000
+      }
     }
   ]
 }

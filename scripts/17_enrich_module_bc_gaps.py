@@ -297,12 +297,39 @@ def scrape_pettalk(max_articles: int = 40) -> Dict[str, Any]:
     urls = urls[:max_articles]
 
     articles: List[Dict[str, Any]] = []
+
+    def keep_dogcat_article(url: str, title: str, content: str) -> bool:
+        # Keep dog/cat-oriented husbandry & owner education.
+        # Strategy: exclude clearly non-dog/cat pet posts, but don't require
+        # explicit “狗/貓” keywords (many PetTalk pages mention them indirectly).
+        if "/question/" in (url or ""):
+            return False
+        blob = f"{title}\n{content}".strip()
+        if not blob:
+            return False
+        if re.search(
+            r"兔|鳥|鸚鵡|倉鼠|守宮|爬蟲|烏龜|蜥蜴|刺蝟|天竺鼠|龜",
+            blob,
+        ):
+            return False
+        # Drop near-empty “tag dump” pages.
+        if re.fullmatch(r"(#[^\n]+)(\n#[^\n]+)*", blob):
+            return False
+        return True
     for i, url in enumerate(urls, 1):
         try:
             html = _fetch(url)
             parsed = _extract_pettalk_body(html)
             if not parsed["content"]:
                 logger.info("[%s/%s] skip empty %s", i, len(urls), url[:80])
+                continue
+            if not keep_dogcat_article(url, parsed.get("title") or "", parsed.get("content") or ""):
+                logger.info(
+                    "[%s/%s] skip non-dogcat %s",
+                    i,
+                    len(urls),
+                    (parsed.get("title") or url)[:40],
+                )
                 continue
             articles.append(
                 {

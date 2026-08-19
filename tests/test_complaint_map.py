@@ -46,6 +46,15 @@ def test_expand_scratching_en(rag_mod):
     assert "pruritus" in joined or "dermatitis" in joined or "alopecia" in joined
 
 
+def test_retrieval_module_a_vs_b(rag_mod):
+    assert rag_mod.retrieval_module_for("小狗正常心率是多少？") == "A"
+    assert rag_mod.retrieval_module_for("狗吃了巧克力怎么办") == "A"
+    assert rag_mod.retrieval_module_for("C-BARQ excitability 怎么计分？") == "B"
+    assert rag_mod.retrieval_module_for("用问卷判断宠物性格") == "B"
+    assert rag_mod.retrieval_module_for("AAHA senior cat life stage") == "C"
+    assert rag_mod.retrieval_module_for("比熊犬常见疾病泪痕皮肤敏感怎么照顾？") == "C"
+
+
 def test_pipeline_uses_clinical_expansion(rag_mod, rag_pipeline):
     RAGQueryRequest = rag_mod.RAGQueryRequest
     req = RAGQueryRequest(question="狗狗吐黄水怎么办？", species="dog")

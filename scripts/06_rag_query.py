@@ -255,6 +255,35 @@ TOPIC_CHECKLISTS_ZH: Tuple[Tuple[re.Pattern, Dict[str, Tuple[str, ...]]], ...] =
             ),
         },
     ),
+    (
+        re.compile(
+            r"AAHA|PetTalk|life\s*stage|生命阶段|生命階段|育养|育養|"
+            r"Puppy|Senior|Young adult|Mature adult|Kitten",
+            re.I,
+        ),
+        {
+            "causes": (
+                "生命阶段不同会带来照护重点差异（饮食、运动、预防与体检频率）",
+                "多数属于可用“阶段计划”管理的日常照护问题（非急症）",
+            ),
+            "observe": (
+                "当前年龄/大致体重变化（是否明显增减）",
+                "食欲、饮水、排便/排尿是否稳定",
+                "活动量与体力：是否比同阶段同龄明显下降",
+                "口腔/牙龈、毛发皮肤是否出现阶段性敏感或异常",
+            ),
+            "actions": (
+                "按阶段调整饮食（选择合适的营养密度与纤维/脂肪水平；逐步过渡）",
+                "规划运动与安全防护：幼龄循序渐进、成年保持规律、老年减少冲击",
+                "落实预防：按计划疫苗/驱虫/牙科与寄生虫防控（以当地兽医建议为准）",
+                "把“体检/观察清单”固定下来：每次记录 1–2 个关键指标，持续追踪变化",
+            ),
+            "seek_care": (
+                "出现明显异常且持续加重（持续呕吐/腹泻、体重快速下降、精神萎靡、呼吸困难、疼痛/跛行）→ 尽快就医",
+                "任何让你担心“是否已超出日常阶段管理范围”的情况 → 先预约兽医评估",
+            ),
+        },
+    ),
 )
 
 # Backward-compatible flat bullets derived from structured checklists.
@@ -582,7 +611,19 @@ def _question_wants_temperature(text: str) -> bool:
 _CORPUS_META_RE = re.compile(
     r"C-?BARQ|MCPQ(?:-?R)?|AAHA|AKC|PetTalk|breed\s*profile|subscale|"
     r"计分|計分|常模|life\s*stage|形容词|adjective|trainability|temperament|"
+    r"性格|气质|氣質|行为问卷|行為問卷|personality|"
     r"比熊|泪痕|淚痕",
+    re.I,
+)
+_MODULE_B_RE = re.compile(
+    r"C-?BARQ|MCPQ(?:-?R)?|性格|气质|氣質|行为问卷|行為問卷|"
+    r"temperament|personality|subscale|AKC|breed\s*profile",
+    re.I,
+)
+_MODULE_C_RE = re.compile(
+    r"AAHA|PetTalk|life\s*stage|生命阶段|生命階段|育养|育養|"
+    r"(比熊|貴賓|贵宾|柴犬|柯基|拉布拉多).*(照顾|照顧|泪痕|淚痕|皮肤敏感|皮膚敏感)|"
+    r"(照顾|照顧).*(比熊|貴賓|贵宾|柴犬|柯基|拉布拉多)",
     re.I,
 )
 
@@ -590,6 +631,16 @@ _CORPUS_META_RE = re.compile(
 def _is_corpus_meta_question(text: str) -> bool:
     """Behavior / husbandry / instrument lookups — do not expand as clinical complaints."""
     return bool(_CORPUS_META_RE.search(text or ""))
+
+
+def retrieval_module_for(text: str) -> str:
+    """A = triage corpus; B = personality/behavior; C = husbandry. Default A."""
+    blob = text or ""
+    if _MODULE_B_RE.search(blob):
+        return "B"
+    if _MODULE_C_RE.search(blob):
+        return "C"
+    return "A"
 
 
 def _overlap_tokens(text: str) -> List[str]:
@@ -1726,9 +1777,23 @@ class AnimaRAGPipeline:
 
         retrieval_query = self._build_retrieval_query(request)
         preferred_types = self._detect_preferred_types(retrieval_query)
-        candidates = self.vector_store.search(
-            retrieval_query, top_k=max(request.top_k * 8, 20)
+        filter_module = retrieval_module_for(
+            " ".join(
+                p
+                for p in (request.question, request.chief_complaint)
+                if p
+            )
         )
+        search_kwargs: Dict[str, Any] = {
+            "top_k": max(request.top_k * 8, 20),
+        }
+        # MerckVectorStore.search supports filter_module; keep older stores working.
+        try:
+            candidates = self.vector_store.search(
+                retrieval_query, filter_module=filter_module, **search_kwargs
+            )
+        except TypeError:
+            candidates = self.vector_store.search(retrieval_query, **search_kwargs)
         sources = self._rerank_sources(
             candidates,
             preferred_types,

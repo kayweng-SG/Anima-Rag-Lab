@@ -70,6 +70,28 @@ def _load_pipeline_module():
     return module
 
 
+def _load_cbarq_module():
+    path = os.path.join(SCRIPTS_DIR, "19_cbarq_personality.py")
+    spec = importlib.util.spec_from_file_location("anima_cbarq_personality", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load C-BARQ scorer from {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["anima_cbarq_personality"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _load_mcpq_module():
+    path = os.path.join(SCRIPTS_DIR, "20_mcpq_personality.py")
+    spec = importlib.util.spec_from_file_location("anima_mcpq_personality", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load MCPQ-R scorer from {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["anima_mcpq_personality"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def _load_store_module():
     path = os.path.join(SCRIPTS_DIR, "08_triage_store.py")
     spec = importlib.util.spec_from_file_location("anima_triage_store", path)
@@ -83,14 +105,19 @@ def _load_store_module():
 
 _pipeline_mod = _load_pipeline_module()
 _store_mod = _load_store_module()
+_cbarq_mod = _load_cbarq_module()
+_mcpq_mod = _load_mcpq_module()
 AnimaRAGPipeline = _pipeline_mod.AnimaRAGPipeline
 RAGQueryRequest = _pipeline_mod.RAGQueryRequest
 TriageResultStore = _store_mod.TriageResultStore
+CBarqPersonality = _cbarq_mod.CBarqPersonality
+MCPQRPersonality = _mcpq_mod.MCPQRPersonality
 
 _pipeline: Optional[AnimaRAGPipeline] = None
-_store = None
-_cache = None
 _store: Optional[TriageResultStore] = None
+_cache = None
+_cbarq: Optional[CBarqPersonality] = None
+_mcpq: Optional[MCPQRPersonality] = None
 
 
 def _configured_api_key() -> str:
@@ -131,11 +158,13 @@ def _error_body(
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    global _pipeline, _store, _cache
+    global _pipeline, _store, _cache, _cbarq, _mcpq
     logger.info("Starting ANIMA triage API — loading vector store and Red-Light index")
     _pipeline = AnimaRAGPipeline()
     _pipeline.vector_store.load()
     _store = TriageResultStore()
+    _cbarq = CBarqPersonality()
+    _mcpq = MCPQRPersonality()
     try:
         from semantic_cache import SemanticCache
 
@@ -144,8 +173,9 @@ async def lifespan(_: FastAPI):
         logger.warning("Semantic cache init skipped: %s", exc)
         _cache = None
     auth_mode = "required" if _configured_api_key() else "open (dev)"
+    retrieval = getattr(_pipeline.vector_store, "active_backend", lambda: "?")()
     logger.info(
-        "Pipeline ready; triage DB: %s; LLM: %s; auth: %s; store: %s; cache: %s",
+        "Pipeline ready; triage DB: %s; LLM: %s; auth: %s; store: %s; retrieval: %s; cache: %s",
         _store.db_path,
         (
             f"on ({_pipeline.openai_model})"
@@ -154,6 +184,7 @@ async def lifespan(_: FastAPI):
         ),
         auth_mode,
         getattr(_pipeline.vector_store, "store_dir", "?"),
+        retrieval,
         (
             f"on ({getattr(_cache, 'backend', '?')})"
             if getattr(_cache, "enabled", False)
@@ -272,6 +303,23 @@ class HealthResponse(BaseModel):
     complaint_map_loaded: bool = False
     cache_enabled: bool = False
     cache_backend: Optional[str] = None
+    retrieval: Optional[str] = None
+    cbarq_personality_loaded: bool = False
+    mcpq_personality_loaded: bool = False
+
+
+class CBarqScoreRequest(BaseModel):
+    answers: Dict[str, float] = Field(
+        ...,
+        description="C-BARQ42 item number → 0–4. Keys: '1' or 'item_1'.",
+    )
+
+
+class MCPQScoreRequest(BaseModel):
+    answers: Dict[str, float] = Field(
+        ...,
+        description="MCPQ-R item number → 1–6. Keys: '1' or 'item_1'.",
+    )
 
 
 class ResultsListResponse(BaseModel):
@@ -438,11 +486,18 @@ def health() -> HealthResponse:
     complaint_path = os.path.join(
         PROJECT_ROOT, "data", "triage_tree", "complaint_clinical_map.json"
     )
+    retrieval = None
+    store = _pipeline.vector_store
+    if hasattr(store, "active_backend"):
+        retrieval = store.active_backend()
+    loaded = store.embedder is not None and (
+        store.vectors is not None or retrieval == "supabase"
+    )
     return HealthResponse(
         status="ok",
         api_version=API_VERSION,
         auth_required=bool(_configured_api_key()),
-        vector_store_loaded=_pipeline.vector_store.vectors is not None,
+        vector_store_loaded=loaded,
         embedder=embedder,
         vector_count=vector_count,
         llm_enabled=bool(getattr(_pipeline, "llm_enabled", False)),
@@ -455,6 +510,9 @@ def health() -> HealthResponse:
         complaint_map_loaded=os.path.isfile(complaint_path),
         cache_enabled=bool(getattr(_cache, "enabled", False)),
         cache_backend=getattr(_cache, "backend", None) if _cache else "off",
+        retrieval=retrieval,
+        cbarq_personality_loaded=_cbarq is not None,
+        mcpq_personality_loaded=_mcpq is not None,
     )
 
 
@@ -471,9 +529,75 @@ def api_info() -> Dict[str, Any]:
         "health": "GET /health",
         "query_endpoint": f"POST /{API_VERSION}/triage/query",
         "results_endpoint": f"GET /{API_VERSION}/triage/results",
+        "personality_cbarq_form": f"GET /{API_VERSION}/personality/cbarq",
+        "personality_cbarq_score": f"POST /{API_VERSION}/personality/cbarq/score",
+        "personality_mcpq_form": f"GET /{API_VERSION}/personality/mcpq",
+        "personality_mcpq_score": f"POST /{API_VERSION}/personality/mcpq/score",
         "legacy_query_endpoint": "POST /triage/query",
         "integration_guide": "docs/APP_INTEGRATION.md",
     }
+
+
+@app.get(
+    f"/{API_VERSION}/personality/cbarq",
+    tags=["personality"],
+    dependencies=[Depends(require_api_key)],
+    summary="C-BARQ42 form spec (item numbers only; no copyrighted stems)",
+)
+def personality_cbarq_form() -> Dict[str, Any]:
+    if _cbarq is None:
+        raise HTTPException(status_code=503, detail="C-BARQ scorer not initialized")
+    return {"api_version": API_VERSION, **_cbarq.form_spec()}
+
+
+@app.post(
+    f"/{API_VERSION}/personality/cbarq/score",
+    tags=["personality"],
+    dependencies=[Depends(require_api_key)],
+    summary="Score C-BARQ42 answers → personality + care needs",
+)
+def personality_cbarq_score(body: CBarqScoreRequest) -> Dict[str, Any]:
+    if _cbarq is None:
+        raise HTTPException(status_code=503, detail="C-BARQ scorer not initialized")
+    try:
+        report = _cbarq.score(body.answers)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=_error_body("validation_error", str(exc)),
+        ) from exc
+    return {"api_version": API_VERSION, **report}
+
+
+@app.get(
+    f"/{API_VERSION}/personality/mcpq",
+    tags=["personality"],
+    dependencies=[Depends(require_api_key)],
+    summary="MCPQ-R form spec (26 adjectives; Lab-derived blank form)",
+)
+def personality_mcpq_form() -> Dict[str, Any]:
+    if _mcpq is None:
+        raise HTTPException(status_code=503, detail="MCPQ-R scorer not initialized")
+    return {"api_version": API_VERSION, **_mcpq.form_spec()}
+
+
+@app.post(
+    f"/{API_VERSION}/personality/mcpq/score",
+    tags=["personality"],
+    dependencies=[Depends(require_api_key)],
+    summary="Score MCPQ-R answers → personality + care needs",
+)
+def personality_mcpq_score(body: MCPQScoreRequest) -> Dict[str, Any]:
+    if _mcpq is None:
+        raise HTTPException(status_code=503, detail="MCPQ-R scorer not initialized")
+    try:
+        report = _mcpq.score(body.answers)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=_error_body("validation_error", str(exc)),
+        ) from exc
+    return {"api_version": API_VERSION, **report}
 
 
 @app.post(

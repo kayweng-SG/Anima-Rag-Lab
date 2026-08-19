@@ -1,140 +1,157 @@
 # Anima-RAG-Lab WBS 状态表（对照 Master WBS）
 
 **来源：** [`BoAnima-RAG-Lab 專案管理主表 (Master WBS).xlsx`](./BoAnima-RAG-Lab%20專案管理主表%20(Master%20WBS).xlsx)  
-**对照表：** 工作表「Anima-RAG-Lab 專案管理主表」（新表；OLD 表日程更早，仅作历史）  
-**更新日期：** 2026-08-13  
-**说明：** 本文件记录 **计划 vs 实际**，并写明与原表不同的执行路径（本地 FastAPI 向量库先行，Supabase 并入 AnimaLink 时再对齐）。
+**对照表：** 工作表「Anima-RAG-Lab 專案管理主表」  
+**更新日期：** 2026-08-18  
+**专案定位：** **把数据准备好**（收集 → ETL → **写入 Supabase pgvector** → Lab API 可检索）。  
+**不包含：** AnimaLink App UI / 聊天接线（主表 4.4 仅要求「产出 API 文件供后续串接」，不是本仓执行项）。
+
+**模块用途（分开，不混用）：**
+
+| 模块 | 用途 | 语料 | 检索 |
+|------|------|------|------|
+| **A** | **急症分诊** | Merck、ASPCA 毒物、主诉映射、红灯生理阈值 | 分诊 API **默认只搜 A** |
+| **B** | **性格测评（类 MBTI）** | 饲主填 **C-BARQ** → 分量表分数 → **性格描述 + 照护需求**（MCPQ-R / AKC 气质作辅） | **不是问诊**；不进分诊检索 |
+| **C** | 育养 / 生命阶段 | AAHA Life Stage、PetTalk | 仅育养题搜 C |
+
+**Module B 应用（类人类 MBTI，不是看病）：**
+
+```
+饲主填 C-BARQ 问卷  →  14 个行为分量表计分  →  性格画像 + 照护建议
+（兴奋/恐惧/攻击/依恋/精力/可训练性…）     （怎么相处、运动量、训练、环境）
+```
+
+- 体验对标：人类做 MBTI 得到类型说明与相处建议；这里 **L1=14 维连续分数（主）→ L2=日常四个重点 → L3=可选 16 型贴纸**（类比层，不是科学分型）。  
+- Lab **已有：** 问卷计分公式；`POST /v1/personality/cbarq/score` 交卷出报告（`subscales` + `facets` + `mbti_like`）；分档文案在 `cbarq42_profile_copy.json`；面向/16 型在 `cbarq42_mbti_types.json`。  
+- **不含** 官方题面（版权宾大）；App 需自行呈现授权问卷，只把题号分数 POST 回来。  
+- 分诊仍走 `/v1/triage/query`（Module A），两条 API 分开。
 
 状态图例：
 
 | 标记 | 含义 |
 |------|------|
-| ✅ Done | 已满足或等价完成验收 |
-| 🟡 Partial | 有交付，但与原表路径/范围不完全一致 |
-| ⬜ Todo | 未开始或明显未达标 |
-| ⏸ Deferred | 刻意延后（改到 AnimaLink 合并阶段或后续 Sprint） |
+| ✅ Done | 已满足主表验收或等价完成 |
+| 🟡 Partial | 有交付，但未达主表原路径验收 |
+| ⬜ Todo | 未开始或未达标 |
+| 🔴 Blocked | 缺前置条件（如云端密钥） |
 
 ---
 
-## 总览
+## 总览（对照主表）
 
-| 阶段 | 计划窗口（新表） | 总体状态 | 备注 |
-|------|------------------|----------|------|
-| Part 1 · 模块 A `0.1–0.3` | 8/3–8/5 | ✅ | Merck / ASPCA / 主诉映射已入库 |
-| Part 1 · 模块 B `0.4–0.5` | 8/5–8/6 | ✅ | 0.4 C-BARQ/MCPQ-R 计分可落地；0.5 AKC 已入库 |
-| Part 1 · 模块 C `0.6–0.7` | 8/6–8/7 | ✅ | 0.6 AAHA 犬/猫 Life Stage PDF 已入库；0.7 URL 清单已有 |
-| Sprint 1 · ETL `1.1–1.3` | 8/10–8/14 | 🟡→实质 ✅ | A 已 chunk；**B/C 已入库** `merged_vector_store`（A 13572 + B/C 381） |
-| Sprint 2 · Supabase `2.1–2.4` | 8/17–8/21 | 🟡 | **本仓已跑通** `16_local_pgvector`（SQLite+numpy 镜像 schema）；云端 SQL/upsert 脚本已备 |
-| Sprint 3 · API `3.1–3.4` | 8/24–8/28 | ✅ / 🟡 | 本地 FastAPI；默认可加载 merged store |
-| Sprint 4 · 收尾 `4.1–4.4` | 8/31–9/4 | 🟡 | Redis 路径可跑（Compose / `memory://` / `run_with_cache.sh`）；公网可用 quick tunnel 脚本 |
+| 阶段 | 计划窗口 | 总体状态 | 一句话 |
+|------|----------|----------|--------|
+| Part 1 · 数据收集 `0.1–0.7` | 8/3–8/7 | ✅ | 语料已收齐（A/B/C） |
+| Sprint 1 · ETL `1.1–1.3` | 8/10–8/14 | ✅ / 🟡 | 切块标注完成；抽验靠自动化 eval，非人工 10% 全文档 |
+| Sprint 2 · **Supabase 向量库** `2.1–2.4` | 8/17–8/21 | ✅ | 云端 `knowledge_chunks` **14000**；RPC + RLS 烟雾通过 |
+| Sprint 3 · API `3.1–3.4` | 8/24–8/28 | ✅ | FastAPI + Red-Light + **Supabase RPC 检索**（无密钥/失败则本地） |
+| Sprint 4 · 测试与部署 `4.1–4.4` | 8/31–9/4 | 🟡 | Eval/文档有；真 Redis / 公网 / RAGAS 未全满 |
 
-**Lab「模块 A 急症线」可交接 AnimaLink：** 见 [`MERGE_TO_ANIMALINK.md`](./MERGE_TO_ANIMALINK.md)。**产品侧接线（2026-08-12）：** AnimaLink `src/lib/triage/triageQuery.ts` + `sendRagMessage` RED 短路已落地；设 `VITE_ANIMA_TRIAGE_URL` 启用。  
-**整份 WBS 到 4.4 全绿：** 尚未完成（缺 Supabase 2.x、Redis、正式对外部署；B/C 切块入库可选）。
+**数据存放真相：**
+
+| 层 | 状态 | 说明 |
+|----|------|------|
+| 原始 / 处理后文件 | ✅ | `data/raw/`、`data/processed/` |
+| 本机向量文件 | ✅ | `merged_vector_store/` **14000**（A 13572 + B/C 428） |
+| 本机 schema 镜像 | ✅ | `data/pgvector_local/`（SQLite+numpy，非云） |
+| **Supabase 云端 pgvector** | ✅ | 项目 `aunzslhgsyjyxsefbveb`；**14000** 行（A 13572 / B 330 / C 98） |
 
 ---
 
 ## Part 1：数据收集
 
-| ID | 任务 | 计划 | 状态 | 实际交付 / 差距 |
-|----|------|------|------|-----------------|
-| 0.1 | Merck 急诊资料 | 8/3–8/4 | ✅ | `data/raw/`、处理与向量化管线；急诊 + owner 扩展语料 |
-| 0.2 | ASPCA 有毒植物 | 8/3–8/4 | ✅ | `data/triage_tree/aspca_toxic_plants.json`；Red-Light 匹配 |
-| 0.3 | Kaggle / 主诉临床映射 | 8/4–8/5 | ✅ | `complaint_clinical_map`（CSV/JSON）；吐黄水等主诉扩展 |
-| 0.4 | C-BARQ & MCPQ-R 常模 | 8/5–8/6 | ✅ | C-BARQ42 完整；C-BARQ(101) **14/14**（Serpell 4 条 + Duffy 2012 补齐）；MCPQ-R 26 形容词 + POMP（Ley 2008/2009）；见 `norms_and_scoring.json` |
-| 0.5 | AKC 品种 JSON | 8/5–8/6 | ✅ | `module_b_behavior/akc_breeds/`（tmfilho/akcdata CSV+JSON） |
-| 0.6 | AAHA Life Stage | 8/6–8/7 | ✅ | `module_c_husbandry/aaha/pdfs/`（2019 canine + 2021 feline）+ `life_stages.json` |
-| 0.7 | PetTalk 等亚洲卫教 URL | 8/6–8/7 | ✅ | `module_c_husbandry/pettalk_asia/url_inventory.json` |
-
-**调整说明：** `0.4–0.7` 原排在 A 之后；A 本地急症 API 已可独立验收，B/C **只收料、暂不接 RAG**，不阻塞 AnimaLink 急症对接。详见 `data/raw/README_MODULE_BC.md`。
+| ID | 任务 | 计划 | 状态 | 实际 |
+|----|------|------|------|------|
+| 0.1 | Merck 急诊 | 8/3–8/4 | ✅ | 爬取/seed + 处理管线 |
+| 0.2 | ASPCA 有毒植物 | 8/3–8/4 | ✅ | `aspca_toxic_plants.json` |
+| 0.3 | Kaggle / 主诉映射 | 8/4–8/5 | ✅ | `complaint_clinical_map` |
+| 0.4 | C-BARQ & MCPQ-R | 8/5–8/6 | ✅ | 14/14 计分 + MCPQ-R 26 词 + lab blank |
+| 0.5 | AKC 品种 JSON | 8/5–8/6 | ✅ | `akc_breeds/` |
+| 0.6 | AAHA Life Stage | 8/6–8/7 | ✅ | 犬/猫 PDF + Table 1 正文 |
+| 0.7 | PetTalk 等 URL/正文 | 8/6–8/7 | ✅ | URL 清单 + ~30 篇 articles |
 
 ---
 
-## Sprint 1：ETL 结构化清洗
+## Sprint 1：ETL
 
-| ID | 任务 | 计划 | 状态 | 实际交付 / 差距 |
-|----|------|------|------|-----------------|
-| 1.1 | 症状树 JSON / Triage | 8/10–8/11 | 🟡→实质 ✅ | 原案「LLM 转 JSON」；实际为规则引擎 `03_red_light_intercept.py` + 结构化 metrics（RED/YELLOW/GREEN）。验收「明确分灯」已达成。 |
-| 1.2 | 知识库切块与标註 | 8/11–8/12 | ✅ | A：`04/05`；B/C：`12_chunk_module_bc.py` + `13_embed_module_bc.py` → `merged_vector_store`（metadata.module A/B/C） |
-| 1.3 | 医疗防护边界抽验 | 8/13–8/14 | 🟡 | 有 `evals/cases.json`、`09_run_eval.py`、`smoke_demo_guide.sh`；非表定「人工抽检 10%」全文档化流程。致命类红灯有自动化覆盖。 |
-
----
-
-## Sprint 2：数据库与向量（路径调整）
-
-| ID | 任务 | 计划 | 状态 | 实际交付 / 差距 |
-|----|------|------|------|-----------------|
-| 2.1 | Supabase 建表 + pgvector | 8/17 | 🟡 | SQL：`supabase/migrations/`；本仓等价表：`data/pgvector_local/` via `16_local_pgvector.py` |
-| 2.2 | HNSW + 检索 RPC | 8/18 | 🟡 | SQL 含 HNSW+RPC；本仓 `match()` 余弦检索已 smoke |
-| 2.3 | 批次写入 + Embedding | 8/19–8/20 | 🟡 | 本地 ST + `16_local_pgvector load`；云端 `14/15_*` 待密钥 |
-| 2.4 | RLS | 8/21 | 🟡 | 云端 grants SQL 已分拆；本仓无 RLS（单机） |
-
-**调整说明（写进计划偏差）：**  
-Sprint 2 原目标是 AnimaLink 同栈的 Supabase。Lab 为加速 A 验收，采用 **本地向量 + FastAPI**。合并时：要么 (a) 将 chunk 同步进 AnimaLink pgvector，要么 (b) AnimaLink HTTP 调用本 API，暂不迁库。
+| ID | 任务 | 计划 | 状态 | 实际 |
+|----|------|------|------|------|
+| 1.1 | 症状树 / Triage 结构 | 8/10–8/11 | ✅ | Red-Light 规则引擎（等价验收：明确分灯） |
+| 1.2 | 切块与标注 | 8/11–8/12 | ✅ | A + B/C → `module_bc_chunks` + merged store |
+| 1.3 | 医疗边界抽验 | 8/13–8/14 | ✅ | `scripts/09_run_eval.py` 全量回归：Eval 25/25 passed（LLM=off） |
 
 ---
 
-## Sprint 3：核心 API（日程提前）
+## Sprint 2：Supabase 向量库
 
-| ID | 任务 | 计划 | 状态 | 实际交付 / 差距 |
-|----|------|------|------|-----------------|
-| 3.1 | API 初始化 / health | 8/24 | ✅ 提前 | FastAPI；`GET /health` → 200 |
-| 3.2 | Triage 红灯拦截 | 8/25–8/26 | ✅ 提前 | <500ms 拦截；RED 不耗 LLM |
-| 3.3 | 双轨 RAG 检索 | 8/27–8/28 | 🟡 | 非红灯走 RAG + 可选 OpenAI；**尚未**「呼叫 Supabase RPC Top 3」。本地 Top-K 向量检索已通。 |
-| 3.4 | 型別与防呆 | 8/28 | 🟡→实质 ✅ | Python Pydantic + 统一 error；AnimaLink `src/lib/triage/triageQuery.ts` 已迁入（原 `examples/app_clients`）。 |
+主表验收要点：建表 + HNSW + `match` RPC + 批次写入 + RLS。**2026-08-13 关闭。**
 
-契约：[`APP_INTEGRATION.md`](./APP_INTEGRATION.md)
-
----
-
-## Sprint 4：测试、优化与部署
-
-| ID | 任务 | 计划 | 状态 | 实际交付 / 差距 |
-|----|------|------|------|-----------------|
-| 4.1 | Semantic Cache (Redis) | 8/31–9/1 | 🟡 | `semantic_cache.py` + Compose/`memory://`/`run_with_cache.sh`；`/health.cache_*`；真 Redis 需 Docker |
-| 4.2 | 自动化 RAG 品质评估 | 9/2 | 🟡 | 急症用例 + **Module B/C 5 案**（`group=module_bc`）；非完整 RAGAS |
-| 4.3 | CI/CD 对外部署 | 9/3 | 🟡 | Compose + `run_staging.sh` + **`run_public_tunnel.sh`**（trycloudflare）；稳定域名仍需运营商主机 |
-| 4.4 | API 文件与交接 | 9/4 | ✅ | `APP_INTEGRATION`、`MERGE_TO_ANIMALINK`、`DEPLOY`、**`LAB_HANDOFF`**、DEMO |
+| ID | 任务 | 计划 | 状态 | 实际 |
+|----|------|------|------|------|
+| 2.1 | 启用 pgvector + 建表 | 8/17 | ✅ | 云端已执行 `20260813_knowledge_chunks.sql` |
+| 2.2 | HNSW + 检索函数 | 8/18 | ✅ | `match_knowledge_chunks` 已部署；C-BARQ 查询 Top-3 合理 |
+| 2.3 | 批次 Embedding 写入 | 8/19–8/20 | ✅ | `15_upsert --apply` 280 批全部 201；行数 **14000** |
+| 2.4 | RLS | 8/21 | ✅ | grants 已执行；anon 写 401；anon 读 0 行；service_role 可写/可 RPC |
 
 ---
 
-## 建议的「改表」结论（给 PM）
+## Sprint 3：核心 API
 
-1. **模块 A（0.1–0.3 + 本地 1.1/3.x + 交接文档）→ 标为 Done，可进 AnimaLink 急症对接。**  
-2. **Sprint 2（2.1–2.4）→ 标 Deferred / 合并阶段**，验收改为「本地向量可检索」或「已写入 AnimaLink pgvector」。  
-3. **0.4–0.7 → 仍 Todo**，下一执行窗专做收料（PDF/JSON/URL），不回头挡 A。  
-4. **4.1 Redis、4.3 公网 URL → 按 AnimaLink 上线需要再排**，不作为 Lab 关闭必要条件。  
-5. Excel 主表可保留计划日期；**以本 Markdown 为实际状态源（source of truth for status）**，避免和超前完成的 API 日程打架。
+| ID | 任务 | 计划 | 状态 | 实际 |
+|----|------|------|------|------|
+| 3.1 | API 初始化 / health | 8/24 | ✅ | FastAPI `GET /health` |
+| 3.2 | Triage 红灯 | 8/25–8/26 | ✅ | RED 不走 LLM |
+| 3.3 | 双轨 RAG | 8/27–8/28 | ✅ | `ANIMA_RETRIEVAL=auto`：有密钥则呼叫 `match_knowledge_chunks`，失败回落本地；eval/tests 强制 local |
+| 3.4 | 型別与防呆 | 8/28 | ✅ | Pydantic + 统一 error；`APP_INTEGRATION.md` |
 
 ---
 
-## 范围约束（2026-08-13 起）
+## Sprint 4：测试优化与部署
 
-**只做本仓库 `anima-rag-lab`。**  
-不做 AnimaLink 代码改动、不做 App 联调、不两边同时动。  
-产品对接整段 **延后**，等本仓数据与向量工作收完再开。
+| ID | 任务 | 计划 | 状态 | 实际 |
+|----|------|------|------|------|
+| 4.1 | Semantic Cache (Redis) | 8/31–9/1 | 🟡 | 代码+Compose profile；真 Redis 需运行时 |
+| 4.2 | RAG 品质评估 | 9/2 | 🟡 | 固定 23 案；非完整 RAGAS |
+| 4.3 | CI/CD 对外部署 | 9/3 | 🟡 | Compose / Tunnel 脚本；无正式域名流水线 |
+| 4.4 | API 文件与交接 | 9/4 | ✅ | `APP_INTEGRATION`、`LAB_HANDOFF`、`DEPLOY` 等 |
 
-## 下一执行窗（Lab 内 · 数据）
+> 4.4「供后续 AnimalLink 串接」= **交付 API 文档**，不是本仓去做产品接线。
+
+---
+
+## 下一执行窗
+
+Sprint 2–3 检索路径已关闭。Module B 性格报告 API 已可测。可选后续：
 
 | 优先级 | 动作 | 对应 WBS |
 |--------|------|----------|
-| L0 | 本仓验收：`16_local_pgvector` smoke + merged store + Lab API 自测（**不含 App**） | 1.2 / 2.x 等价 |
-| L1 | ~~补 B/C 语料缺口~~ → **已做**（PetTalk 正文、AAHA Table1、MCPQ blank） | 0.4–0.7 |
-| L2 | ~~B/C 检索用例写入 `evals/`~~ → **已做**（`group=module_bc` 5 案；检索污染已修） | 4.2 |
-| L3 | ~~文档/导出包整理~~ → **已做**（`LAB_HANDOFF.md` + `handoff_manifest.json`） | 交接 |
-| — | ~~联调 Lab API + App~~ | **⏸ 延后** |
-| — | ~~AnimaLink Supabase 真写入~~ | **⏸ 延后** |
+| B2 | MCPQ-R 同样交卷出报告 | Module B |
+| S5 | Redis / 公网 staging | 4.1 / 4.3 |
+
+**Sprint 2 验收（已满足）：**
+
+1. `knowledge_chunks` = **14000**（A 13572 / B 330 / C 98）  
+2. `match_knowledge_chunks` C-BARQ 种子查询 Top-3（自匹配 similarity=1.0）  
+3. RLS：anon 写 401；anon 读 0 行；service_role 可写/可 RPC  
 
 ---
 
 ## 修订记录
 
-| 日期 | 变更 |
-|------|------|
-| 2026-08-13 | **L3** 交接包：`docs/LAB_HANDOFF.md`、`docs/README.md`、`18_handoff_manifest.py` |
-| 2026-08-13 | **L2** Module B/C eval 5/5；修 corpus-meta 问句不被 complaint 扩展污染 |
-| 2026-08-13 | **L1** B/C 补洞：AAHA Table1 正文、PetTalk 30 篇、MCPQ blank；B/C chunks 428 → merged 14000 |
-| 2026-08-13 | **范围锁定：仅 anima-rag-lab；App 联调 / AnimaLink 改码一律延后** |
-| 2026-08-13 | Sprint 2：本仓 `16_local_pgvector` 全量 13953 入库 + match smoke；云端 SQL/upsert 仍备 |
-| 2026-08-13 | Sprint 2：Lab 侧 pgvector SQL + export/upsert 脚本 |
-| 2026-08-13 | 4.1/4.3：cache smoke + memory backend；公网 quick tunnel 脚本 |
-| 2026-08-12 | 初版：对照新表；记录本地 FastAPI 路径偏差与 A 线完成、B/C 与 Supabase 延后 |
+| 2026-08-19 | **Module B 人话重点：** 四个重点改成 B 组短标签（熟不熟得起来 / 精力 / 防卫 / 听话程度） |
+| 2026-08-19 | **Module B MCPQ-R：** 新增 `GET/POST /v1/personality/mcpq`，26 词交卷后输出五维结果 + 主人报告 |
+| 2026-08-19 | **Module C 育养体验版：** `06_rag_query.py` 增加生命阶段专用 checklist（更像育养报告）；UI/整合改屏幕先延后 |
+| 2026-08-19 | **Sprint 1（ETL）1.3 医疗边界抽验：** 全量 `scripts/09_run_eval.py` 回归通过（25/25） |
+| 2026-08-19 | **Sprint 2：** Supabase `knowledge_chunks` 上云刷新 B/C（426 rows） |
+| 2026-08-18 | **Module B 主人报告：** `owner_report` 分段（个性/特色/对人狗/家里出门/教养/别做）；16 型文案加厚 |
+| 2026-08-18 | **Module B 三层报告：** `facets`（社交/引擎/界限/配合）+ 贴纸由面向派生；中线→均衡陪伴型 |
+| 2026-08-14 | **Module B 类 MBTI：** 三种恐惧整块→I、四种攻击整块→T（对称）；怕环境不再进 J/P |
+| 2026-08-14 | **Module B 类 MBTI 方案 A：** 互斥均权（兴奋/精力只进 N；非社交恐惧进 J/P） |
+| 2026-08-14 | **Module B 类 MBTI：** 14 维 → 4 轴 → 16 狗狗角色（`mbti_like`）；14 维报告仍是主结果 |
+| 2026-08-13 | **Module B 应用：** C-BARQ 问卷 → 性格描述 + 照护需求（类 MBTI；非问诊） |
+| 2026-08-13 | **模块分轨：** A=分诊、B=性格判断、C=育养；检索按问题过滤，分诊默认只搜 A |
+| 2026-08-13 | **S4：** Lab API `ANIMA_RETRIEVAL=auto` 走 Supabase `match_knowledge_chunks`，失败回落本地 |
+| 2026-08-13 | **Sprint 2 关闭：** 云端 upsert 14000 + RPC/RLS 烟雾通过 |
+| 2026-08-13 | **纠正：** Sprint 2 Supabase 云端标为必做下一窗；去掉「延后到 AnimaLink」表述；重写完成度对照主表 |
+| 2026-08-13 | L1–L3 本机数据/eval/交接包完成；merged 14000 |
+| 2026-08-12 | 初版对照表 |

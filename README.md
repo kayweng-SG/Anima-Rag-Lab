@@ -116,6 +116,7 @@ Report writes to `evals/last_report.json`. LLM is off by default for determinism
 | B/C 补洞 | `scripts/17_enrich_module_bc_gaps.py` | AAHA Table1 / PetTalk / MCPQ blank |
 | Lab pgvector | `scripts/16_local_pgvector.py` | `data/pgvector_local/` |
 | 交接清单 | `scripts/18_handoff_manifest.py` | `docs/handoff_manifest.json` |
+| C-BARQ 性格报告 | `scripts/19_cbarq_personality.py` | `POST /v1/personality/cbarq/score`（14 维 + 4 面向 + 贴纸） |
 | RAG query | `scripts/06_rag_query.py` | CLI / `--json` stdin |
 | API | `scripts/07_api_server.py` | FastAPI server |
 | Eval | `scripts/09_run_eval.py` | `evals/last_report.json` |

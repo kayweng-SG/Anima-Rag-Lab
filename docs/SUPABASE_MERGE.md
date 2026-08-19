@@ -1,9 +1,9 @@
-# Supabase / pgvector merge (WBS Sprint 2)
+# Supabase / pgvector（WBS Sprint 2 ✅ · S4 检索已接）
 
-Lab serves RAG from a **local** sentence-transformers index
-(`data/processed/merged_vector_store/`, 384-d MiniLM).
+专案目标：数据进 **Supabase pgvector**，Lab API 经 RPC 检索。  
+本地 `merged_vector_store/`（384-d MiniLM）是 embed 源；云端 `knowledge_chunks` = **14000**。
 
-## Path A — do it **in this Lab first** (recommended now)
+## Path A — 本机 schema 镜像（已完成，作对照）
 
 No Docker / Homebrew required. Mirrors the `knowledge_chunks` schema +
 `match_knowledge_chunks` behaviour with SQLite + numpy:
@@ -30,11 +30,11 @@ Data lives under `data/pgvector_local/` (gitignored).
 | SQL (for real Postgres/Supabase) | [`supabase/migrations/20260813_knowledge_chunks.sql`](../supabase/migrations/20260813_knowledge_chunks.sql) |
 | Supabase-only RLS grants | [`…_supabase_grants.sql`](../supabase/migrations/20260813_knowledge_chunks_supabase_grants.sql) |
 
-## Path B — real Supabase / Postgres later
+## Path B — 云端 Supabase（**已完成** 2026-08-13）
 
 | Step | Command |
 |------|---------|
-| 1. Apply SQL | paste migration in Supabase SQL editor (then optional grants file) |
+| 1. Apply SQL | paste migration in Supabase SQL editor（再跑 grants 文件） |
 | 2. Export | `python scripts/14_export_pgvector.py` |
 | 3. Upsert | set `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` → `python scripts/15_upsert_supabase.py --apply` |
 
@@ -42,7 +42,10 @@ Data lives under `data/pgvector_local/` (gitignored).
 # .env
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJ…   # service_role only
+ANIMA_RETRIEVAL=auto             # Lab API: RPC if keys else local numpy
 ```
+
+`ANIMA_RETRIEVAL`：`local` | `supabase` | `auto`（默认 auto）。eval / pytest 强制 `local`。
 
 Query embeddings **must** use the same model:
 `paraphrase-multilingual-MiniLM-L12-v2`.

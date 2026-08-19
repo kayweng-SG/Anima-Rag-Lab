@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-13T06:29:46.226216+00:00",
+  "at": "2026-08-19T10:26:19.651648+00:00",
   "aaha": {
     "canine_stages": 5,
     "feline_stages": 5
@@ -9,9 +9,9 @@
     "path": "data/raw/module_b_behavior/cbarq_mcpq_r/related_instruments/mcpq_r_blank_form.json"
   },
   "pettalk": {
-    "scraped_at": "2026-08-13T06:30:51.311375+00:00",
-    "article_count": 30,
-    "attempted": 35,
+    "scraped_at": "2026-08-19T10:27:31.957513+00:00",
+    "article_count": 27,
+    "attempted": 70,
     "output": "data/raw/module_c_husbandry/pettalk_asia/articles.jsonl",
     "rights": "PetTalk © — Lab research staging only; do not redistribute commercially."
   }

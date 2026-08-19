@@ -9,6 +9,6 @@
   "note": "Homepage crawl of pettalk.tw + curated AAHA/AVMA/MSD links. Full article scrape deferred; use inventory for later ingest.",
   "primary_site": "https://www.pettalk.tw/",
   "articles_jsonl": "articles.jsonl",
-  "articles_count": 30,
-  "updated_at": "2026-08-13T06:30:51.311804+00:00"
+  "articles_count": 27,
+  "updated_at": "2026-08-19T10:27:31.957671+00:00"
 }

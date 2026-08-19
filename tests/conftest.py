@@ -10,6 +10,11 @@ import pytest
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS_DIR = os.path.join(PROJECT_ROOT, "scripts")
 
+# Unit tests / eval must not hit cloud RPC even if .env has Supabase keys.
+os.environ["ANIMA_RETRIEVAL"] = "local"
+# Keep API tests open unless a test explicitly sets ANIMA_API_KEY.
+os.environ["ANIMA_API_KEY"] = ""
+
 
 def load_script_module(module_name: str, filename: str) -> Any:
     path = os.path.join(SCRIPTS_DIR, filename)
@@ -49,9 +54,21 @@ def red_light(red_light_mod):
 
 @pytest.fixture(scope="session")
 def vector_store(embed_mod):
-    store = embed_mod.MerckVectorStore()
+    store = embed_mod.MerckVectorStore(retrieval="local")
     store.load()
     return store
+
+
+@pytest.fixture(scope="session")
+def cbarq_engine():
+    mod = load_script_module("test_cbarq", "19_cbarq_personality.py")
+    return mod.CBarqPersonality()
+
+
+@pytest.fixture(scope="session")
+def mcpq_engine():
+    mod = load_script_module("test_mcpq", "20_mcpq_personality.py")
+    return mod.MCPQRPersonality()
 
 
 @pytest.fixture(scope="session")

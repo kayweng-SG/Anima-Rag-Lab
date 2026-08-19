@@ -292,7 +292,7 @@ def evaluate_case(pipeline: Any, rag_mod: Any, case: Dict[str, Any]) -> CaseResu
 def build_pipeline(with_llm: bool = False) -> Tuple[Any, Any]:
     embed_mod = _load_script("eval_embed", "05_embed_merck.py")
     rag_mod = _load_script("eval_rag", "06_rag_query.py")
-    store = embed_mod.MerckVectorStore()
+    store = embed_mod.MerckVectorStore(retrieval="local")
     store.load()
     pipeline = rag_mod.AnimaRAGPipeline(vector_store=store)
     if not with_llm:

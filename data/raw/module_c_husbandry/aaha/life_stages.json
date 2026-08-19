@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "wbs_id": "0.6",
-  "extracted_at": "2026-08-13T06:29:48.088291+00:00",
+  "extracted_at": "2026-08-19T10:26:21.479346+00:00",
   "disclaimer": "Stage definitions taken from AAHA guideline PDF text extract (Table 1). Always prefer the official PDF for clinical decisions. Research staging only.",
   "canine": {
     "guideline": "2019 AAHA Canine Life Stage Guidelines",

@@ -255,6 +255,22 @@ def chunk_pettalk(path: str) -> List[Dict[str, Any]]:
 def chunk_pettalk_articles(path: str) -> List[Dict[str, Any]]:
     """Full article bodies from articles.jsonl (L1 scrape)."""
     out: List[Dict[str, Any]] = []
+
+    def keep_article(url: str, title: str, content: str) -> bool:
+        blob = f"{title}\n{content}".strip()
+        if "/question/" in (url or ""):
+            return False
+        if re.search(r"兔|鳥|鸚鵡|倉鼠|守宮|爬蟲|草食小寵|天竺鼠", blob, re.I):
+            return False
+        # Prefer dog over cat: drop cat-only pages that don't mention dog.
+        dog_pat = r"狗狗|犬|狗|比熊|拉布拉多|柯基|柴犬|貴賓"
+        cat_pat = r"貓咪|貓|猫"
+        dogish = bool(re.search(dog_pat, blob))
+        catish = bool(re.search(cat_pat, blob))
+        if catish and not dogish:
+            return False
+        return True
+
     if not os.path.isfile(path):
         return out
     with open(path, encoding="utf-8") as fh:
@@ -267,6 +283,8 @@ def chunk_pettalk_articles(path: str) -> List[Dict[str, Any]]:
             content = (row.get("content") or "").strip()
             url = row.get("url") or ""
             if len(content) < 40:
+                continue
+            if not keep_article(url, title, content):
                 continue
             # Split long articles into ~900-char windows
             step = 800
@@ -369,6 +387,24 @@ def main() -> None:
         part = fn(path)
         logger.info("%s → %d chunks", label, len(part))
         chunks.extend(part)
+
+    # De-duplicate exact content duplicates (same content_hash).
+    # This helps reduce noisy repeated chunks in embedding/indexing.
+    seen: set[str] = set()
+    uniq_chunks: List[Dict[str, Any]] = []
+    for c in chunks:
+        meta = c.get("metadata") or {}
+        h = meta.get("content_hash")
+        if not h:
+            uniq_chunks.append(c)
+            continue
+        if h in seen:
+            continue
+        seen.add(h)
+        uniq_chunks.append(c)
+    if len(uniq_chunks) != len(chunks):
+        logger.info("Dedup chunks by content_hash: %d → %d", len(chunks), len(uniq_chunks))
+    chunks = uniq_chunks
 
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),

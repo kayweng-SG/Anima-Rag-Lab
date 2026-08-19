@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "instrument": "C-BARQ42",
+  "source": "forms/CBARQ_short_questionnaire_2018.pdf",
+  "note": "口語題面依 2018 短版原文情境改寫，方便饲主作答；非逐字复制官方英文题干。",
+  "anchors": {
+    "excitability": {
+      "kind": "severity",
+      "zh": ["0 完全没反应", "1 一点点", "2 普通兴奋", "3 很兴奋", "4 炸了、停不下来"],
+      "prompt_zh": "0＝淡定　4＝兴奋到很难冷静"
+    },
+    "aggression": {
+      "kind": "severity",
+      "zh": ["0 完全不凶", "1 小声警告", "2 叫或吼", "3 露牙、很凶", "4 会咬或想咬"],
+      "prompt_zh": "0＝没攻击　4＝咬人或想咬"
+    },
+    "fear": {
+      "kind": "severity",
+      "zh": ["0 完全不怕", "1 有点紧张", "2 明显害怕", "3 很怕、想逃", "4 蹲下躲、发抖、逃不了"],
+      "prompt_zh": "0＝不怕　4＝躲起来、逃、发抖"
+    },
+    "frequency": {
+      "kind": "frequency",
+      "zh": ["0 从来没有", "1 很少", "2 有时", "3 常常", "4 几乎每次"],
+      "prompt_zh": "0＝从来没有　4＝几乎每次都这样"
+    }
+  },
+  "items": [
+    {"id": 1, "section": "excitability", "anchor": "excitability", "prompt_zh": "要出门散步前，它会兴奋成什么样？", "source_en": "Just before being taken for a walk."},
+    {"id": 2, "section": "excitability", "anchor": "excitability", "prompt_zh": "要上车出门前，它会兴奋成什么样？", "source_en": "Just before being taken on a car trip."},
+    {"id": 3, "section": "aggression", "anchor": "aggression", "prompt_zh": "牵着散步时，陌生人正面走过来，它会凶吗？", "source_en": "When approached directly by an unfamiliar person while being walked/exercised on a leash."},
+    {"id": 4, "section": "aggression", "anchor": "aggression", "prompt_zh": "家里人拿走它的玩具、骨头时，它会凶吗？", "source_en": "When toys, bones or other objects are taken away by a household member."},
+    {"id": 5, "section": "aggression", "anchor": "aggression", "prompt_zh": "它在吃饭，家里人走过去靠近，它会凶吗？", "source_en": "When approached directly by a household member while s/he (the dog) is eating."},
+    {"id": 6, "section": "aggression", "anchor": "aggression", "prompt_zh": "快递员、邮差靠近家门口时，它会凶吗？", "source_en": "When mailmen or other delivery workers approach your home."},
+    {"id": 7, "section": "aggression", "anchor": "aggression", "prompt_zh": "家里人拿走它的食物时，它会凶吗？", "source_en": "When his/her food is taken away by a household member."},
+    {"id": 8, "section": "aggression", "anchor": "aggression", "prompt_zh": "牵着散步时，不认识的狗正面走过来，它会凶吗？", "source_en": "When approached directly by an unfamiliar dog while being walked/exercised on a leash."},
+    {"id": 9, "section": "aggression", "anchor": "aggression", "prompt_zh": "它在院子或门外，有陌生人从门口走过，它会凶吗？", "source_en": "When strangers walk past your home when your dog is outside or in the yard."},
+    {"id": 10, "section": "aggression", "anchor": "aggression", "prompt_zh": "被别的不熟的狗叫、吼或冲过来时，它会凶回去吗？", "source_en": "When barked, growled, or lunged at by another (unfamiliar) dog."},
+    {"id": 11, "section": "aggression", "anchor": "aggression", "prompt_zh": "它在吃饭，家里另一只狗靠近（没有别的狗就跳过），它会凶吗？", "source_en": "When approached while eating by another (familiar) household dog."},
+    {"id": 12, "section": "aggression", "anchor": "aggression", "prompt_zh": "它在啃玩具，家里另一只狗靠近（没有别的狗就跳过），它会凶吗？", "source_en": "When approached while playing with/chewing a favorite toy by another household dog."},
+    {"id": 13, "section": "fear", "anchor": "fear", "prompt_zh": "出门在外，陌生人正面走过来，它会怕吗？", "source_en": "When approached directly by an unfamiliar person while away from your home."},
+    {"id": 14, "section": "fear", "anchor": "fear", "prompt_zh": "突然的大声（雷、吸尘器、鞭炮、东西掉地上），它会怕吗？", "source_en": "In response to sudden or loud noises (e.g. thunder, vacuum cleaner, car backfire)."},
+    {"id": 15, "section": "fear", "anchor": "fear", "prompt_zh": "陌生人想摸它时，它会怕吗？", "source_en": "When an unfamiliar person tries to touch or pet the dog."},
+    {"id": 16, "section": "fear", "anchor": "fear", "prompt_zh": "路边出现奇怪的东西（垃圾袋、飘的旗、落叶堆），它会怕吗？", "source_en": "In response to strange or unfamiliar objects on or near the sidewalk."},
+    {"id": 17, "section": "fear", "anchor": "fear", "prompt_zh": "不认识的狗正面走过来，它会怕吗？", "source_en": "When approached directly by an unfamiliar dog."},
+    {"id": 18, "section": "fear", "anchor": "fear", "prompt_zh": "第一次遇到新状况（第一次坐车、坐电梯、去医院），它会怕吗？", "source_en": "When first exposed to unfamiliar situations (e.g. first car trip, elevator, vet)."},
+    {"id": 19, "section": "fear", "anchor": "fear", "prompt_zh": "被不熟的狗叫、吼或冲过来时，它会怕吗？", "source_en": "When barked, growled, or lunged at by an unfamiliar dog."},
+    {"id": 20, "section": "fear", "anchor": "fear", "prompt_zh": "家里人帮它剪指甲时，它会怕吗？", "source_en": "When having nails clipped by a household member."},
+    {"id": 21, "section": "fear", "anchor": "fear", "prompt_zh": "家里人帮它梳毛或洗澡时，它会怕吗？", "source_en": "When groomed or bathed by a household member."},
+    {"id": 22, "section": "separation", "anchor": "frequency", "prompt_zh": "要单独留它、或刚要出门时，它会走来走去坐不住吗？", "source_en": "Restlessness/agitation/pacing."},
+    {"id": 23, "section": "separation", "anchor": "frequency", "prompt_zh": "单独留它时，它会叫或哼吗？", "source_en": "Barking or whining."},
+    {"id": 24, "section": "separation", "anchor": "frequency", "prompt_zh": "单独留它时，它会咬门、抓地板、抓窗帘吗？", "source_en": "Chewing/scratching at doors, floor, windows, curtains, etc."},
+    {"id": 25, "section": "attachment", "anchor": "frequency", "prompt_zh": "你在家从一个房间走到另一个房间，它会跟着吗？", "source_en": "Tends to follow you about the house, from room to room."},
+    {"id": 26, "section": "attachment", "anchor": "frequency", "prompt_zh": "你坐下时，它会贴着你坐或靠过来吗？", "source_en": "Tends to sit close to, or in contact with, you when you are sitting down."},
+    {"id": 27, "section": "training", "anchor": "frequency", "prompt_zh": "你说「坐」，它会马上坐下吗？（这题分数会反向计）", "source_en": "Obeys a sit command immediately.", "reverse": true},
+    {"id": 28, "section": "training", "anchor": "frequency", "prompt_zh": "你说「待着／不要动」，它会马上停住吗？（这题分数会反向计）", "source_en": "Obeys a stay command immediately.", "reverse": true},
+    {"id": 29, "section": "training", "anchor": "frequency", "prompt_zh": "外面有声音、气味或会动的东西时，它很容易分心吗？", "source_en": "Easily distracted by interesting sights, sounds or smells."},
+    {"id": 30, "section": "chasing", "anchor": "frequency", "prompt_zh": "有机会的话，它会追鸟吗？", "source_en": "Chases or would chase birds, given the chance."},
+    {"id": 31, "section": "chasing", "anchor": "frequency", "prompt_zh": "有机会的话，它会追松鼠、兔子这类小动物吗？", "source_en": "Chases or would chase squirrels, rabbits, etc., given the chance."},
+    {"id": 32, "section": "misc", "anchor": "frequency", "prompt_zh": "有机会的话，它会从家或院子逃出去吗？", "source_en": "Escapes or would escape from home or yard, given the chance."},
+    {"id": 33, "section": "misc", "anchor": "frequency", "prompt_zh": "它会乱咬不该咬的东西吗？", "source_en": "Chews inappropriate objects."},
+    {"id": 34, "section": "misc", "anchor": "frequency", "prompt_zh": "牵绳时它会很用力往前拉吗？", "source_en": "Pulls excessively hard when on the leash."},
+    {"id": 35, "section": "misc", "anchor": "frequency", "prompt_zh": "它会在家里对家具或墙角抬腿尿尿吗？", "source_en": "Urinates against objects/furnishings in your home."},
+    {"id": 36, "section": "misc", "anchor": "frequency", "prompt_zh": "晚上或白天单独留它时，它会在屋里尿尿吗？", "source_en": "Urinates when left alone at night, or during the daytime."},
+    {"id": 37, "section": "misc", "anchor": "frequency", "prompt_zh": "晚上或白天单独留它时，它会在屋里大便吗？", "source_en": "Defecates when left alone at night, or during the daytime."},
+    {"id": 38, "section": "misc", "anchor": "frequency", "prompt_zh": "它静不下来、很难好好休息吗？", "source_en": "Hyperactive, restless, has trouble settling down."},
+    {"id": 39, "section": "energy", "anchor": "frequency", "prompt_zh": "它还像小狗一样爱玩、蹦蹦跳跳吗？", "source_en": "Playful, puppyish, boisterous."},
+    {"id": 40, "section": "energy", "anchor": "frequency", "prompt_zh": "它精力很旺、整天停不下来吗？", "source_en": "Active, energetic, always on the go."},
+    {"id": 41, "section": "misc", "anchor": "frequency", "prompt_zh": "它会追自己的尾巴吗？", "source_en": "Chases own tail/hind end."},
+    {"id": 42, "section": "misc", "anchor": "frequency", "prompt_zh": "一紧张或一兴奋，它会叫个不停吗？", "source_en": "Barks persistently when alarmed or excited."}
+  ]
+}

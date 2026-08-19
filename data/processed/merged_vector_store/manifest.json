@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-08-13T06:31:28.861931+00:00",
+  "generated_at": "2026-08-19T11:26:30.360939+00:00",
   "embedder": "sentence_transformers:paraphrase-multilingual-MiniLM-L12-v2",
   "dimension": 384,
-  "vector_count": 14000,
+  "vector_count": 13998,
   "module_a_count": 13572,
-  "module_bc_count": 428,
-  "build_elapsed_ms": 816.95,
+  "module_bc_count": 426,
+  "build_elapsed_ms": 646.1,
   "base_store": "merck_vector_store",
   "source_chunks_file": "module_bc_chunks.json",
   "modules": [

@@ -1,7 +1,7 @@
 {
-  "scraped_at": "2026-08-13T06:30:51.311375+00:00",
-  "article_count": 30,
-  "attempted": 35,
+  "scraped_at": "2026-08-19T10:27:31.957513+00:00",
+  "article_count": 27,
+  "attempted": 70,
   "output": "data/raw/module_c_husbandry/pettalk_asia/articles.jsonl",
   "rights": "PetTalk © — Lab research staging only; do not redistribute commercially."
 }
