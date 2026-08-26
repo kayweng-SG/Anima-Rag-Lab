@@ -12,6 +12,9 @@ SCRIPTS_DIR = os.path.join(PROJECT_ROOT, "scripts")
 
 # Unit tests / eval must not hit cloud RPC even if .env has Supabase keys.
 os.environ["ANIMA_RETRIEVAL"] = "local"
+# Prefer local HF cache; avoid long proxy hangs when the model is missing.
+# Warm cache once online: python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')"
+os.environ.setdefault("ANIMA_EMBED_OFFLINE", "1")
 # Keep API tests open unless a test explicitly sets ANIMA_API_KEY.
 os.environ["ANIMA_API_KEY"] = ""
 

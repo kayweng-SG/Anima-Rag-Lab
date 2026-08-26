@@ -45,7 +45,7 @@
 | Sprint 1 · ETL `1.1–1.3` | 8/10–8/14 | ✅ / 🟡 | 切块标注完成；抽验靠自动化 eval，非人工 10% 全文档 |
 | Sprint 2 · **Supabase 向量库** `2.1–2.4` | 8/17–8/21 | ✅ | 云端 `knowledge_chunks` **14000**；RPC + RLS 烟雾通过 |
 | Sprint 3 · API `3.1–3.4` | 8/24–8/28 | ✅ | FastAPI + Red-Light + **Supabase RPC 检索**（无密钥/失败则本地） |
-| Sprint 4 · 测试与部署 `4.1–4.4` | 8/31–9/4 | 🟡 | Eval/文档有；真 Redis / 公网 / RAGAS 未全满 |
+| Sprint 4 · 测试与部署 `4.1–4.4` | 8/31–9/4 | 🟡 | 4.4✅；cache/eval/tunnel 有代码；本机无 Docker → 真 Redis/公网未跑通 |
 
 **数据存放真相：**
 
@@ -110,8 +110,8 @@
 
 | ID | 任务 | 计划 | 状态 | 实际 |
 |----|------|------|------|------|
-| 4.1 | Semantic Cache (Redis) | 8/31–9/1 | 🟡 | 代码+Compose profile；真 Redis 需运行时 |
-| 4.2 | RAG 品质评估 | 9/2 | 🟡 | 固定 23 案；非完整 RAGAS |
+| 4.1 | Semantic Cache (Redis) | 8/31–9/1 | 🟡 | 代码+Compose profile+`memory://` smoke ✅；真 Redis 需 Docker（本机暂无） |
+| 4.2 | RAG 品质评估 | 9/2 | 🟡 | 固定 eval **25/25** 通过（LLM=off）；非完整 RAGAS |
 | 4.3 | CI/CD 对外部署 | 9/3 | 🟡 | Compose / Tunnel 脚本；无正式域名流水线 |
 | 4.4 | API 文件与交接 | 9/4 | ✅ | `APP_INTEGRATION`、`LAB_HANDOFF`、`DEPLOY` 等 |
 
@@ -121,12 +121,12 @@
 
 ## 下一执行窗
 
-Sprint 2–3 检索路径已关闭。Module B 性格报告 API 已可测。可选后续：
+Sprint 2–3 检索路径已关闭。Module B（C-BARQ + MCPQ-R）性格报告 API 已可测。
 
 | 优先级 | 动作 | 对应 WBS |
 |--------|------|----------|
-| B2 | MCPQ-R 同样交卷出报告 | Module B |
-| S5 | Redis / 公网 staging | 4.1 / 4.3 |
+| S4 | 全量 eval 回归（本机 HF cache 已暖） | 4.2 |
+| S5 | Docker Redis + 公网 tunnel staging | 4.1 / 4.3 |
 
 **Sprint 2 验收（已满足）：**
 
@@ -138,6 +138,9 @@ Sprint 2–3 检索路径已关闭。Module B 性格报告 API 已可测。可�
 
 ## 修订记录
 
+| 2026-08-26 | **Sprint 4.2：** 全量 `09_run_eval.py` 回归 **25/25**（HF cache 已暖、LLM=off） |
+| 2026-08-26 | **续作：** 还原 800MB 临时 tfidf 向量；ST embedder 离线快速失败；HF cache 已暖；Sprint 3 API/RPC/cache/MCPQ 测试 19/19 |
+| 2026-08-26 | **Sprint 4 启动：** `memory://` semantic cache smoke ✅；本机无 Docker，真 Redis / Compose cache 暂搁 |
 | 2026-08-19 | **Module B 人话重点：** 四个重点改成 B 组短标签（熟不熟得起来 / 精力 / 防卫 / 听话程度） |
 | 2026-08-19 | **Module B MCPQ-R：** 新增 `GET/POST /v1/personality/mcpq`，26 词交卷后输出五维结果 + 主人报告 |
 | 2026-08-19 | **Module C 育养体验版：** `06_rag_query.py` 增加生命阶段专用 checklist（更像育养报告）；UI/整合改屏幕先延后 |

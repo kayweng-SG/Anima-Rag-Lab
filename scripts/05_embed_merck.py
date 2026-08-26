@@ -156,11 +156,32 @@ class SentenceTransformerEmbedder(BaseEmbedder):
         self.batch_size = batch_size
         logger.info("Loading sentence-transformers model: %s", model_name)
         # Prefer local cache to avoid HuggingFace network calls at API startup.
+        # When offline flags are set, fail fast instead of hanging on proxy/download.
+        offline = any(
+            (os.getenv(k) or "").strip().lower() in {"1", "true", "yes"}
+            for k in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "ANIMA_EMBED_OFFLINE")
+        )
+        if offline:
+            os.environ.setdefault("HF_HUB_OFFLINE", "1")
+            os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
         try:
+            # local_files_only can still trip transformers hub probes; fall back
+            # to a normal load while HF offline env is set (uses cache only).
             self.model = SentenceTransformer(model_name, local_files_only=True)
-        except Exception:
-            logger.info("Local cache miss for %s — downloading", model_name)
-            self.model = SentenceTransformer(model_name)
+        except Exception as local_exc:
+            if offline:
+                try:
+                    self.model = SentenceTransformer(model_name)
+                except Exception as offline_exc:
+                    raise RuntimeError(
+                        f"Sentence-transformers model {model_name!r} not in local cache "
+                        f"and offline mode is enabled (HF_HUB_OFFLINE / "
+                        f"TRANSFORMERS_OFFLINE / ANIMA_EMBED_OFFLINE). "
+                        f"Warm the HF cache once online, or set MERCK_EMBEDDER=tfidf."
+                    ) from offline_exc
+            else:
+                logger.info("Local cache miss for %s — downloading", model_name)
+                self.model = SentenceTransformer(model_name)
         sample = self.model.encode(["warmup"], normalize_embeddings=True)
         self._dimension = int(sample.shape[1])
 
