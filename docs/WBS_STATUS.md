@@ -45,7 +45,7 @@
 | Sprint 1 · ETL `1.1–1.3` | 8/10–8/14 | ✅ / 🟡 | 切块标注完成；抽验靠自动化 eval，非人工 10% 全文档 |
 | Sprint 2 · **Supabase 向量库** `2.1–2.4` | 8/17–8/21 | ✅ | 云端 `knowledge_chunks` **14000**；RPC + RLS 烟雾通过 |
 | Sprint 3 · API `3.1–3.4` | 8/24–8/28 | ✅ | FastAPI + Red-Light + **Supabase RPC 检索**（无密钥/失败则本地） |
-| Sprint 4 · 测试与部署 `4.1–4.4` | 8/31–9/4 | 🟡 | 4.4✅；cache/eval/tunnel 有代码；本机无 Docker → 真 Redis/公网未跑通 |
+| Sprint 4 · 测试与部署 `4.1–4.4` | 8/31–9/4 | 🟡 | 4.4✅；4.2 eval 25/25；4.1 memory cache✅；4.3 quick tunnel smoke✅；真 Redis/正式域名仍缺 |
 
 **数据存放真相：**
 
@@ -110,9 +110,9 @@
 
 | ID | 任务 | 计划 | 状态 | 实际 |
 |----|------|------|------|------|
-| 4.1 | Semantic Cache (Redis) | 8/31–9/1 | 🟡 | 代码+Compose profile+`memory://` smoke ✅；真 Redis 需 Docker（本机暂无） |
+| 4.1 | Semantic Cache (Redis) | 8/31–9/1 | 🟡 | `memory://` smoke + API `/health cache_backend=memory` ✅；真 Redis 需 Docker（本机暂无） |
 | 4.2 | RAG 品质评估 | 9/2 | 🟡 | 固定 eval **25/25** 通过（LLM=off）；非完整 RAGAS |
-| 4.3 | CI/CD 对外部署 | 9/3 | 🟡 | Compose / Tunnel 脚本；无正式域名流水线 |
+| 4.3 | CI/CD 对外部署 | 9/3 | 🟡 | Cloudflare quick tunnel + `smoke_ios_api` **3/3** ✅；无正式域名流水线 |
 | 4.4 | API 文件与交接 | 9/4 | ✅ | `APP_INTEGRATION`、`LAB_HANDOFF`、`DEPLOY` 等 |
 
 > 4.4「供后续 AnimalLink 串接」= **交付 API 文档**，不是本仓去做产品接线。
@@ -121,12 +121,13 @@
 
 ## 下一执行窗
 
-Sprint 2–3 检索路径已关闭。Module B（C-BARQ + MCPQ-R）性格报告 API 已可测。
+**Lab 本仓可交付范围已基本关闭。** Docker / 真 Redis / 正式域名 **延后到 AnimaLink 整合阶段**再按需求做。
 
-| 优先级 | 动作 | 对应 WBS |
-|--------|------|----------|
-| S4 | 全量 eval 回归（本机 HF cache 已暖） | 4.2 |
-| S5 | Docker Redis + 公网 tunnel staging | 4.1 / 4.3 |
+| 优先级 | 动作 | 时机 |
+|--------|------|------|
+| I1 | 真 Redis（Docker Compose `--profile cache`） | 整合需要缓存时 |
+| I2 | 正式域名 / named Tunnel 或 Caddy | 整合需要稳定 Base URL 时 |
+| I3 | （可选）RAGAS 品质评估 | 有精力再加厚 4.2 |
 
 **Sprint 2 验收（已满足）：**
 
@@ -134,10 +135,20 @@ Sprint 2–3 检索路径已关闭。Module B（C-BARQ + MCPQ-R）性格报告 A
 2. `match_knowledge_chunks` C-BARQ 种子查询 Top-3（自匹配 similarity=1.0）  
 3. RLS：anon 写 401；anon 读 0 行；service_role 可写/可 RPC  
 
+**Sprint 4 Lab 侧（已满足，非 Docker 路径）：**
+
+1. Eval **25/25**（LLM=off）  
+2. Semantic cache：`REDIS_URL=memory://local` + `/health cache_backend=memory`  
+3. 公网烟雾：Cloudflare quick tunnel + `smoke_ios_api` 3/3  
+4. API 文档：`APP_INTEGRATION` / `DEPLOY` / 本 WBS
+
 ---
 
 ## 修订记录
 
+| 2026-08-26 | **决策：** Docker / 真 Redis / 正式域名延后到整合阶段；Lab 侧 Sprint 4 以 memory cache + quick tunnel 验收 |
+| 2026-08-26 | **Sprint 4.3：** Cloudflare quick tunnel 公网烟雾 `smoke_ios_api` 3/3；API 以 `REDIS_URL=memory://local` 运行 |
+| 2026-08-26 | **Sprint 4.1：** 本地 API `/health` 确认 `cache_enabled=true` / `cache_backend=memory` |
 | 2026-08-26 | **Sprint 4.2：** 全量 `09_run_eval.py` 回归 **25/25**（HF cache 已暖、LLM=off） |
 | 2026-08-26 | **续作：** 还原 800MB 临时 tfidf 向量；ST embedder 离线快速失败；HF cache 已暖；Sprint 3 API/RPC/cache/MCPQ 测试 19/19 |
 | 2026-08-26 | **Sprint 4 启动：** `memory://` semantic cache smoke ✅；本机无 Docker，真 Redis / Compose cache 暂搁 |
