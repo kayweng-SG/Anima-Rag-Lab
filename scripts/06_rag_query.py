@@ -984,8 +984,13 @@ def expand_complaint_to_clinical(text: str, limit: int = 8) -> List[str]:
         "flea",
     }
 
+    # Only narrow to the ear when the owner actually mentioned it; several
+    # Kaggle map rows carry "otitis" as noise on generic itch phrases.
+    ear_cue = bool(
+        re.search(r"耳", blob) or re.search(r"(?<![a-z])ears?(?![a-z])", blob_l)
+    )
     terms_ci = {t.casefold().strip(): t for t in terms}
-    if any(t in ear_terms for t in terms_ci.keys()):
+    if ear_cue and any(t in ear_terms for t in terms_ci.keys()):
         allowed = set(ear_terms) | {"yeast", "yeast infection"}
         terms = [t for t in terms if t.casefold().strip() in allowed]
 
