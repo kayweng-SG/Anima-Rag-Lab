@@ -12,7 +12,7 @@
 
 | 标准 | 证据 |
 |------|------|
-| 数据管线可用 | Module A/B/C 已入库；merged store ≈ **14000**；云端 Supabase `knowledge_chunks` **14000** |
+| 数据管线可用 | Module A/B/C 已入库；merged store **13998**；云端 Supabase `knowledge_chunks` **13998**（`--verify` In sync） |
 | v1 契约稳定 | `POST /v1/triage/query` + C-BARQ / MCPQ-R 性格 API；见 [`APP_INTEGRATION.md`](./APP_INTEGRATION.md) |
 | 评测可回归 | `evals/cases.json` **25** 案（含 Module B/C）全过 |
 | 检索双轨 | `ANIMA_RETRIEVAL=auto`：有密钥走 Supabase RPC，失败回落本地 |
@@ -29,10 +29,10 @@
 | 路径 | 说明 |
 |------|------|
 | `data/processed/merck_vector_store/` | Module A only |
-| `data/processed/merged_vector_store/` | **默认**：A + B/C ≈ **14000** |
+| `data/processed/merged_vector_store/` | **默认**：A + B/C = **13998** |
 | `data/processed/module_bc_chunks.json` | B/C 切块 |
 | `data/pgvector_local/` | Lab 内 SQLite+numpy 镜像（schema 对齐 pgvector） |
-| Supabase `knowledge_chunks` | 云端 **14000**（A 13572 / B 330 / C 98） |
+| Supabase `knowledge_chunks` | 云端 **13998**（A 13572 / B 330 / C 96） |
 
 API 加载顺序：`ANIMA_VECTOR_STORE_DIR` → `merged_vector_store/` → `merck_vector_store/`。
 
@@ -119,6 +119,7 @@ python scripts/18_handoff_manifest.py
 
 | 项 | 说明 |
 |----|------|
+| **Supabase 免费方案自动暂停** | 闲置 7 天即暂停（2026-08-27 已中招一次）。暂停时 `ANIMA_RETRIEVAL=auto` 会静默回落本地，服务不报错。**监控方式：** `/health` 的 `retrieval_last` 变 `local` 且 `retrieval_fallbacks` 增长。整合前需升级方案或加定期保活 |
 | 真 Redis / Docker Compose cache | **延后**；Lab 用 `memory://` 已验收路径 |
 | 正式域名 / named Tunnel | **延后**；quick tunnel 仅临时 |
 | 完整 RAGAS | 可选加厚；现有固定 25 案回归已够 Lab |

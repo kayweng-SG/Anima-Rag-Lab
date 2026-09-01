@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-08-13T07:25:16.527942+00:00",
+  "generated_at": "2026-08-27T02:51:59.409843+00:00",
   "lab": "anima-rag-lab",
   "scope": "lab_only_no_animalink_wiring",
   "handoff_doc": "docs/LAB_HANDOFF.md",
   "vectors": {
-    "merged_count": 14000,
+    "merged_count": 13998,
     "module_a_count": 13572,
-    "module_bc_count": 428,
+    "module_bc_count": 426,
     "embedder": "sentence_transformers:paraphrase-multilingual-MiniLM-L12-v2",
     "dimension": 384,
     "store_dir": "data/processed/merged_vector_store"
   },
   "module_bc_chunks": {
-    "count": 428,
+    "count": 426,
     "sources": [
       "aaha",
       "akc",
@@ -23,16 +23,18 @@
     ],
     "path": "data/processed/module_bc_chunks.json"
   },
-  "pettalk_articles": 30,
+  "pettalk_articles": 27,
   "evals": {
-    "total_cases": 23,
-    "module_bc_cases": 5,
+    "total_cases": 25,
+    "module_bc_cases": 7,
     "module_bc_ids": [
       "bc_cbarq_stranger_aggression",
       "bc_akc_labrador",
       "bc_aaha_feline_senior",
       "bc_mcpq_extraversion",
-      "bc_pettalk_bichon"
+      "bc_pettalk_bichon",
+      "bc_aaha_dog_puppy",
+      "bc_aaha_dog_senior"
     ]
   },
   "paths": {

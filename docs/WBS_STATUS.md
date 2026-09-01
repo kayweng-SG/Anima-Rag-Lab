@@ -43,7 +43,7 @@
 |------|----------|----------|--------|
 | Part 1 · 数据收集 `0.1–0.7` | 8/3–8/7 | ✅ | 语料已收齐（A/B/C） |
 | Sprint 1 · ETL `1.1–1.3` | 8/10–8/14 | ✅ / 🟡 | 切块标注完成；抽验靠自动化 eval，非人工 10% 全文档 |
-| Sprint 2 · **Supabase 向量库** `2.1–2.4` | 8/17–8/21 | ✅ | 云端 `knowledge_chunks` **14000**；RPC + RLS 烟雾通过 |
+| Sprint 2 · **Supabase 向量库** `2.1–2.4` | 8/17–8/21 | ✅ | 表/HNSW/RPC/RLS 已验；云端 **13998** 与本机 `--verify` In sync |
 | Sprint 3 · API `3.1–3.4` | 8/24–8/28 | ✅ | FastAPI + Red-Light + **Supabase RPC 检索**（无密钥/失败则本地） |
 | Sprint 4 · 测试与部署 `4.1–4.4` | 8/31–9/4 | 🟡 | 4.4✅；4.2 eval 25/25；4.1 memory cache✅；4.3 quick tunnel smoke✅；真 Redis/正式域名仍缺 |
 
@@ -52,9 +52,9 @@
 | 层 | 状态 | 说明 |
 |----|------|------|
 | 原始 / 处理后文件 | ✅ | `data/raw/`、`data/processed/` |
-| 本机向量文件 | ✅ | `merged_vector_store/` **14000**（A 13572 + B/C 428） |
+| 本机向量文件 | ✅ | `merged_vector_store/` **13998**（A 13572 + B 330 + C 96） |
 | 本机 schema 镜像 | ✅ | `data/pgvector_local/`（SQLite+numpy，非云） |
-| **Supabase 云端 pgvector** | ✅ | 项目 `aunzslhgsyjyxsefbveb`；**14000** 行（A 13572 / B 330 / C 98） |
+| **Supabase 云端 pgvector** | ✅ | 项目 `aunzslhgsyjyxsefbveb`（2026-08-27 曾自动暂停，已 Restore）。**13998**（A 13572 / B 330 / C 96）；全量 `--verify` 回报 **In sync**，三个 module 皆 `stale=0 missing=0` |
 
 ---
 
@@ -90,7 +90,7 @@
 |----|------|------|------|------|
 | 2.1 | 启用 pgvector + 建表 | 8/17 | ✅ | 云端已执行 `20260813_knowledge_chunks.sql` |
 | 2.2 | HNSW + 检索函数 | 8/18 | ✅ | `match_knowledge_chunks` 已部署；C-BARQ 查询 Top-3 合理 |
-| 2.3 | 批次 Embedding 写入 | 8/19–8/20 | ✅ | `15_upsert --apply` 280 批全部 201；行数 **14000** |
+| 2.3 | 批次 Embedding 写入 | 8/19–8/20 | ✅ | 云端 **13998** = 本机；`--verify` 2026-08-27 实测 A/B/C 全部 `stale=0 missing=0` |
 | 2.4 | RLS | 8/21 | ✅ | grants 已执行；anon 写 401；anon 读 0 行；service_role 可写/可 RPC |
 
 ---
@@ -131,7 +131,7 @@
 
 **Sprint 2 验收（已满足）：**
 
-1. `knowledge_chunks` = **14000**（A 13572 / B 330 / C 98）  
+1. `knowledge_chunks` = **13998**（A 13572 / B 330 / C 96），`--verify` 实测与本机 In sync  
 2. `match_knowledge_chunks` C-BARQ 种子查询 Top-3（自匹配 similarity=1.0）  
 3. RLS：anon 写 401；anon 读 0 行；service_role 可写/可 RPC  
 
@@ -146,6 +146,14 @@
 
 ## 修订记录
 
+| 2026-08-27 | **2.3 关闭：** 全量导出（13998）后 `--verify` 实测 A 13572 / B 330 / C 96，三个 module 皆 `stale=0 missing=0`，**In sync**。另补 `_with_retry`（指数退避 4 次，只拦传输层例外）——A 需 14 次分页请求，原本一次抖动就整轮中止 |
+| 2026-08-27 | **2.3 B/C 对齐：** `--verify` 实测云端 C=**137**（旧记录 98 是错的），其中 **41 笔 `pettalk_art_*` 陈旧**——正是狗优先过滤 + 去重刻意剔除、却一直留在云端的内容，会污染 Module C 检索。`--apply --prune --force` 删除后 B 330/330、C 96/96 |
+| 2026-08-27 | **观测缺口已修：** `/health` 新增 `retrieval_last`（实际服务上一笔查询的后端，无查询时 `null`）与 `retrieval_fallbacks`（云端失败回落累计次数）；`retrieval` 保持原义不变以兼容既有消费方。`last_backend` 初值由猜测改为 `None`，避免与实测值混淆 |
+| 2026-08-27 | **观测缺口：** `/health` 的 `retrieval` 取自 `active_backend()`，只看密钥有无、不碰网络。项目暂停这 8 天里每笔查询其实都回落本地，但 `/health` 仍回报 `supabase` |
+| 2026-08-27 | **事故：** Supabase 项目 `aunzslhgsyjyxsefbveb` **被自动暂停**（免费方案闲置 7 天；上次动它 8/19）。表现为 TLS 握手被关闭 `EOF occurred in violation of protocol`，非 TLS 版本问题。已确认 `search()` 的 `except Exception` 能接住连线层例外并回落本地，API 不会挂 |
+| 2026-08-27 | **2.3 补强：** `15_upsert_supabase.py` 新增 `--verify`（只读比对云端 vs 导出，回传 exit code）与 `--prune`（删除云端陈旧 id，带 20% 安全阈值 + `--force`）；`tests/test_supabase_sync.py` 7 案 mock 覆盖 |
+| 2026-08-27 | **2.3 缺口：** `15_upsert_supabase.py` 用 `resolution=merge-duplicates`，**只增不删**，云端陈旧 chunk 无法清除；当前导出仅 B/C（`modules_filter=[B,C]`，跳过 A 13572），未做过全量对齐；云端行数待连线核实 |
+| 2026-08-27 | **全量复核：** pytest 92/92、eval 25/25；修正 `expand_complaint_to_clinical` 耳道优先误触发（英文「scratching + hair loss」被压成只剩 otitis）；校正本机向量数 14000→13998 |
 | 2026-08-26 | **决策：** Docker / 真 Redis / 正式域名延后到整合阶段；Lab 侧 Sprint 4 以 memory cache + quick tunnel 验收 |
 | 2026-08-26 | **Sprint 4.3：** Cloudflare quick tunnel 公网烟雾 `smoke_ios_api` 3/3；API 以 `REDIS_URL=memory://local` 运行 |
 | 2026-08-26 | **Sprint 4.1：** 本地 API `/health` 确认 `cache_enabled=true` / `cache_backend=memory` |

@@ -35,7 +35,7 @@ TS 样例：`examples/app_clients/triage_query.ts`（对接阶段再迁入 Anima
 
 | 类别 | 路径 / 命令 | 说明 |
 |------|-------------|------|
-| 急症 + B/C 向量 | `data/processed/merged_vector_store/` | **14000**（A 13572 + B/C 428） |
+| 急症 + B/C 向量 | `data/processed/merged_vector_store/` | **13998**（A 13572 + B 330 + C 96） |
 | B/C 切块 | `data/processed/module_bc_chunks.json` | AKC / C-BARQ / MCPQ / AAHA / PetTalk |
 | Lab pgvector 镜像 | `scripts/16_local_pgvector.py` | SQLite+numpy，schema 对齐 |
 | 有毒植物 | `data/triage_tree/aspca_toxic_plants.json` | Red-Light |
