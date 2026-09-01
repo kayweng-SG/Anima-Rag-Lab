@@ -257,11 +257,10 @@ class MerckVectorStore:
             embedder_backend or os.getenv("MERCK_EMBEDDER", "tfidf").lower()
         )
         self.retrieval = resolve_retrieval_mode(retrieval)
-        self.last_backend: str = (
-            "supabase"
-            if self.retrieval == "supabase"
-            else "local"
-        )
+        # None until a query actually runs; a guess here would be indistinguishable
+        # from a measured value.
+        self.last_backend: Optional[str] = None
+        self.retrieval_fallbacks: int = 0
         self.embedder: Optional[BaseEmbedder] = None
         self.vectors: Optional[np.ndarray] = None
         self.records: List[Dict[str, Any]] = []
@@ -414,7 +413,13 @@ class MerckVectorStore:
             except Exception as exc:
                 if self.retrieval == "supabase":
                     raise
-                logger.warning("Supabase RPC failed (%s); falling back to local", exc)
+                self.retrieval_fallbacks += 1
+                logger.warning(
+                    "Supabase RPC failed (%s); falling back to local "
+                    "(fallback #%s) — check /health retrieval_fallbacks",
+                    exc,
+                    self.retrieval_fallbacks,
+                )
 
         self.last_backend = "local"
         return self._search_local(query_text, top_k, filter_module=module)

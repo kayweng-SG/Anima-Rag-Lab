@@ -44,6 +44,16 @@ Authorization: Bearer <ANIMA_API_KEY>
 | GET | `/v1/triage/results/{id}` | if configured | Fetch one result |
 | POST | `/triage/query` | if configured | Legacy alias (same body/response) |
 
+### `/health` 检索字段（判断有没有静默降级）
+
+| 字段 | 含义 |
+|------|------|
+| `retrieval` | **打算**先试哪个后端（`local` / `supabase`）。只看密钥有无，不碰网络 |
+| `retrieval_last` | **实际**服务上一笔查询的后端；还没有查询过时为 `null` |
+| `retrieval_fallbacks` | 云端 RPC 失败并回落本地的累计次数 |
+
+`ANIMA_RETRIEVAL=auto` 下，云端不可用（例如 Supabase 免费方案闲置暂停）时会**静默**回落本地，服务不会报错。此时 `retrieval` 仍是 `supabase`，但 `retrieval_last` 会是 `local` 且 `retrieval_fallbacks` 持续增长 —— 这组合就是降级信号。
+
 ## Request — `POST /v1/triage/query`
 
 ```json

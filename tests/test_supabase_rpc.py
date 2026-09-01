@@ -86,3 +86,14 @@ def test_auto_falls_back_to_local_on_rpc_error(embed_mod, vector_store):
     assert store.last_backend == "local"
     assert hits
     assert hits[0]["chunk_id"]
+    # The silent-degradation signal: cloud was intended, local actually served.
+    assert store.active_backend() == "supabase"
+    assert store.retrieval_fallbacks == 1
+
+
+def test_last_backend_is_unset_before_any_query(embed_mod, vector_store):
+    store = embed_mod.MerckVectorStore(
+        store_dir=vector_store.store_dir, retrieval="auto"
+    )
+    assert store.last_backend is None
+    assert store.retrieval_fallbacks == 0

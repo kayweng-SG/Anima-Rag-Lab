@@ -304,6 +304,8 @@ class HealthResponse(BaseModel):
     cache_enabled: bool = False
     cache_backend: Optional[str] = None
     retrieval: Optional[str] = None
+    retrieval_last: Optional[str] = None
+    retrieval_fallbacks: int = 0
     cbarq_personality_loaded: bool = False
     mcpq_personality_loaded: bool = False
 
@@ -511,6 +513,8 @@ def health() -> HealthResponse:
         cache_enabled=bool(getattr(_cache, "enabled", False)),
         cache_backend=getattr(_cache, "backend", None) if _cache else "off",
         retrieval=retrieval,
+        retrieval_last=getattr(store, "last_backend", None),
+        retrieval_fallbacks=int(getattr(store, "retrieval_fallbacks", 0) or 0),
         cbarq_personality_loaded=_cbarq is not None,
         mcpq_personality_loaded=_mcpq is not None,
     )

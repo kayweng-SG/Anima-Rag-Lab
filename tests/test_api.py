@@ -36,6 +36,20 @@ def test_health(api_client):
     assert "complaint_map_loaded" in body
     assert "cache_enabled" in body
     assert "cache_backend" in body
+    assert "retrieval" in body
+    assert "retrieval_last" in body
+    assert body["retrieval_fallbacks"] == 0
+
+
+def test_health_reports_backend_actually_used(api_client):
+    """`retrieval` is the intent; `retrieval_last` is what really served."""
+    assert api_client.get("/health").json()["retrieval_last"] is None
+    api_client.post(
+        "/triage/query",
+        json={"question": "What is normal heart rate for a small dog?"},
+    )
+    body = api_client.get("/health").json()
+    assert body["retrieval_last"] == "local"
 
 
 def test_triage_query_green(api_client):
