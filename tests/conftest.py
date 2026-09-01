@@ -51,6 +51,11 @@ def api_mod():
 
 
 @pytest.fixture(scope="session")
+def upsert_mod():
+    return load_script_module("test_upsert", "15_upsert_supabase.py")
+
+
+@pytest.fixture(scope="session")
 def red_light(red_light_mod):
     return red_light_mod.RedLightIntercept()
 

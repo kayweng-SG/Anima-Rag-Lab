@@ -1,7 +1,7 @@
 # Supabase / pgvector（WBS Sprint 2 ✅ · S4 检索已接）
 
 专案目标：数据进 **Supabase pgvector**，Lab API 经 RPC 检索。  
-本地 `merged_vector_store/`（384-d MiniLM）是 embed 源；云端 `knowledge_chunks` = **14000**。
+本地 `merged_vector_store/`（384-d MiniLM）是 embed 源；云端 `knowledge_chunks` = **13998**。
 
 ## Path A — 本机 schema 镜像（已完成，作对照）
 
@@ -37,6 +37,21 @@ Data lives under `data/pgvector_local/` (gitignored).
 | 1. Apply SQL | paste migration in Supabase SQL editor（再跑 grants 文件） |
 | 2. Export | `python scripts/14_export_pgvector.py` |
 | 3. Upsert | set `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` → `python scripts/15_upsert_supabase.py --apply` |
+| 4. Verify | `python scripts/15_upsert_supabase.py --verify` |
+
+### 云端与导出对不齐时
+
+upsert 用 `Prefer: resolution=merge-duplicates`，**只增不删**。导出档移除的 chunk（例如去重）会一直留在云端，直到 prune：
+
+```bash
+# 只读比对，不写任何东西；一致回 0，有漂移回 1 并列出 id
+python scripts/15_upsert_supabase.py --verify
+
+# 上传后删掉「云端有、导出没有」的列
+python scripts/15_upsert_supabase.py --apply --prune
+```
+
+比对范围**只涵盖导出档里出现过的 module**。预设导出是全量；若用 `--modules B,C` 只导 B/C，prune 就不会碰 Module A。另有 20% 安全阈值：单一 module 要删超过两成时会中止（通常代表导出档不完整），确认无误再加 `--force`。
 
 ```bash
 # .env
