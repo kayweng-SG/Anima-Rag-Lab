@@ -6,6 +6,7 @@ __pycache__/
 venv/
 .env
 evals/last_report.json
+evals/animalink_retrieval_report.json
 .DS_Store
 tools/bin/
 tools/openssl/

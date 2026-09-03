@@ -1,13 +1,17 @@
 # Eval suite
 
 - `cases.json` — triage + Module B/C retrieval regression cases  
-- `last_report.json` — latest run (gitignored)
+- `last_report.json` — Lab extractive pipeline report (gitignored)  
+- `animalink_retrieval_report.json` — AnimaLink pgvector retrieval report (gitignored)
 
 ```bash
-# all cases
+# Lab local extractive pipeline (needs HF cache / sentence-transformers)
 HF_HUB_OFFLINE=1 python scripts/09_run_eval.py
 
-# Module B/C only
+# AnimaLink cloud retrieval after OpenAI re-embed (needs ANIMALINK_* + OPENAI_API_KEY)
+python scripts/22_eval_animalink_retrieval.py
+
+# Module B/C only (Lab pipeline)
 HF_HUB_OFFLINE=1 python scripts/09_run_eval.py --group module_bc
 
 # pytest

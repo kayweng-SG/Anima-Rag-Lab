@@ -2,8 +2,15 @@
 """Upsert exported knowledge_chunks JSONL into Supabase (WBS 2.2–2.3).
 
 Requires env:
+  ANIMALINK_SUPABASE_URL
+  ANIMALINK_SUPABASE_SERVICE_ROLE_KEY
+or the Lab-local pair:
   SUPABASE_URL
   SUPABASE_SERVICE_ROLE_KEY
+
+This script defaults to the AnimaLink pair so a merge run cannot
+accidentally write 14k vectors into the Lab project. Pass --target lab
+to use SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY.
 
 Dry-run by default (no network). Pass --apply to POST batches.
 
@@ -58,6 +65,18 @@ def _load_dotenv() -> None:
         val = val.strip().strip("'").strip('"')
         if key and key not in os.environ:
             os.environ[key] = val
+
+
+def _credentials(target: str) -> tuple[str, str]:
+    if target == "animalink":
+        return (
+            (os.getenv("ANIMALINK_SUPABASE_URL") or "").strip(),
+            (os.getenv("ANIMALINK_SUPABASE_SERVICE_ROLE_KEY") or "").strip(),
+        )
+    return (
+        (os.getenv("SUPABASE_URL") or "").strip(),
+        (os.getenv("SUPABASE_SERVICE_ROLE_KEY") or "").strip(),
+    )
 
 
 def iter_rows(path: Path) -> Iterator[Dict[str, Any]]:
@@ -315,6 +334,12 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         action="store_true",
         help="Actually POST to Supabase (requires env keys)",
     )
+    p.add_argument(
+        "--target",
+        choices=("animalink", "lab"),
+        default="animalink",
+        help="Which env pair to use. Default animalink to avoid writing into the Lab project.",
+    )
     p.add_argument("--sleep", type=float, default=0.15, help="Pause between batches")
     p.add_argument(
         "--verify",
@@ -365,12 +390,19 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         logger.info("Re-run with --apply after applying supabase/migrations/*.sql")
         return 0
 
-    url = (os.getenv("SUPABASE_URL") or "").strip()
-    key = (os.getenv("SUPABASE_SERVICE_ROLE_KEY") or "").strip()
+    url, key = _credentials(args.target)
     if not url or not key:
-        raise SystemExit(
-            "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in env or .env"
+        names = (
+            "ANIMALINK_SUPABASE_URL and ANIMALINK_SUPABASE_SERVICE_ROLE_KEY"
+            if args.target == "animalink"
+            else "SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY"
         )
+        raise SystemExit(f"Set {names} in env or .env")
+
+    from urllib.parse import urlparse
+
+    host = urlparse(url).netloc
+    logger.info("Target %s → %s", args.target, host)
 
     if args.verify:
         return _report_drift(url, key, scope, local_by_module)
