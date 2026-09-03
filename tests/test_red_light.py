@@ -238,3 +238,85 @@ def test_aspca_ambiguous_plant_needs_ingestion(red_light_mod, red_light):
         )
     )
     assert not any(a.code == "aspca_toxic_plant" for a in result.alerts)
+
+
+@pytest.mark.parametrize(
+    "complaint",
+    [
+        "My dog ate his dinner today",
+        "She ate breakfast today and seems fine",
+        "Ate a little less today, no other issues",
+        "I'll take him to the vet tomorrow",
+        "He was limping yesterday but is better now",
+        "Booking a grooming appointment for tomorrow",
+        "My dog loves his orange ball",
+        "My dog ate bread this morning",
+    ],
+)
+def test_scrape_fragments_do_not_trigger_false_red(red_light_mod, red_light, complaint):
+    """Everyday complaints must never be intercepted as plant poisoning.
+
+    The ASPCA scrape produced single-word aliases (today/tomorrow/yesterday from
+    "Yesterday, Today and Tomorrow", bread from "Bread and Butter Plant") plus an
+    unflagged "orange", all of which used to force a RED emergency intercept.
+    """
+    PatientVitals = red_light_mod.PatientVitals
+    result = red_light.evaluate(
+        PatientVitals(species="dog", chief_complaint=complaint)
+    )
+    assert not any(a.code == "aspca_toxic_plant" for a in result.alerts), complaint
+    assert result.intercept is False, complaint
+
+
+@pytest.mark.parametrize(
+    "species,complaint,expected_alias",
+    [
+        ("dog", "My dog ate a Brunfelsia flower today", "Brunfelsia"),
+        ("dog", "My dog ate an orange peel", "orange"),
+        ("dog", "My dog ate an apple core", "apple"),
+        ("cat", "Cat ate tulip bulb", "tulip"),
+    ],
+)
+def test_excluding_fragments_keeps_real_poisonings(
+    red_light_mod, red_light, species, complaint, expected_alias
+):
+    """Dropping the fragments must not cost coverage of the plants themselves."""
+    PatientVitals = red_light_mod.PatientVitals
+    result = red_light.evaluate(
+        PatientVitals(species=species, chief_complaint=complaint)
+    )
+    assert result.status.value == "RED", complaint
+    hits = [a for a in result.alerts if a.code == "aspca_toxic_plant"]
+    assert hits, complaint
+    assert hits[0].observed == expected_alias
+
+
+@pytest.mark.parametrize(
+    "simplified,traditional,expected_status,traditional_flag",
+    [
+        ("狗狗误食毒物", "狗狗誤食毒物", "RED", "誤食毒物"),
+        ("狗狗无反应，意识不清", "狗狗無反應，意識不清", "RED", "無反應"),
+        ("狗狗站不起来，瘫倒在地", "狗狗站不起來，癱倒在地", "RED", "站不起來"),
+        ("狗狗吃了洋葱", "狗狗吃了洋蔥", "YELLOW", "吃了洋葱/蒜"),
+    ],
+)
+def test_traditional_chinese_matches_simplified_grade(
+    red_light_mod,
+    red_light,
+    simplified,
+    traditional,
+    expected_status,
+    traditional_flag,
+):
+    """zh-TW complaints must not drop a grade relative to the Simplified regexes."""
+    PatientVitals = red_light_mod.PatientVitals
+    simplified_result = red_light.evaluate(
+        PatientVitals(species="dog", chief_complaint=simplified)
+    )
+    traditional_result = red_light.evaluate(
+        PatientVitals(species="dog", chief_complaint=traditional)
+    )
+    assert simplified_result.status.value == expected_status
+    assert traditional_result.status.value == expected_status
+    assert traditional_result.intercept is simplified_result.intercept
+    assert traditional_flag in traditional_result.matched_red_flags

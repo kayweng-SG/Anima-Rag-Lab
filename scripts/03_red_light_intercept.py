@@ -17,6 +17,29 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+# Traditional → Simplified, 1:1, covering only characters used by the regexes
+# and ASPCA aliases. Patterns were authored in Simplified Chinese; AnimaLink's
+# primary locale is zh-TW. Without this, 8/12 real emergency complaints drop a
+# grade (4 of them RED → GREEN). Length is preserved so match spans can be
+# sliced back from the owner's original text.
+_CJK_TRADITIONAL = (
+    "乾來剋卽啞喫嘔囌夾幹復應査榦樹氣沒無熱甦癇癱癲睏節紅綠緑纔脩脫萬葉葯蒼蔥薈"
+    "藥蘆蘇蘿虛複誌誤識變辦過還醣錯錶鐵閤隻難鞦鬱鵑麼麽黃齣"
+)
+_CJK_SIMPLIFIED = (
+    "干来克即哑吃呕苏夹干复应查干树气没无热苏痫瘫癫困节红绿绿才修脱万叶药苍葱荟"
+    "药芦苏萝虚复志误识变办过还糖错表铁合只难秋郁鹃么么黄出"
+)
+_CJK_TRANSLATE = str.maketrans(_CJK_TRADITIONAL, _CJK_SIMPLIFIED)
+
+
+def normalize_cjk_variants(text: str) -> str:
+    """Map Traditional characters to the Simplified forms the regexes know."""
+    if not text:
+        return text
+    return text.translate(_CJK_TRANSLATE)
+
+
 class TriageStatus(str, Enum):
     RED = "RED"
     YELLOW = "YELLOW"
@@ -186,9 +209,10 @@ _EXTRACTION_PATTERNS = (
 
 def extract_symptom_keywords(*texts: str) -> List[str]:
     """Pull known triage symptom phrases from free-text complaint / question."""
-    blob = " ".join(part for part in texts if part).strip()
-    if not blob:
+    original = " ".join(part for part in texts if part).strip()
+    if not original:
         return []
+    blob = normalize_cjk_variants(original)
     found: List[str] = []
     seen = set()
 
@@ -233,7 +257,7 @@ def extract_symptom_keywords(*texts: str) -> List[str]:
 
     for pattern in _EXTRACTION_PATTERNS:
         for match in pattern.finditer(blob):
-            _add(match.group(0).strip())
+            _add(original[match.start() : match.end()].strip())
 
     return found
 
@@ -302,6 +326,29 @@ class RedLightResult:
         }
 
 
+# The ASPCA scrape splits multi-word plant names into single-word aliases, which
+# produced aliases whose everyday meaning is overwhelmingly not the plant. Left in
+# place they intercept ordinary complaints as poisoning emergencies: "My dog ate
+# his dinner today" matched Brunfelsia and "My dog ate bread this morning" matched
+# Coleus. Every affected plant keeps its proper aliases, so coverage is unchanged.
+EXCLUDED_TOXIC_PLANT_ALIASES = frozenset(
+    {
+        # From Brunfelsia's "Yesterday, Today and Tomorrow"; the plant is still
+        # reachable via Brunfelsia / Lady-of-the-Night / Kiss-Me-Quick.
+        "today",
+        "tomorrow",
+        "yesterday",
+        # From Coleus' "Bread and Butter Plant"; Coleus itself is retained.
+        "bread",
+    }
+)
+
+# ASPCA does not flag these as ambiguous, but their everyday usage is common enough
+# that matching without an ingestion cue yields false RED alerts, e.g. "My dog loves
+# his orange ball". Require an ingestion cue instead.
+FORCE_AMBIGUOUS_TOXIC_PLANT_ALIASES = frozenset({"orange"})
+
+
 class RedLightIntercept:
     """Evaluate vitals and symptoms against Merck reference metrics in <500ms."""
 
@@ -350,9 +397,14 @@ class RedLightIntercept:
             return []
 
         compiled: List[Dict[str, Any]] = []
+        skipped = 0
         for entry in payload.get("aliases") or []:
             alias = str(entry.get("alias") or "").strip()
             if len(alias) < 2:
+                continue
+            alias_key = alias.casefold()
+            if alias_key in EXCLUDED_TOXIC_PLANT_ALIASES:
+                skipped += 1
                 continue
             if any("\u4e00" <= ch <= "\u9fff" for ch in alias):
                 pattern = re.compile(re.escape(alias))
@@ -362,14 +414,20 @@ class RedLightIntercept:
             compiled.append(
                 {
                     "alias": alias,
-                    "ambiguous": bool(entry.get("ambiguous")),
+                    "ambiguous": bool(entry.get("ambiguous"))
+                    or alias_key in FORCE_AMBIGUOUS_TOXIC_PLANT_ALIASES,
                     "common_name": entry.get("common_name") or alias,
                     "toxic_to": entry.get("toxic_to") or [],
                     "url": entry.get("url"),
                     "pattern": pattern,
                 }
             )
-        logger.info("Loaded %d ASPCA toxic-plant aliases for Red-Light", len(compiled))
+        logger.info(
+            "Loaded %d ASPCA toxic-plant aliases for Red-Light (%d excluded as "
+            "scrape fragments)",
+            len(compiled),
+            skipped,
+        )
         return compiled
 
     def _match_toxic_plant(
@@ -390,6 +448,8 @@ class RedLightIntercept:
                 continue
             return {
                 "alias": match.group(0),
+                "start": match.start(),
+                "end": match.end(),
                 "common_name": entry["common_name"],
                 "url": entry.get("url"),
             }
@@ -676,11 +736,16 @@ class RedLightIntercept:
         return alerts
 
     def _evaluate_symptoms(self, patient: PatientVitals) -> Tuple[List[TriageAlert], List[str]]:
-        text = " ".join(
+        original_text = " ".join(
             [patient.chief_complaint, *patient.symptoms]
         ).strip()
-        if not text:
+        if not original_text:
             return [], []
+
+        text = normalize_cjk_variants(original_text)
+
+        def _display(match: re.Match) -> str:
+            return original_text[match.start() : match.end()]
 
         alerts: List[TriageAlert] = []
         matched_flags: List[str] = []
@@ -688,7 +753,7 @@ class RedLightIntercept:
         for pattern, code in CRITICAL_SYMPTOM_PATTERNS:
             match = pattern.search(text)
             if match:
-                phrase = match.group(0)
+                phrase = _display(match)
                 matched_flags.append(phrase)
                 alerts.append(
                     TriageAlert(
@@ -726,7 +791,9 @@ class RedLightIntercept:
                         )
                     )
 
-        heat_alerts, heat_flags = self._grade_heat_severity(patient, text)
+        heat_alerts, heat_flags = self._grade_heat_severity(
+            patient, text, original_text
+        )
         alerts.extend(heat_alerts)
         for flag in heat_flags:
             if flag not in matched_flags:
@@ -736,7 +803,7 @@ class RedLightIntercept:
         # Inside heat context, severity is already graded by _grade_heat_severity.
         collapse_match = COLLAPSE_PATTERN.search(text)
         if collapse_match and not HEAT_CONTEXT_PATTERN.search(text):
-            phrase = collapse_match.group(0)
+            phrase = _display(collapse_match)
             if phrase not in matched_flags:
                 matched_flags.append(phrase)
             alerts.append(
@@ -751,7 +818,7 @@ class RedLightIntercept:
         for pattern, code in WARNING_SYMPTOM_PATTERNS:
             match = pattern.search(text)
             if match:
-                phrase = match.group(0)
+                phrase = _display(match)
                 if phrase not in matched_flags:
                     matched_flags.append(phrase)
                 alerts.append(
@@ -765,7 +832,7 @@ class RedLightIntercept:
 
         toxic_hit = self._match_toxic_plant(text, patient.species)
         if toxic_hit:
-            phrase = toxic_hit["alias"]
+            phrase = original_text[toxic_hit["start"] : toxic_hit["end"]]
             if phrase not in matched_flags:
                 matched_flags.append(phrase)
             plant_name = toxic_hit["common_name"]
@@ -789,7 +856,7 @@ class RedLightIntercept:
         return alerts, matched_flags
 
     def _grade_heat_severity(
-        self, patient: PatientVitals, text: str
+        self, patient: PatientVitals, text: str, original_text: Optional[str] = None
     ) -> Tuple[List[TriageAlert], List[str]]:
         """Self-check grading for heat/中暑: mild advice vs RED emergency.
 
@@ -797,13 +864,14 @@ class RedLightIntercept:
         Moderate (YELLOW): heat context with elevated temp or mild heat signs — allow RAG advice.
         Mild/ask-only (YELLOW guidance): "中暑怎么办" without severe signs — allow RAG, no intercept.
         """
+        source = original_text if original_text is not None else text
         heat_match = HEAT_CONTEXT_PATTERN.search(text)
         if not heat_match:
             return [], []
 
+        phrase = source[heat_match.start() : heat_match.end()]
         alerts: List[TriageAlert] = []
-        flags: List[str] = [heat_match.group(0)]
-        phrase = heat_match.group(0)
+        flags: List[str] = [phrase]
 
         temp_f = patient.rectal_temp_f
         temp_c = patient.rectal_temp_c
@@ -857,8 +925,9 @@ class RedLightIntercept:
         if mild_signs or moderate_temp:
             detail = []
             if mild_signs:
-                detail.append(mild_signs.group(0))
-                flags.append(mild_signs.group(0))
+                mild_phrase = source[mild_signs.start() : mild_signs.end()]
+                detail.append(mild_phrase)
+                flags.append(mild_phrase)
             if moderate_temp:
                 detail.append(f"temp {temp_f}°F")
             alerts.append(
